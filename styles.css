@@ -1,0 +1,248 @@
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a1f;
+  color: #ffffff;
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+}
+
+body.light-mode {
+  background: #fafaff;
+  color: #0a0a1f;
+}
+
+body.light-mode .container, body.light-mode input, body.light-mode select, body.light-mode button, body.light-mode .loading, body.light-mode #bioOutput {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  color: #0a0a1f;
+}
+
+#particle-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.container {
+  background: rgba(15, 15, 40, 0.3);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 230, 255, 0.4);
+  border-radius: 25px;
+  padding: 50px;
+  max-width: 90%;
+  width: 600px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(0, 230, 255, 0.5);
+  text-align: center;
+  margin: 40px auto;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+h1 {
+  font-size: 3rem;
+  color: #00e6ff;
+  text-shadow: 0 0 20px rgba(0, 230, 255, 0.8);
+  margin-bottom: 20px;
+  letter-spacing: 3px;
+  font-weight: 700;
+}
+
+.tagline {
+  font-size: 1.4rem;
+  color: #ff00cc;
+  margin-bottom: 15px;
+  font-weight: 500;
+}
+
+.social-proof {
+  font-size: 1.2rem;
+  color: #00e6ff;
+  margin-bottom: 15px;
+}
+
+.free {
+  font-size: 1.1rem;
+  color: #b0e0e6;
+  margin-bottom: 30px;
+}
+
+.dark-mode-btn, .glowing, .copy-btn, #shareTwitter {
+  padding: 12px 25px;
+  background: linear-gradient(45deg, #00e6ff, #ff00cc);
+  border: none;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dark-mode-btn:hover, .glowing:hover, .copy-btn:hover, #shareTwitter:hover {
+  box-shadow: 0 0 25px rgba(0, 230, 255, 0.8);
+  transform: scale(1.05);
+}
+
+label {
+  display: block;
+  font-size: 1.1rem;
+  color: #b0e0e6;
+  text-align: left;
+  margin-top: 20px;
+  margin-bottom: 8px;
+}
+
+input, select {
+  width: 100%;
+  padding: 15px;
+  margin: 10px 0;
+  border: 1px solid rgba(0, 230, 255, 0.4);
+  border-radius: 10px;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  box-shadow: 0 0 20px rgba(0, 230, 255, 0.6);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: #ff00cc;
+}
+
+select option {
+  background: #0a0a1f;
+  color: #ffffff;
+  font-size: 1.2rem;
+  padding: 10px;
+}
+
+.char-counter {
+  font-size: 1.1rem;
+  color: #b0e0e6;
+  margin: 15px 0;
+}
+
+.loading {
+  font-size: 1.2rem;
+  color: #00e6ff;
+  margin-top: 25px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading.visible {
+  display: flex;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 4px solid #00e6ff;
+  border-top: 4px solid #ff00cc;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 10px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#bioOutput {
+  margin-top: 25px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(0, 230, 255, 0.4);
+  border-radius: 12px;
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  white-space: pre-wrap;
+  text-align: left;
+}
+
+.copy-btn {
+  margin-top: 15px;
+  display: none;
+}
+
+.copy-btn.visible {
+  display: inline-block;
+}
+
+.share-buttons {
+  margin-top: 25px;
+}
+
+.history {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.history h2 {
+  font-size: 1.6rem;
+  color: #00e6ff;
+}
+
+.history ul {
+  list-style: none;
+  padding: 0;
+}
+
+.history li {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.history li:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.testimonials {
+  margin-top: 40px;
+  text-align: left;
+}
+
+.testimonials h2 {
+  font-size: 1.6rem;
+  color: #00e6ff;
+}
+
+.testimonials p {
+  font-size: 1.1rem;
+  color: #b0e0e6;
+}
+
+.footer {
+  font-size: 1.1rem;
+  color: #a0a0a0;
+  margin-top: 40px;
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 30px;
+    margin: 20px;
+  }
+  h1 {
+    font-size: 2.5rem;
+  }
+  .tagline, .social-proof, .free {
+    font-size: 1rem;
+  }
+}
