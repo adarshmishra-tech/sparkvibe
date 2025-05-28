@@ -1,319 +1,233 @@
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto;
-  background: #000;
-  transition: background 0.5s ease, color 0.5s ease;
-}
+document.addEventListener('DOMContentLoaded', () => {
+  // Particle Background
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  document.getElementById('particle-bg').appendChild(renderer.domElement);
 
-/* Theme-specific styles with high-contrast text */
-.dark-theme {
-  background: linear-gradient(135deg, #0a0a1f, #1c2526);
-  color: #ffffff; /* Bright white for max visibility */
-}
-.light-theme {
-  background: linear-gradient(135deg, #ffffff, #d4e4ff);
-  color: #1a1a1a; /* Dark gray for contrast on light background */
-}
-.cosmic-theme {
-  background: linear-gradient(135deg, #1a0033, #4b0082);
-  color: #f0f0f5; /* Light purple for visibility on dark purple */
-}
-.ocean-theme {
-  background: linear-gradient(135deg, #003087, #00c4ff);
-  color: #ffffff; /* White for contrast on blue */
-}
-.forest-theme {
-  background: linear-gradient(135deg, #1a3c34, #2e8b57);
-  color: #f0f0e6; /* Off-white for visibility on green */
+  const particleCount = 300; // Increased for density
+  const particles = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
 
-.light-theme .container,
-.light-theme input,
-.light-theme select,
-.light-theme button,
-.light-theme .loading,
-.light-theme #bioOutput {
-  background: rgba(255, 255, 255, 0.95); /* Opaque white for clarity */
-  border: 1px solid rgba(0, 0, 0, 0.15);
-  color: #1a1a1a; /* Dark text for light theme */
-}
-
-#particle-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -2; /* Behind container to avoid text overlap */
-}
-
-.container {
-  background: rgba(20, 20, 50, 0.85); /* Higher opacity for text clarity */
-  backdrop-filter: blur(15px); /* Reduced blur for sharper text */
-  border: 2px solid rgba(0, 230, 255, 0.6);
-  border-radius: 20px;
-  padding: 40px;
-  max-width: 95%;
-  width: 700px;
-  box-shadow: 0 0 50px rgba(0, 230, 255, 0.4), 0 0 20px rgba(255, 0, 204, 0.3);
-  text-align: center;
-  margin: 30px auto;
-  z-index: 1; /* Above particles */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.container:hover {
-  transform: scale(1.03);
-  box-shadow: 0 0 70px rgba(0, 230, 255, 0.6), 0 0 30px rgba(255, 0, 204, 0.5);
-}
-
-h1 {
-  font-size: 2.8rem;
-  color: inherit; /* Inherit theme color for consistency */
-  text-shadow: 0 0 5px rgba(0, 230, 255, 0.4); /* Subtle shadow */
-  margin-bottom: 15px;
-  letter-spacing: 1.5px;
-  font-weight: 700; /* Bold for clarity */
-}
-
-.tagline {
-  font-size: 1.3rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(255, 0, 204, 0.3);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.social-proof {
-  font-size: 1.1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  margin-bottom: 10px;
-  font-weight: 500;
-}
-
-.free {
-  font-size: 1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  margin-bottom: 25px;
-  font-weight: 500;
-}
-
-.theme-btn, .glowing, .copy-btn, .share-btn {
-  padding: 12px 30px;
-  background: linear-gradient(45deg, #00e6ff, #ff00cc);
-  border: none;
-  border-radius: 10px;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 230, 255, 0.5);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-.theme-btn:hover, .glowing:hover, .copy-btn:hover, .share-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 40px rgba(0, 230, 255, 0.7);
-}
-.theme-btn:focus, .glowing:focus, .copy-btn:focus, .share-btn:focus {
-  outline: 2px solid #ff00cc;
-  outline-offset: 2px;
-}
-.theme-btn::after, .glowing::after, .copy-btn::after, .share-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  transition: 0.5s;
-}
-.theme-btn:hover::after, .glowing:hover::after, .copy-btn:hover::after, .share-btn:hover::after {
-  left: 100%;
-}
-
-.theme-selector {
-  margin: 20px 0;
-}
-
-label {
-  display: block;
-  font-size: 1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  text-align: left;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  font-weight: 500;
-}
-
-input, select {
-  width: 100%;
-  padding: 12px;
-  margin: 8px 0;
-  border: 2px solid rgba(0, 230, 255, 0.6);
-  border-radius: 10px;
-  font-size: 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  color: inherit;
-  box-shadow: 0 0 10px rgba(0, 230, 255, 0.3);
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-input:focus, select:focus {
-  outline: none;
-  border-color: #ff00cc;
-  box-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
-  background: rgba(255, 255, 255, 0.15);
-}
-select option {
-  background: #0a0a1f;
-  color: #ffffff;
-  font-size: 1rem;
-}
-
-.char-counter {
-  font-size: 1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  margin: 10px 0;
-  font-weight: 500;
-}
-
-.loading {
-  font-size: 1.1rem;
-  color: inherit;
-  text-shadow: 0 0 4px rgba(0, 230, 255, 0.4);
-  margin-top: 20px;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  font-weight: 500;
-}
-.loading.visible {
-  display: flex;
-}
-.spinner {
-  width: 24px;
-  height: 24px;
-  border: 4px solid #00e6ff;
-  border-top: 4px solid #ff00cc;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 10px;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-#bioOutput {
-  margin-top: 20px;
-  padding: 15px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(0, 230, 255, 0.6);
-  border-radius: 10px;
-  color: inherit;
-  font-size: 1rem;
-  white-space: pre-wrap;
-  text-align: left;
-  box-shadow: 0 0 15px rgba(0, 230, 255, 0.3);
-  transition: all 0.3s ease;
-  font-weight: 500;
-}
-
-.copy-btn, .share-btn {
-  margin-top: 12px;
-  display: none;
-}
-.copy-btn.visible, .share-btn.visible {
-  display: inline-block;
-}
-
-.seo-guide, .history, .testimonials {
-  margin-top: 30px;
-  text-align: left;
-}
-.seo-guide h2, .history h2, .testimonials h2 {
-  font-size: 1.5rem;
-  color: inherit;
-  text-shadow: 0 0 4px rgba(0, 230, 255, 0.4);
-  font-weight: 600;
-}
-.seo-guide ul, .history ul {
-  list-style: none;
-  padding: 0;
-}
-.seo-guide li, .history li {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 230, 255, 0.4);
-  transition: background 0.3s ease, transform 0.2s ease;
-  font-weight: 500;
-}
-.seo-guide li:hover, .history li:hover {
-  background: rgba(255, 255, 255, 0.15);
-  transform: translateX(5px);
-}
-.history li {
-  cursor: pointer;
-}
-.testimonials p {
-  font-size: 1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  font-weight: 500;
-}
-
-.footer {
-  font-size: 1rem;
-  color: inherit;
-  text-shadow: 0 0 3px rgba(0, 230, 255, 0.3);
-  margin-top: 30px;
-  font-weight: 500;
-}
-.footer a {
-  color: #00e6ff;
-  text-decoration: none;
-}
-.footer a:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 600px) {
-  .container {
-    padding: 20px;
-    width: 90%;
-    max-width: 100%;
+  for (let i = 0; i < particleCount * 3; i += 3) {
+    positions[i] = (Math.random() - 0.5) * 200; // Wider spread
+    positions[i + 1] = (Math.random() - 0.5) * 200;
+    positions[i + 2] = (Math.random() - 0.5) * 200;
+    velocities[i] = (Math.random() - 0.5) * 0.004; // Smooth movement
+    velocities[i + 1] = (Math.random() - 0.5) * 0.004;
+    velocities[i + 2] = (Math.random() - 0.5) * 0.004;
+    const colorChoice = Math.random();
+    colors[i] = colorChoice < 0.33 ? 0 : colorChoice < 0.66 ? 1 : 0.5; // Cyan, pink, purple
+    colors[i + 1] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 0 : 0.5;
+    colors[i + 2] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 1 : 0.8;
   }
-  h1 {
-    font-size: 2rem;
+
+  particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const material = new THREE.PointsMaterial({
+    size: 0.2,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.8,
+    blending: THREE.AdditiveBlending // Neon glow
+  });
+
+  const particleSystem = new THREE.Points(particles, material);
+  scene.add(particleSystem);
+
+  const lineMaterial = new THREE.LineBasicMaterial({
+    color: 0xffffff,
+    transparent: true,
+    opacity: 0.2,
+    blending: THREE.AdditiveBlending
+  });
+  const lines = [];
+  function updateLines() {
+    lines.forEach(line => scene.remove(line));
+    lines.length = 0;
+    const positions = particleSystem.geometry.attributes.position.array;
+    for (let i = 0; i < particleCount; i++) {
+      for (let j = i + 1; j < particleCount; j++) {
+        const dx = positions[i * 3] - positions[j * 3];
+        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
+        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+        const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
+        if (distance < 15) { // Increased connection range
+          const geometry = new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
+            new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2])
+          ]);
+          const line = new THREE.Line(geometry, lineMaterial);
+          scene.add(line);
+          lines.push(line);
+        }
+      }
+    }
   }
-  .tagline {
-    font-size: 1.1rem;
+
+  camera.position.z = 50;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    const positions = particleSystem.geometry.attributes.position.array;
+    for (let i = 0; i < particleCount * 3; i += 3) {
+      positions[i] += velocities[i];
+      positions[i + 1] += velocities[i + 1];
+      positions[i + 2] += velocities[i + 2];
+      if (Math.abs(positions[i]) > 100) velocities[i] *= -1;
+      if (Math.abs(positions[i + 1]) > 100) velocities[i + 1] *= -1;
+      if (Math.abs(positions[i + 2]) > 100) velocities[i + 2] *= -1;
+    }
+    particleSystem.geometry.attributes.position.needsUpdate = true;
+    particleSystem.rotation.y += 0.0001;
+    updateLines();
+    renderer.render(scene, camera);
   }
-  .social-proof, .free, .seo-guide p, .testimonials p {
-    font-size: 0.9rem;
+  animate();
+
+  window.addEventListener('resize', () => {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+  });
+
+  // 3D Tilt Effect
+  VanillaTilt.init(document.querySelector('.container'), {
+    max: 5,
+    speed: 1000,
+    glare: true,
+    'max-glare': 0.3
+  });
+
+  // Theme Toggle
+  const themeSelect = document.getElementById('themeSelect');
+  const themeToggle = document.getElementById('themeToggle');
+  const applyTheme = (theme) => {
+    document.body.className = '';
+    document.body.classList.add(theme);
+    themeToggle.textContent = theme === 'dark-theme' ? '🌙 Dark Theme' : `🌟 ${theme.split('-')[0]} Theme`;
+  };
+
+  themeToggle.addEventListener('click', () => {
+    const currentTheme = themeSelect.value;
+    applyTheme(currentTheme);
+  });
+
+  themeSelect.addEventListener('change', () => {
+    const newTheme = themeSelect.value;
+    applyTheme(newTheme);
+  });
+
+  applyTheme(themeSelect.value);
+
+  // Character Counter
+  const platformSelect = document.getElementById('platform');
+  const bioPurposeInput = document.getElementById('bioPurpose');
+  const charCount = document.getElementById('charCount');
+  const maxCharsSpan = document.getElementById('maxChars');
+  const platformCharLimits = {
+    Instagram: 150,
+    LinkedIn: 2000,
+    TikTok: 80,
+    Twitter: 160
+  };
+
+  platformSelect.addEventListener('change', () => {
+    maxCharsSpan.textContent = platformCharLimits[platformSelect.value] || 150;
+    updateCharCount();
+  });
+
+  bioPurposeInput.addEventListener('input', updateCharCount);
+
+  function updateCharCount() {
+    charCount.textContent = bioPurposeInput.value.length;
+    const max = platformCharLimits[platformSelect.value] || 150;
+    charCount.style.color = bioPurposeInput.value.length > max ? '#ff4d4d' : '#00e6ff';
   }
-  .theme-btn, .glowing, .copy-btn, .share-btn {
-    padding: 10px 20px;
-    font-size: 0.9rem;
+
+  // Form Submission
+  const bioForm = document.getElementById('bioForm');
+  const bioOutput = document.getElementById('bioOutput');
+  const loading = document.getElementById('loading');
+  const copyBio = document.getElementById('copyBio');
+  const shareTwitter = document.getElementById('shareTwitter');
+
+  bioForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    loading.classList.add('visible');
+    bioOutput.textContent = '';
+    copyBio.classList.remove('visible');
+    shareTwitter.style.display = 'none';
+
+    const bioPurpose = bioPurposeInput.value.trim();
+    const location = document.getElementById('location').value.trim();
+    const tone = document.getElementById('tone').value;
+    const platform = platformSelect.value;
+
+    if (!bioPurpose) {
+      bioOutput.textContent = 'Please enter a bio purpose.';
+      loading.classList.remove('visible');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://sparkvibe-1.onrender.com/generate-bio', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bioPurpose, location, tone, platform })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      if (!data.bio) {
+        throw new Error('No bio returned from server');
+      }
+
+      bioOutput.textContent = data.bio;
+      loading.classList.remove('visible');
+      copyBio.classList.add('visible');
+      shareTwitter.style.display = 'inline-block';
+
+      const history = JSON.parse(localStorage.getItem('bioHistory') || '[]');
+      history.unshift({ bio: data.bio, platform, purpose: bioPurpose, timestamp: new Date().toLocaleString() });
+      localStorage.setItem('bioHistory', JSON.stringify(history.slice(0, 5)));
+      updateHistory();
+
+      copyBio.onclick = () => {
+        navigator.clipboard.writeText(data.bio);
+        copyBio.textContent = '✅ Copied!';
+        setTimeout(() => { copyBio.textContent = '📋 Copy Bio'; }, 2000);
+      };
+
+      shareTwitter.onclick = () => {
+        const tweet = encodeURIComponent(`Check out my SEO-optimized ${platform} bio from SparkVibe’s AI bio generator! ${data.bio} Try it: https://sparkvibe-1.onrender.com #AIBioGenerator`);
+        window.open(`https://twitter.com/intent/tweet?text=${tweet}`, '_blank');
+      };
+    } catch (error) {
+      console.error('Error:', error.message);
+      bioOutput.textContent = `Failed to generate bio: ${error.message}. Please try again or check your API key.`;
+      loading.classList.remove('visible');
+    }
+  });
+
+  function updateHistory() {
+    const history = JSON.parse(localStorage.getItem('bioHistory') || '[]');
+    const bioHistory = document.getElementById('bioHistory') || document.createElement('div');
+    bioHistory.id = 'bioHistory';
+    bioHistory.innerHTML = history.map(item => `<li>${item.bio}<br><small>${item.platform} - ${item.purpose} - ${item.timestamp}</small></li>`).join('');
+    bioHistory.querySelectorAll('li').forEach(item => {
+      item.addEventListener('click', () => {
+        navigator.clipboard.writeText(item.textContent.split('\n')[0]);
+        alert('Bio copied to clipboard!');
+      });
+    });
   }
-  input, select {
-    font-size: 0.9rem;
-    padding: 10px;
-  }
-  .seo-guide h2, .history h2, .testimonials h2 {
-    font-size: 1.3rem;
-  }
-}
+  updateHistory();
+});
