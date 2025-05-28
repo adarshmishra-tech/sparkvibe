@@ -3,7 +3,7 @@ body {
   margin: 0;
   min-height: 100vh;
   display: flex;
-  justify-content: center;
+  justify-content: center; /* Center the container */
   align-items: center;
   overflow-y: auto;
   background: #000;
@@ -12,23 +12,23 @@ body {
 
 /* Vibrant, premium themes */
 .dark-theme {
-  background: linear-gradient(135deg, #0d001a, #2a0039); /* Deeper purple gradient */
+  background: linear-gradient(135deg, #1a0033, #4b0082); /* Bold cosmic purple */
   color: #ffffff;
 }
 .light-theme {
-  background: linear-gradient(135deg, #f0f8ff, #87cefa); /* Light blue gradient */
+  background: linear-gradient(135deg, #e6f0fa, #87ceeb); /* Bright light blue */
   color: #1a1a1a;
 }
 .cosmic-theme {
-  background: linear-gradient(135deg, #1a0033, #800080); /* Bold cosmic purple */
+  background: linear-gradient(135deg, #0d001a, #800080); /* Deep cosmic gradient */
   color: #f0f0f5;
 }
 .ocean-theme {
-  background: linear-gradient(135deg, #0066cc, #00ccff); /* Vibrant ocean blue */
+  background: linear-gradient(135deg, #0066cc, #00b7eb); /* Vibrant ocean blue */
   color: #ffffff;
 }
 .forest-theme {
-  background: linear-gradient(135deg, #0f2f21, #228b22); /* Rich forest green */
+  background: linear-gradient(135deg, #0f2f21, #3cb371); /* Rich forest green */
   color: #f0f0e6;
 
 .light-theme .container,
@@ -52,16 +52,16 @@ body {
 }
 
 .container {
-  background: rgba(15, 15, 40, 0.9); /* Darker, opaque background */
-  backdrop-filter: blur(10px); /* Minimal blur for clarity */
+  background: rgba(15, 15, 40, 0.9); /* Opaque background */
+  backdrop-filter: blur(10px); /* Minimal blur */
   border: 2px solid rgba(0, 230, 255, 0.7);
   border-radius: 20px;
-  padding: 40px 30px; /* Adjusted padding to ensure full visibility */
-  max-width: 90%;
-  width: 700px;
+  padding: 40px 40px; /* Increased padding for full visibility */
+  max-width: 800px; /* Wider container */
+  width: 90%; /* Responsive width */
   box-shadow: 0 0 60px rgba(0, 230, 255, 0.5), 0 0 30px rgba(255, 0, 204, 0.4);
   text-align: center;
-  margin: 20px auto;
+  margin: 20px auto; /* Center horizontally */
   z-index: 1; /* Above particles */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: shimmer 3s infinite alternate;
@@ -176,7 +176,7 @@ input:focus, select:focus {
   box-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
 }
 select option {
-  background: #0d001a;
+  background: #1a0033;
   color: #ffffff;
 }
 
@@ -285,8 +285,8 @@ select option {
 
 @media (max-width: 600px) {
   .container {
-    padding: 20px 15px;
-    width: 92%;
+    padding: 20px 20px;
+    width: 94%;
     max-width: 100%;
   }
   h1 {
