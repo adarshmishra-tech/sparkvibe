@@ -5,11 +5,11 @@ const rateLimit = require('express-rate-limit');
 const path = require('path');
 const dotenv = require('dotenv');
 
-// Try loading env vars from Render secret file (if exists), else fallback to default .env
+// Load environment variables from Render secret file or fallback to local .env
 const secretPath = '/etc/secrets/.env';
 const result = dotenv.config({ path: secretPath });
 if (result.error) {
-  dotenv.config(); // fallback for local dev
+  dotenv.config(); // fallback for local development
 }
 
 const app = express();
@@ -26,13 +26,14 @@ app.get('/', (req, res) => {
 
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 60 * 1000,
+  windowMs: 60 * 1000, // 1 minute window
   max: 10,
   message: 'Too many requests, please try again later.',
 });
 app.use('/generate-bio', limiter);
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const OPENROUTER_URL = 'https://openrouter.ai/v1/chat/completions';
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
 
@@ -43,10 +44,12 @@ async function fetchBio(businessType, location, tone, platform) {
   const maxChars = charLimits[platform] || 150;
   const locationText = location ? ` located in ${location}` : '';
 
+  console.log('Using API Key:', OPENROUTER_API_KEY ? '[REDACTED]' : 'NOT FOUND');
+
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
       const response = await axios.post(
-        'https://openrouter.ai/api/v1/chat/completions',
+        OPENROUTER_URL,
         {
           model: 'gpt-3.5-turbo',
           messages: [
@@ -69,12 +72,15 @@ async function fetchBio(businessType, location, tone, platform) {
 
       return response.data.choices[0].message.content.trim();
     } catch (error) {
-      // Detailed error logging for debugging
       console.error(`Attempt ${attempt} failed.`);
+
       if (error.response) {
-        console.error('API Response Error:', error.response.status, error.response.data);
+        console.error('API error status:', error.response.status);
+        console.error('API error data:', error.response.data);
+      } else if (error.request) {
+        console.error('No response received:', error.request);
       } else {
-        console.error('Error Message:', error.message);
+        console.error('Error message:', error.message);
       }
 
       if (attempt === MAX_RETRIES) {
@@ -106,6 +112,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at https://sparkvibe-pi5u.onrender.com`);
 });
+
 
 
 
