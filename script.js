@@ -6,34 +6,39 @@ document.addEventListener('DOMContentLoaded', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('particle-bg').appendChild(renderer.domElement);
 
-  const particleCount = 400; // Increased for density
+  const particleCount = 500; // Increased for density
   const particles = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
   const velocities = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
+  const sizes = new Float32Array(particleCount); // For varied particle sizes
 
-  for (let i = 0; i < particleCount * 3; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 250; // Wider spread
-    positions[i + 1] = (Math.random() - 0.5) * 250;
-    positions[i + 2] = (Math.random() - 0.5) * 250;
-    velocities[i] = (Math.random() - 0.5) * 0.005; // Smooth movement
-    velocities[i + 1] = (Math.random() - 0.5) * 0.005;
-    velocities[i + 2] = (Math.random() - 0.5) * 0.005;
+  for (let i = 0; i < particleCount; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 300; // Wider spread
+    positions[i3 + 1] = (Math.random() - 0.5) * 300;
+    positions[i3 + 2] = (Math.random() - 0.5) * 300;
+    velocities[i3] = (Math.random() - 0.5) * 0.006; // Smooth movement
+    velocities[i3 + 1] = (Math.random() - 0.5) * 0.006;
+    velocities[i3 + 2] = (Math.random() - 0.5) * 0.006;
     const colorChoice = Math.random();
-    colors[i] = colorChoice < 0.33 ? 0 : colorChoice < 0.66 ? 1 : 0.5; // Cyan, pink, purple
-    colors[i + 1] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 0 : 0.5;
-    colors[i + 2] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 1 : 0.8;
+    colors[i3] = colorChoice < 0.33 ? 0 : colorChoice < 0.66 ? 1 : 0.5; // Cyan, pink, purple
+    colors[i3 + 1] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 0 : 0.5;
+    colors[i3 + 2] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 1 : 1;
+    sizes[i] = 0.2 + Math.random() * 0.3; // Varied sizes for depth
   }
 
   particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
   const material = new THREE.PointsMaterial({
-    size: 0.25,
+    size: 0.3,
     vertexColors: true,
     transparent: true,
-    opacity: 0.85,
-    blending: THREE.AdditiveBlending // Neon glow
+    opacity: 0.9,
+    blending: THREE.AdditiveBlending, // Neon glow
+    sizeAttenuation: true // Size variation based on distance
   });
 
   const particleSystem = new THREE.Points(particles, material);
@@ -42,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.25,
+    opacity: 0.3,
     blending: THREE.AdditiveBlending
   });
   const lines = [];
@@ -52,14 +57,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const positions = particleSystem.geometry.attributes.position.array;
     for (let i = 0; i < particleCount; i++) {
       for (let j = i + 1; j < particleCount; j++) {
-        const dx = positions[i * 3] - positions[j * 3];
-        const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
-        const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
+        const i3 = i * 3, j3 = j * 3;
+        const dx = positions[i3] - positions[j3];
+        const dy = positions[i3 + 1] - positions[j3 + 1];
+        const dz = positions[i3 + 2] - positions[j3 + 2];
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (distance < 20) { // Increased connection range
+        if (distance < 25) { // Increased connection range
           const geometry = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
-            new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2])
+            new THREE.Vector3(positions[i3], positions[i3 + 1], positions[i3 + 2]),
+            new THREE.Vector3(positions[j3], positions[j3 + 1], positions[j3 + 2])
           ]);
           const line = new THREE.Line(geometry, lineMaterial);
           scene.add(line);
@@ -69,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  camera.position.z = 60;
+  camera.position.z = 70;
 
   function animate() {
     requestAnimationFrame(animate);
@@ -78,12 +84,12 @@ document.addEventListener('DOMContentLoaded', () => {
       positions[i] += velocities[i];
       positions[i + 1] += velocities[i + 1];
       positions[i + 2] += velocities[i + 2];
-      if (Math.abs(positions[i]) > 125) velocities[i] *= -1;
-      if (Math.abs(positions[i + 1]) > 125) velocities[i + 1] *= -1;
-      if (Math.abs(positions[i + 2]) > 125) velocities[i + 2] *= -1;
+      if (Math.abs(positions[i]) > 150) velocities[i] *= -1;
+      if (Math.abs(positions[i + 1]) > 150) velocities[i + 1] *= -1;
+      if (Math.abs(positions[i + 2]) > 150) velocities[i + 2] *= -1;
     }
     particleSystem.geometry.attributes.position.needsUpdate = true;
-    particleSystem.rotation.y += 0.00015;
+    particleSystem.rotation.y += 0.0002;
     updateLines();
     renderer.render(scene, camera);
   }
