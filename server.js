@@ -9,15 +9,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from the root directory (adjust if needed)
+// Serve static files from root (adjust if using /public)
 app.use(express.static(path.join(__dirname, '.')));
 
-// Root route for index.html
+// Root route to serve index.html
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Rate limit: 10 requests per IP per minute
+// Rate limiting
 const limiter = rateLimit({
   windowMs: 60 * 1000,
   max: 10,
@@ -28,6 +28,8 @@ app.use('/generate-bio', limiter);
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const MAX_RETRIES = 3;
 const RETRY_DELAY = 1000;
+
+console.log('API key loaded?', !!OPENROUTER_API_KEY); // Debug log
 
 async function fetchBio(businessType, location, tone, platform) {
   const charLimits = { Instagram: 150, LinkedIn: 2000, TikTok: 80, Twitter: 160 };
@@ -51,7 +53,7 @@ async function fetchBio(businessType, location, tone, platform) {
           headers: {
             Authorization: `Bearer ${OPENROUTER_API_KEY}`,
             'Content-Type': 'application/json',
-            'HTTP-Referer': 'https://your-app-name.onrender.com', // Replace or remove for prod
+            'HTTP-Referer': 'https://sparkvibe-pi5u.onrender.com',
             'X-Title': 'SparkVibe',
           },
           timeout: 10000,
@@ -72,6 +74,7 @@ app.post('/generate-bio', async (req, res) => {
   const { businessType, location, tone, platform } = req.body;
 
   if (!OPENROUTER_API_KEY) {
+    console.error('Missing API key in environment variables.');
     return res.status(500).json({ bio: 'API key missing. Please configure your .env file.' });
   }
 
@@ -84,9 +87,9 @@ app.post('/generate-bio', async (req, res) => {
   }
 });
 
-// Use dynamic port for Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running at https://sparkvibe-pi5u.onrender.com`);
 });
+
 
