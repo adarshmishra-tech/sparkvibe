@@ -1,35 +1,38 @@
 body {
   font-family: 'Poppins', sans-serif;
   margin: 0;
+  padding: 0;
   min-height: 100vh;
   display: flex;
-  justify-content: center; /* Center the container */
-  align-items: center;
+  flex-direction: column; /* Ensure vertical stacking */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
   overflow-y: auto;
   background: #000;
   transition: background 0.5s ease, color 0.5s ease;
 }
 
-/* Vibrant, premium themes */
+/* Ultra-vibrant themes */
 .dark-theme {
-  background: linear-gradient(135deg, #1a0033, #4b0082); /* Bold cosmic purple */
+  background: linear-gradient(135deg, #1c003b, #5e00a3); /* Vivid purple */
   color: #ffffff;
 }
 .light-theme {
-  background: linear-gradient(135deg, #e6f0fa, #87ceeb); /* Bright light blue */
+  background: linear-gradient(135deg, #d9eaff, #66b3ff); /* Bright sky blue */
   color: #1a1a1a;
 }
 .cosmic-theme {
-  background: linear-gradient(135deg, #0d001a, #800080); /* Deep cosmic gradient */
+  background: linear-gradient(135deg, #0a001f, #9900cc); /* Deep cosmic gradient */
   color: #f0f0f5;
 }
 .ocean-theme {
-  background: linear-gradient(135deg, #0066cc, #00b7eb); /* Vibrant ocean blue */
+  background: linear-gradient(135deg, #004080, #00b3e6); /* Vivid ocean blue */
   color: #ffffff;
 }
 .forest-theme {
-  background: linear-gradient(135deg, #0f2f21, #3cb371); /* Rich forest green */
+  background: linear-gradient(135deg, #0a2e1f, #4caf50); /* Lush forest green */
   color: #f0f0e6;
+}
 
 .light-theme .container,
 .light-theme input,
@@ -52,27 +55,28 @@ body {
 }
 
 .container {
-  background: rgba(15, 15, 40, 0.9); /* Opaque background */
-  backdrop-filter: blur(10px); /* Minimal blur */
-  border: 2px solid rgba(0, 230, 255, 0.7);
+  background: rgba(10, 10, 30, 0.9); /* Opaque background */
+  backdrop-filter: blur(8px); /* Minimal blur */
+  border: 2px solid rgba(0, 230, 255, 0.8);
   border-radius: 20px;
-  padding: 40px 40px; /* Increased padding for full visibility */
-  max-width: 800px; /* Wider container */
-  width: 90%; /* Responsive width */
-  box-shadow: 0 0 60px rgba(0, 230, 255, 0.5), 0 0 30px rgba(255, 0, 204, 0.4);
+  padding: 50px 40px; /* Increased padding for visibility */
+  max-width: 850px; /* Wider container */
+  width: 90%; /* Responsive */
+  box-shadow: 0 0 60px rgba(0, 230, 255, 0.6), 0 0 30px rgba(255, 0, 204, 0.5);
   text-align: center;
-  margin: 20px auto; /* Center horizontally */
+  margin: 30px auto; /* Explicit centering */
   z-index: 1; /* Above particles */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   animation: shimmer 3s infinite alternate;
+  box-sizing: border-box; /* Prevent overflow */
 }
 @keyframes shimmer {
-  0% { box-shadow: 0 0 60px rgba(0, 230, 255, 0.5); }
-  100% { box-shadow: 0 0 80px rgba(0, 230, 255, 0.7); }
+  0% { box-shadow: 0 0 60px rgba(0, 230, 255, 0.6); }
+  100% { box-shadow: 0 0 90px rgba(0, 230, 255, 0.8); }
 }
 .container:hover {
   transform: scale(1.03);
-  box-shadow: 0 0 100px rgba(0, 230, 255, 0.8);
+  box-shadow: 0 0 120px rgba(0, 230, 255, 0.9);
 }
 
 h1 {
@@ -120,6 +124,8 @@ h1 {
   cursor: pointer;
   box-shadow: 0 0 20px rgba(0, 230, 255, 0.6);
   transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 .theme-btn:hover, .glowing:hover, .copy-btn:hover, .share-btn:hover {
   transform: scale(1.05);
@@ -162,13 +168,14 @@ input, select {
   width: 100%;
   padding: 12px;
   margin: 8px 0;
-  border: 2px solid rgba(0, 230, 255, 0.7);
+  border: 2px solid rgba(0, 230, 255, 0.8);
   border-radius: 10px;
   font-size: 1rem;
   background: rgba(255, 255, 255, 0.1);
   color: inherit;
   box-shadow: 0 0 10px rgba(0, 230, 255, 0.3);
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 input:focus, select:focus {
   outline: none;
@@ -176,7 +183,7 @@ input:focus, select:focus {
   box-shadow: 0 0 15px rgba(255, 0, 204, 0.5);
 }
 select option {
-  background: #1a0033;
+  background: #1c003b;
   color: #ffffff;
 }
 
@@ -218,7 +225,7 @@ select option {
   margin-top: 20px;
   padding: 15px;
   background: rgba(255, 255, 255, 0.1);
-  border: 2px solid rgba(0, 230, 255, 0.7);
+  border: 2px solid rgba(0, 230, 255, 0.8);
   border-radius: 10px;
   color: inherit;
   font-size: 1rem;
@@ -285,8 +292,8 @@ select option {
 
 @media (max-width: 600px) {
   .container {
-    padding: 20px 20px;
-    width: 94%;
+    padding: 30px 20px;
+    width: 95%;
     max-width: 100%;
   }
   h1 {
