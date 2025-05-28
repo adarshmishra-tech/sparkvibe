@@ -3,7 +3,14 @@ const axios = require('axios');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const path = require('path');
-require('dotenv').config();
+const dotenv = require('dotenv');
+
+// Try loading env vars from Render secret file (if exists), else fallback to default .env
+const secretPath = '/etc/secrets/.env';
+const result = dotenv.config({ path: secretPath });
+if (result.error) {
+  dotenv.config(); // fallback for local dev
+}
 
 const app = express();
 app.use(cors());
@@ -62,6 +69,14 @@ async function fetchBio(businessType, location, tone, platform) {
 
       return response.data.choices[0].message.content.trim();
     } catch (error) {
+      // Detailed error logging for debugging
+      console.error(`Attempt ${attempt} failed.`);
+      if (error.response) {
+        console.error('API Response Error:', error.response.status, error.response.data);
+      } else {
+        console.error('Error Message:', error.message);
+      }
+
       if (attempt === MAX_RETRIES) {
         throw new Error(`API error after ${MAX_RETRIES} attempts: ${error.message}`);
       }
@@ -75,7 +90,7 @@ app.post('/generate-bio', async (req, res) => {
 
   if (!OPENROUTER_API_KEY) {
     console.error('Missing API key in environment variables.');
-    return res.status(500).json({ bio: 'API key missing. Please configure your .env file.' });
+    return res.status(500).json({ bio: 'API key missing. Please configure your .env file or environment variables.' });
   }
 
   try {
@@ -91,5 +106,6 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at https://sparkvibe-pi5u.onrender.com`);
 });
+
 
 
