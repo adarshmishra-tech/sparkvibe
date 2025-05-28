@@ -70,13 +70,15 @@ async function fetchBio(businessType, location, tone, platform) {
         }
       );
 
+      console.log('API response:', JSON.stringify(response.data, null, 2));
       return response.data.choices[0].message.content.trim();
     } catch (error) {
       console.error(`Attempt ${attempt} failed.`);
 
       if (error.response) {
         console.error('API error status:', error.response.status);
-        console.error('API error data:', error.response.data);
+        console.error('API error headers:', error.response.headers);
+        console.error('API error data:', JSON.stringify(error.response.data, null, 2));
       } else if (error.request) {
         console.error('No response received:', error.request);
       } else {
@@ -112,6 +114,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running at https://sparkvibe-pi5u.onrender.com`);
 });
+
 
 
 
