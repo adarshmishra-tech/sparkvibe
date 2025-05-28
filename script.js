@@ -6,19 +6,19 @@ document.addEventListener('DOMContentLoaded', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.getElementById('particle-bg').appendChild(renderer.domElement);
 
-  const particleCount = 300; // Increased for density
+  const particleCount = 400; // Increased for density
   const particles = new THREE.BufferGeometry();
   const positions = new Float32Array(particleCount * 3);
   const velocities = new Float32Array(particleCount * 3);
   const colors = new Float32Array(particleCount * 3);
 
   for (let i = 0; i < particleCount * 3; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 200; // Wider spread
-    positions[i + 1] = (Math.random() - 0.5) * 200;
-    positions[i + 2] = (Math.random() - 0.5) * 200;
-    velocities[i] = (Math.random() - 0.5) * 0.004; // Smooth movement
-    velocities[i + 1] = (Math.random() - 0.5) * 0.004;
-    velocities[i + 2] = (Math.random() - 0.5) * 0.004;
+    positions[i] = (Math.random() - 0.5) * 250; // Wider spread
+    positions[i + 1] = (Math.random() - 0.5) * 250;
+    positions[i + 2] = (Math.random() - 0.5) * 250;
+    velocities[i] = (Math.random() - 0.5) * 0.005; // Smooth movement
+    velocities[i + 1] = (Math.random() - 0.5) * 0.005;
+    velocities[i + 2] = (Math.random() - 0.5) * 0.005;
     const colorChoice = Math.random();
     colors[i] = colorChoice < 0.33 ? 0 : colorChoice < 0.66 ? 1 : 0.5; // Cyan, pink, purple
     colors[i + 1] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 0 : 0.5;
@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
   particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
   const material = new THREE.PointsMaterial({
-    size: 0.2,
+    size: 0.25,
     vertexColors: true,
     transparent: true,
-    opacity: 0.8,
+    opacity: 0.85,
     blending: THREE.AdditiveBlending // Neon glow
   });
 
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const lineMaterial = new THREE.LineBasicMaterial({
     color: 0xffffff,
     transparent: true,
-    opacity: 0.2,
+    opacity: 0.25,
     blending: THREE.AdditiveBlending
   });
   const lines = [];
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dy = positions[i * 3 + 1] - positions[j * 3 + 1];
         const dz = positions[i * 3 + 2] - positions[j * 3 + 2];
         const distance = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        if (distance < 15) { // Increased connection range
+        if (distance < 20) { // Increased connection range
           const geometry = new THREE.BufferGeometry().setFromPoints([
             new THREE.Vector3(positions[i * 3], positions[i * 3 + 1], positions[i * 3 + 2]),
             new THREE.Vector3(positions[j * 3], positions[j * 3 + 1], positions[j * 3 + 2])
@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  camera.position.z = 50;
+  camera.position.z = 60;
 
   function animate() {
     requestAnimationFrame(animate);
@@ -78,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
       positions[i] += velocities[i];
       positions[i + 1] += velocities[i + 1];
       positions[i + 2] += velocities[i + 2];
-      if (Math.abs(positions[i]) > 100) velocities[i] *= -1;
-      if (Math.abs(positions[i + 1]) > 100) velocities[i + 1] *= -1;
-      if (Math.abs(positions[i + 2]) > 100) velocities[i + 2] *= -1;
+      if (Math.abs(positions[i]) > 125) velocities[i] *= -1;
+      if (Math.abs(positions[i + 1]) > 125) velocities[i + 1] *= -1;
+      if (Math.abs(positions[i + 2]) > 125) velocities[i + 2] *= -1;
     }
     particleSystem.geometry.attributes.position.needsUpdate = true;
-    particleSystem.rotation.y += 0.0001;
+    particleSystem.rotation.y += 0.00015;
     updateLines();
     renderer.render(scene, camera);
   }
