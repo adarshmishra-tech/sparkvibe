@@ -1,127 +1,146 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SparkVibe: Generate viral AI-powered bios for Instagram, LinkedIn, TikTok, and Twitter using GPT-3.5. Free, fast, no signup!">
-  <meta property="og:title" content="SparkVibe - Premium AI Bio Generator">
-  <meta property="og:description" content="Craft professional bios instantly with GPT-3.5. Free forever, no signup needed!">
-  <meta property="og:image" content="https://your-domain.com/og-image.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="SparkVibe - Premium AI Bio Generator">
-  <meta name="twitter:description" content="Create stunning bios in seconds with SparkVibe. Powered by GPT-3.5, free, no signup!">
-  <meta name="twitter:image" content="https://your-domain.com/og-image.jpg">
-  <title>SparkVibe - Premium AI Bio Generator</title>
-  <link rel="stylesheet" href="styles.css">
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1234567890"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-1234567890');
+  <meta name="description" content="Create SEO-optimized AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Free, fast, and professional with SparkVibe!">
+  <meta name="keywords" content="AI bio generator, social media bio generator, professional bio generator, SEO content generator, Instagram bio, LinkedIn bio, TikTok bio, Twitter bio">
+  <meta name="author" content="SparkVibe">
+  <meta property="og:title" content="AI Bio Generator | SparkVibe - Free Social Media Bios">
+  <meta property="og:description" content="Craft SEO-optimized bios with SparkVibe’s AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Free, professional, and tailored to you!">
+  <meta property="og:image" content="https://your-app-name.onrender.com/og-image.jpg">
+  <meta property="og:url" content="https://your-app-name.onrender.com">
+  <title>AI Bio Generator | SparkVibe - Free Social Media Bios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SparkVibe AI Bio Generator",
+    "description": "Free AI bio generator to create SEO-optimized professional bios for Instagram, LinkedIn, TikTok, and Twitter.",
+    "url": "https://your-app-name.onrender.com",
+    "applicationCategory": "Content Creation",
+    "operatingSystem": "All",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
   </script>
   <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "WebApplication",
-      "name": "SparkVibe",
-      "description": "AI-powered business bio generator using GPT-3.5 for Instagram, LinkedIn, TikTok, and Twitter.",
-      "url": "https://your-domain.com",
-      "applicationCategory": "BusinessApplication"
-    }
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How to write a professional bio?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Use SparkVibe’s AI bio generator to create SEO-optimized, professional bios tailored for platforms like LinkedIn, Instagram, TikTok, or Twitter. Input your purpose, tone, and platform, and get a bio in seconds."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the best AI bio generator for 2025?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "SparkVibe is the leading AI bio generator for 2025, offering free, SEO-optimized bios for social media platforms with customizable tones and themes."
+        }
+      }
+    ]
+  }
   </script>
 </head>
-<body>
+<body class="dark-theme">
   <div id="particle-bg"></div>
   <div class="container">
-    <h1>SparkVibe</h1>
-    <p class="tagline">Craft Viral Bios with AI — Free, Fast, and Always On-Brand</p>
-    <p class="social-proof">Join 10,000+ creators using SparkVibe</p>
-    <p class="free">Free Forever. No Login Needed.</p>
-    <button id="darkModeToggle" class="dark-mode-btn">🌙 Dark Mode</button>
+    <h1>SparkVibe - AI Bio Generator for Social Media</h1>
+    <p class="tagline">Craft SEO-Optimized Professional Bios with AI</p>
+    <p class="social-proof">Trusted by 20,000+ creators and brands worldwide</p>
+    <p class="free">Free Forever. No Login Required.</p>
+
+    <button id="themeToggle" class="theme-btn">🌙 Dark Theme</button>
+    <div class="theme-selector">
+      <label for="themeSelect">Choose Theme:</label>
+      <select id="themeSelect">
+        <option value="dark-theme">Dark</option>
+        <option value="light-theme">Light</option>
+        <option value="cosmic-theme">Cosmic</option>
+        <option value="ocean-theme">Ocean</option>
+        <option value="forest-theme">Forest</option>
+      </select>
+    </div>
+
     <form id="bioForm">
-      <label for="businessType">Business Type</label>
-      <input type="text" id="businessType" placeholder="e.g., Barber Shop" required>
-      <label for="location">Location (Optional)</label>
-      <input type="text" id="location" placeholder="e.g., New York">
+      <label for="bioPurpose">Bio Purpose (e.g., Personal Branding, Business)</label>
+      <input type="text" id="bioPurpose" placeholder="e.g., Digital Marketing, Bakery Business" required>
+      
+      <label for="location">Location (Optional, e.g., New York, NY)</label>
+      <input type="text" id="location" placeholder="e.g., New York, NY for local SEO">
+      
       <label for="platform">Platform</label>
-      <select id="platform" required>
-        <option value="" disabled selected>Choose Your Platform</option>
+      <select id="platform">
         <option value="Instagram">📸 Instagram (150 chars)</option>
         <option value="LinkedIn">💼 LinkedIn (2000 chars)</option>
         <option value="TikTok">🎥 TikTok (80 chars)</option>
         <option value="Twitter">🐦 Twitter/X (160 chars)</option>
       </select>
+
       <label for="tone">Tone</label>
-      <select id="tone" required>
-        <option value="" disabled selected>Choose Your Tone</option>
-        <option value="professional">💼 Professional</option>
-        <option value="friendly">😄 Friendly</option>
-        <option value="luxury">✨ Luxury</option>
+      <select id="tone">
+        <option value="Professional">💼 Professional</option>
+        <option value="Friendly">😄 Friendly</option>
+        <option value="Luxury">✨ Luxury</option>
+        <option value="Sad">😔 Sad</option>
+        <option value="Happy">😊 Happy</option>
+        <option value="Excited">🎉 Excited</option>
+        <option value="Witty">😎 Witty</option>
       </select>
-      <div class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></div>
-      <button type="submit" class="glowing">🔥 Generate My Bio</button>
+
+      <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
+      <button type="submit" class="glowing">🚀 Generate My SEO-Optimized Bio</button>
     </form>
-    <div id="loading" class="loading hidden">
-      <div class="spinner"></div> Generating Your Bio...
+
+    <div id="loading" class="loading">
+      <span class="spinner"></span> Crafting Your SEO-Optimized Bio...
     </div>
-    <div id="bioOutput"></div>
-    <button id="copyBio" class="copy-btn hidden">📋 Copy Bio</button>
-    <div class="share-buttons">
-      <button id="shareTwitter">Share on Twitter/X 🐦</button>
+
+    <p id="bioOutput"></p>
+    <button id="copyBio" class="copy-btn">📋 Copy Bio</button>
+    <a id="shareTwitter" class="share-btn" href="#" target="_blank">Share on Twitter/X 🐦</a>
+
+    <div class="seo-guide">
+      <h2>SEO Guide: Boost Your Online Presence</h2>
+      <p>Use SparkVibe’s AI bio generator to create bios that rank higher on platforms like LinkedIn and Instagram. Here’s how to maximize your bio’s SEO impact:</p>
+      <ul>
+        <li><strong>Include Keywords</strong>: Add terms like “digital marketing expert” or “professional bio” to your bio for better platform search rankings.</li>
+        <li><strong>Use Hashtags</strong>: On Instagram and TikTok, include hashtags (e.g., #PersonalBranding) to increase discoverability.</li>
+        <li><strong>Link to Your Site</strong>: Add a trackable link (e.g., yoursite.com/?utm_source=sparkvibe) to monitor traffic in Google Analytics.</li>
+        <li><strong>Update Regularly</strong>: Refresh your bio monthly to align with trending keywords and maintain relevance.</li>
+        <li><strong>Download Our SEO Checklist</strong>: <a href="/seo-checklist.pdf" download>Free SEO Checklist</a> to optimize your profiles.</li>
+      </ul>
     </div>
+
     <div class="history">
-      <h2>Saved Bios</h2>
+      <h2>Saved SEO-Optimized Bios</h2>
       <ul id="bioHistory"></ul>
     </div>
+
     <div class="testimonials">
-      <h2>What Creators Say</h2>
-      <p>"SparkVibe made my Instagram bio pop!" – Alex, Salon Owner</p>
-      <p>"Perfect for TikTok branding!" – Mia, Content Creator</p>
+      <h2>What Creators Say About Our AI Bio Generator</h2>
+      <p>"SparkVibe’s AI bio generator boosted my LinkedIn ranking with a professional bio!" – Sarah, Digital Marketer</p>
+      <p>"My SEO-optimized TikTok bio drives traffic to my site!" – Jake, Fitness Influencer</p>
+      <p>"The best free AI bio generator for Instagram in 2025!" – Emma, Freelance Artist</p>
     </div>
-    <p class="footer">Powered by STX Tech</p>
+
+    <p class="footer">Powered by STX Tech & OpenAI | <a href="/seo-guide">Learn More About SEO</a></p>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vanilla-tilt/1.7.0/vanilla-tilt.min.js"></script>
-  <script src="script.js"></script>
+
+  <script src="/script.js"></script>
 </body>
 </html>
