@@ -23,7 +23,7 @@ const openai = new OpenAI({
 });
 
 // Toggle for mock response (set to true to bypass OpenAI API for testing)
-const USE_MOCK_RESPONSE = false;
+const USE_MOCK_RESPONSE = true;
 
 // Route to generate bio
 app.post('/generate-bio', async (req, res) => {
@@ -58,13 +58,13 @@ app.post('/generate-bio', async (req, res) => {
       // Call OpenAI API
       console.log('Calling OpenAI API with prompt:', prompt);
       const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo', // Fallback to a more stable model (as of May 2025)
+        model: 'gpt-3.5-turbo', // Fallback to a stable model
         messages: [
           { role: 'system', content: 'You are a professional bio writer specializing in SEO-optimized social media bios.' },
           { role: 'user', content: prompt }
         ],
-        max_tokens: Math.ceil(maxLength / 4), // Approximate tokens for character limit
-        temperature: 0.7, // Balanced creativity
+        max_tokens: Math.ceil(maxLength / 4),
+        temperature: 0.7,
       });
 
       // Extract the generated bio
