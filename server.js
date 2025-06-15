@@ -1,6 +1,7 @@
 const express = require('express');
 const OpenAI = require('openai');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 // Load environment variables
 dotenv.config();
@@ -9,8 +10,9 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // Middleware
-app.use(express.static('.')); // Serve static files from root
+app.use(express.static('.'));
 app.use(express.json());
+app.use(cors());
 
 // Validate OpenAI API key
 if (!process.env.OPENAI_API_KEY) {
@@ -22,21 +24,17 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Toggle for mock response (set to true to bypass OpenAI API for testing)
-const USE_MOCK_RESPONSE = true;
+// In-memory storage for saved bios (replace with database in production)
+const savedBios = [];
 
-// Route to generate bio
 app.post('/generate-bio', async (req, res) => {
   try {
     const { bioPurpose, location, tone, platform } = req.body;
 
-    // Validate request body
     if (!bioPurpose || !platform) {
-      console.warn('Invalid request: bioPurpose or platform missing', req.body);
       return res.status(400).json({ error: 'bioPurpose and platform are required' });
     }
 
-    // Define platform-specific character limits
     const platformCharLimits = {
       Instagram: 150,
       LinkedIn: 2000,
@@ -45,69 +43,54 @@ app.post('/generate-bio', async (req, res) => {
     };
     const maxLength = platformCharLimits[platform] || 150;
 
-    // Construct the prompt
     const prompt = `Generate a ${tone} bio for ${platform} with the purpose of "${bioPurpose}"${location ? `, based in ${location}` : ''}. Keep it under ${maxLength} characters, SEO-optimized, and engaging.`;
 
-    let bio;
+    const response = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        { role: 'system', content: 'You are a professional bio writer specializing in SEO-optimized social media bios.' },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: Math.ceil(maxLength / 4),
+      temperature: 0.7,
+    });
 
-    if (USE_MOCK_RESPONSE) {
-      // Mock response for testing
-      console.log('Using mock response for /generate-bio');
-      bio = `${bioPurpose} | ${tone.charAt(0).toUpperCase() + tone.slice(1)} & Engaging${location ? ` | Based in ${location}` : ''} | #${platform}`;
-    } else {
-      // Call OpenAI API
-      console.log('Calling OpenAI API with prompt:', prompt);
-      const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo', // Fallback to a stable model
-        messages: [
-          { role: 'system', content: 'You are a professional bio writer specializing in SEO-optimized social media bios.' },
-          { role: 'user', content: prompt }
-        ],
-        max_tokens: Math.ceil(maxLength / 4),
-        temperature: 0.7,
-      });
-
-      // Extract the generated bio
-      bio = response.choices[0]?.message?.content?.trim();
-      if (!bio) {
-        throw new Error('No bio generated from OpenAI response');
-      }
-
-      console.log('OpenAI API response:', bio);
+    const bio = response.choices[0]?.message?.content?.trim();
+    if (!bio) {
+      throw new Error('No bio generated from OpenAI response');
     }
 
-    // Ensure bio is within character limit
     const finalBio = bio.length > maxLength ? bio.substring(0, maxLength - 3) + '...' : bio;
-
-    // Send success response
     res.status(200).json({ bio: finalBio });
   } catch (error) {
-    // Log detailed error information
-    console.error('Error in /generate-bio:', {
-      message: error.message,
-      stack: error.stack,
-      response: error.response?.data || 'No response data',
-      status: error.response?.status,
-    });
-
-    // Send detailed error response
-    let errorMessage = 'Failed to generate bio';
-    if (error.message.includes('api key')) {
-      errorMessage += ': Invalid or missing API key. Please check your OPENAI_API_KEY.';
-    } else if (error.message.includes('model')) {
-      errorMessage += ': Model not available. Please check the model name or your API permissions.';
-    } else {
-      errorMessage += `: ${error.message}`;
-    }
-
-    res.status(500).json({
-      error: errorMessage,
-      details: error.response?.data || 'No additional details available',
-    });
+    console.error('Error in /generate-bio:', error);
+    res.status(500).json({ error: `Failed to generate bio: ${error.message}` });
   }
 });
 
-// Start the server
+// Save Bio Endpoint
+app.post('/save-bio', async (req, res) => {
+  try {
+    const { email, bio, platform } = req.body;
+    if (!email || !bio || !platform) {
+      return res.status(400).json({ error: 'Email, bio, and platform are required' });
+    }
+
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({ error: 'Invalid email address' });
+    }
+
+    // Store bio (in-memory for demo; use database in production)
+    savedBios.push({ email, bio, platform, timestamp: new Date() });
+    res.status(200).json({ message: 'Bio saved successfully' });
+  } catch (error) {
+    console.error('Error in /save-bio:', error);
+    res.status(500).json({ error: `Failed to save bio: ${error.message}` });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
