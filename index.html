@@ -3,18 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Create SEO-optimized AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Free, fast, and professional with SparkVibe!">
+  <meta name="description" content="Create SEO-optimized AI bios for Instagram, LinkedIn, TikTok, and Twitter with SparkVibe’s free, fast, and professional bio generator!">
   <meta name="keywords" content="AI bio generator, social media bio generator, professional bio generator, SEO content generator, Instagram bio, LinkedIn bio, TikTok bio, Twitter bio">
   <meta name="author" content="SparkVibe">
   <meta property="og:title" content="AI Bio Generator | SparkVibe - Free Social Media Bios">
   <meta property="og:description" content="Craft SEO-optimized bios with SparkVibe’s AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Free, professional, and tailored to you!">
   <meta property="og:image" content="https://sparkvibe-q09j.onrender.com/og-image.jpg">
   <meta property="og:url" content="https://sparkvibe-q09j.onrender.com">
+  <meta property="og:type" content="website">
   <title>AI Bio Generator | SparkVibe - Free Social Media Bios</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="manifest" href="/manifest.json">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-XXXXXXXXXX');
+  </script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -34,16 +44,35 @@
 </head>
 <body class="dark-theme">
   <div id="particle-bg"></div>
-  <div class="container">
+  <div class="container" role="main" aria-label="AI Bio Generator">
+    <div class="early-user-badge">🔥 You’re in the Top 5% of Early Users!</div>
     <h1>SparkVibe - AI Bio Generator</h1>
     <p class="tagline">Craft Neon-Powered SEO-Optimized Bios</p>
     <p class="social-proof">Trusted by 20,000+ creators worldwide</p>
     <p class="free">Free Forever. No Login Required.</p>
 
-    <button id="themeToggle" class="theme-btn">🌙 Dark Theme</button>
+    <!-- Sample Bio Previews Slider -->
+    <div class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
+      <h2>Preview Sample Bios</h2>
+      <div class="slider">
+        <div class="slide active" data-type="Business">
+          <p><strong>Business (LinkedIn):</strong> Digital Marketing Expert | Boosting brands with data-driven strategies | NYC | #Marketing</p>
+        </div>
+        <div class="slide" data-type="Creator">
+          <p><strong>Creator (Instagram):</strong> Content Creator | Sharing vibes & inspo | DM for collabs! 🌟 #CreatorLife</p>
+        </div>
+        <div class="slide" data-type="Funny">
+          <p><strong>Funny (Twitter):</strong> Professional meme curator | Coffee addict | Tweeting my chaos daily 😂 #MemeLord</p>
+        </div>
+      </div>
+      <button class="slider-prev" aria-label="Previous slide">←</button>
+      <button class="slider-next" aria-label="Next slide">→</button>
+    </div>
+
+    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Theme</button>
     <div class="theme-selector">
       <label for="themeSelect">Choose Theme:</label>
-      <select id="themeSelect">
+      <select id="themeSelect" aria-label="Select theme">
         <option value="dark-theme">Dark</option>
         <option value="light-theme">Light</option>
         <option value="cosmic-theme">Cosmic</option>
@@ -52,15 +81,15 @@
       </select>
     </div>
 
-    <form id="bioForm">
+    <form id="bioForm" aria-label="Bio generation form">
       <label for="bioPurpose">Bio Purpose (e.g., Personal Branding, Business)</label>
-      <input type="text" id="bioPurpose" placeholder="e.g., Digital Marketing, Bakery Business" required>
+      <input type="text" id="bioPurpose" placeholder="e.g., Digital Marketing, Bakery Business" required aria-required="true">
       
       <label for="location">Location (Optional, e.g., New York, NY)</label>
       <input type="text" id="location" placeholder="e.g., New York, NY">
       
       <label for="platform">Platform</label>
-      <select id="platform">
+      <select id="platform" aria-label="Select social media platform">
         <option value="Instagram">📸 Instagram (150 chars)</option>
         <option value="LinkedIn">💼 LinkedIn (2000 chars)</option>
         <option value="TikTok">🎥 TikTok (80 chars)</option>
@@ -68,7 +97,7 @@
       </select>
 
       <label for="tone">Tone</label>
-      <select id="tone">
+      <select id="tone" aria-label="Select tone">
         <option value="Professional">💼 Professional</option>
         <option value="Friendly">😄 Friendly</option>
         <option value="Luxury">✨ Luxury</option>
@@ -79,30 +108,104 @@
       </select>
 
       <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
-      <button type="submit" class="glowing">🚀 Generate My SEO-Optimized Bio</button>
+      <button type="submit" class="glowing" aria-label="Generate bio">🚀 Generate My SEO-Optimized Bio</button>
     </form>
 
-    <div id="loading" class="loading">
+    <div id="loading" class="loading" role="alert" aria-live="polite">
       <span class="spinner"></span> Crafting Your Bio...
     </div>
 
-    <p id="bioOutput"></p>
-    <button id="copyBio" class="copy-btn">📋 Copy Bio</button>
-    <a id="shareTwitter" class="share-btn" href="#" target="_blank">Share on Twitter/X 🐦</a>
-
-    <div class="seo-guide">
-      <h2>SEO Guide: Boost Your Online Presence</h2>
-      <p>Use SparkVibe’s AI bio generator to create bios that rank higher on platforms like LinkedIn and Instagram.</p>
-      <ul>
-        <li><strong>Include Keywords</strong>: Add terms like “digital marketing expert” for better search rankings.</li>
-        <li><strong>Use Hashtags</strong>: Include hashtags (e.g., #PersonalBranding) on Instagram/TikTok.</li>
-        <li><strong>Link Your Site</strong>: Add a trackable link to monitor traffic.</li>
-      </ul>
+    <p id="bioOutput" aria-live="polite"></p>
+    <div class="bio-actions">
+      <button id="copyBio" class="copy-btn" aria-label="Copy generated bio">📋 Copy Bio</button>
+      <button id="downloadBio" class="copy-btn" aria-label="Download bio as text">📥 Download Bio</button>
+      <a id="shareTwitter" class="share-btn" href="#" target="_blank" aria-label="Share on Twitter/X">Share on Twitter/X 🐦</a>
+      <a id="shareLinkedIn" class="share-btn" href="#" target="_blank" aria-label="Share on LinkedIn">Share on LinkedIn 💼</a>
     </div>
 
-    <p class="footer">Powered by STX Tech & OpenAI</p>
+    <div class="save-bio" role="region" aria-label="Save bio">
+      <label for="saveEmail">Want to save this bio? Enter your email:</label>
+      <input type="email" id="saveEmail" placeholder="your.email@example.com">
+      <button id="saveBio" class="glowing" aria-label="Save bio">💾 Save Bio</button>
+    </div>
+
+    <div class="blog-section" role="region" aria-label="Blog articles">
+      <h2>Boost Your Online Presence</h2>
+      <div class="blog-posts">
+        <div class="blog-post">
+          <h3><a href="/blog/best-bio-generator-for-linkedin">Best Bio Generator for LinkedIn</a></h3>
+          <p>Learn how to craft a professional LinkedIn bio that ranks higher and attracts recruiters.</p>
+        </div>
+        <div class="blog-post">
+          <h3><a href="/blog/how-to-write-instagram-bio">How to Write a Professional Instagram Bio</a></h3>
+          <p>Discover tips to create an Instagram bio that boosts your followers and engagement.</p>
+        </div>
+        <div class="blog-post">
+          <h3><a href="/blog/ai-tools-personal-branding">AI Tools for Personal Branding</a></h3>
+          <p>Explore the best AI tools to elevate your personal brand across social media.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Testimonials Section -->
+    <div class="testimonials" role="region" aria-label="User testimonials">
+      <h2>What Our Users Say</h2>
+      <div class="testimonials-carousel" role="listbox">
+        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option" aria-selected="true">
+          <div class="avatar">
+            <img src="/avatars/creativepro.jpg" alt="CreativePro avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+            <span class="avatar-fallback">CP</span>
+          </div>
+          <div class="rating">⭐⭐⭐⭐⭐</div>
+          <p>"SparkVibe made my LinkedIn bio 10x sharper!"</p>
+          <div class="user-info">
+            <span class="username">@CreativePro</span>
+            <span class="platform">LinkedIn</span>
+            <span class="verified">✔ Verified User</span>
+          </div>
+        </div>
+        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option">
+          <div class="avatar">
+            <img src="/avatars/vibecreator.jpg" alt="VibeCreator avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+            <span class="avatar-fallback">VC</span>
+          </div>
+          <div class="rating">⭐⭐⭐⭐⭐</div>
+          <p>"Easiest way to get a professional TikTok bio!"</p>
+          <div class="user-info">
+            <span class="username">@VibeCreator</span>
+            <span class="platform">TikTok</span>
+            <span class="verified">✔ Verified User</span>
+          </div>
+        </div>
+        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option">
+          <div class="avatar">
+            <img src="/avatars/digitalnomad.jpg" alt="DigitalNomad avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
+            <span class="avatar-fallback">DN</span>
+          </div>
+          <div class="rating">⭐⭐⭐⭐⭐</div>
+          <p>"My Twitter bio now gets more clicks!"</p>
+          <div class="user-info">
+            <span class="username">@DigitalNomad</span>
+            <span class="platform">Twitter</span>
+            <span class="verified">✔ Verified User</span>
+          </div>
+        </div>
+      </div>
+      <div class="carousel-controls">
+        <button class="carousel-prev" aria-label="Previous testimonial">←</button>
+        <div class="carousel-dots"></div>
+        <button class="carousel-next" aria-label="Next testimonial">→</button>
+      </div>
+    </div>
+
+    <div class="affiliate-banner" role="region" aria-label="Affiliate promotion">
+      <p>Want to launch your bio as a full personal brand? <a href="https://www.canva.com" target="_blank" rel="noopener">Try Canva for stunning designs!</a></p>
+    </div>
+
+    <p class="footer">Powered by STX Tech & OpenAI | <a href="/privacy">Privacy Policy</a></p>
   </div>
 
   <script src="/script.js"></script>
+  <script src="/service-worker.js"></script>
 </body>
 </html>
