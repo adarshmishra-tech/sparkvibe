@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Create SEO-optimized AI bios for Instagram, LinkedIn, TikTok, and Twitter with SparkVibe’s free, fast, and professional bio generator!">
-  <meta name="keywords" content="AI bio generator, social media bio generator, professional bio generator, SEO content generator, Instagram bio, LinkedIn bio, TikTok bio, Twitter bio">
+  <meta name="description" content="Create SEO-optimized AI bios for Instagram, LinkedIn, TikTok, and Twitter with SparkVibe’s premium bio generator!">
+  <meta name="keywords" content="AI bio generator, social media bio generator, premium bio generator, SEO content generator, Instagram bio, LinkedIn bio, TikTok bio, Twitter bio">
   <meta name="author" content="SparkVibe">
-  <meta property="og:title" content="AI Bio Generator | SparkVibe - Free Social Media Bios">
-  <meta property="og:description" content="Craft SEO-optimized bios with SparkVibe’s AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Free, professional, and tailored to you!">
+  <meta property="og:title" content="Premium AI Bio Generator | SparkVibe">
+  <meta property="og:description" content="Craft SEO-optimized bios with SparkVibe’s premium AI bio generator for Instagram, LinkedIn, TikTok, and Twitter. Upgrade for exclusive features!">
   <meta property="og:image" content="https://sparkvibe-q09j.onrender.com/og-image.jpg">
   <meta property="og:url" content="https://sparkvibe-q09j.onrender.com">
   <meta property="og:type" content="website">
-  <title>AI Bio Generator | SparkVibe - Free Social Media Bios</title>
+  <title>Premium AI Bio Generator | SparkVibe</title>
   <link rel="stylesheet" href="/styles.css">
   <link rel="manifest" href="/manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js"></script>
-  <!-- Google Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fingerprintjs2@2.1.4/fingerprint2.min.js"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -29,8 +30,8 @@
   {
     "@context": "https://schema.org",
     "@type": "WebApplication",
-    "name": "SparkVibe AI Bio Generator",
-    "description": "Free AI bio generator to create SEO-optimized professional bios for Instagram, LinkedIn, TikTok, and Twitter.",
+    "name": "SparkVibe Premium AI Bio Generator",
+    "description": "Premium AI bio generator to create SEO-optimized professional bios for Instagram, LinkedIn, TikTok, and Twitter.",
     "url": "https://sparkvibe-q09j.onrender.com",
     "applicationCategory": "Content Creation",
     "operatingSystem": "All",
@@ -45,13 +46,14 @@
 <body class="dark-theme">
   <div id="particle-bg"></div>
   <div class="container" role="main" aria-label="AI Bio Generator">
-    <div class="early-user-badge">🔥 You’re in the Top 5% of Early Users!</div>
-    <h1>SparkVibe - AI Bio Generator</h1>
-    <p class="tagline">Craft Neon-Powered SEO-Optimized Bios</p>
-    <p class="social-proof">Trusted by 20,000+ creators worldwide</p>
-    <p class="free">Free Forever. No Login Required.</p>
+    <div class="early-user-badge">🔥 Early Adopter: Limited Spots for Diamond Plan!</div>
+    <h1>SparkVibe - Premium AI Bio Generator</h1>
+    <p class="tagline">Craft SEO-Optimized Bios with Elite & Diamond Plans</p>
+    <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
+    <p class="premium-cta">Start Free, Upgrade for Premium Features!</p>
+    <a href="#pricing" class="glowing cta-btn">Unlock Your Premium Bio Now</a>
+    <div class="countdown-timer">Limited Offer: Elite Plan Discount Ends in <span id="timer">24:00:00</span></div>
 
-    <!-- Sample Bio Previews Slider -->
     <div class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
       <h2>Preview Sample Bios</h2>
       <div class="slider">
@@ -69,11 +71,11 @@
       <button class="slider-next" aria-label="Next slide">→</button>
     </div>
 
-    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌙 Dark Theme</button>
+    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme" disabled title="Upgrade to Elite for Themes">🌙 Dark Theme</button>
     <div class="theme-selector">
-      <label for="themeSelect">Choose Theme:</label>
-      <select id="themeSelect" aria-label="Select theme">
-        <option value="dark-theme">Dark</option>
+      <label for="themeSelect">Choose Theme (Elite/Diamond):</label>
+      <select id="themeSelect" aria-label="Select theme" disabled>
+        <option value="dark-theme">Dark (Free)</option>
         <option value="light-theme">Light</option>
         <option value="cosmic-theme">Cosmic</option>
         <option value="ocean-theme">Ocean</option>
@@ -98,13 +100,13 @@
 
       <label for="tone">Tone</label>
       <select id="tone" aria-label="Select tone">
-        <option value="Professional">💼 Professional</option>
-        <option value="Friendly">😄 Friendly</option>
-        <option value="Luxury">✨ Luxury</option>
-        <option value="Sad">😔 Sad</option>
-        <option value="Happy">😊 Happy</option>
-        <option value="Excited">🎉 Excited</option>
-        <option value="Witty">😎 Witty</option>
+        <option value="Professional">💼 Professional (Free)</option>
+        <option value="Friendly" disabled>😄 Friendly (Elite/Diamond)</option>
+        <option value="Luxury" disabled>✨ Luxury (Elite/Diamond)</option>
+        <option value="Sad" disabled>😔 Sad (Elite/Diamond)</option>
+        <option value="Happy" disabled>😊 Happy (Elite/Diamond)</option>
+        <option value="Excited" disabled>🎉 Excited (Elite/Diamond)</option>
+        <option value="Witty" disabled>😎 Witty (Elite/Diamond)</option>
       </select>
 
       <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
@@ -119,14 +121,21 @@
     <div class="bio-actions">
       <button id="copyBio" class="copy-btn" aria-label="Copy generated bio">📋 Copy Bio</button>
       <button id="downloadBio" class="copy-btn" aria-label="Download bio as text">📥 Download Bio</button>
+      <button id="bioAnalytics" class="copy-btn" aria-label="View bio analytics" disabled title="Upgrade to Elite for Analytics">📊 Bio Analytics</button>
       <a id="shareTwitter" class="share-btn" href="#" target="_blank" aria-label="Share on Twitter/X">Share on Twitter/X 🐦</a>
       <a id="shareLinkedIn" class="share-btn" href="#" target="_blank" aria-label="Share on LinkedIn">Share on LinkedIn 💼</a>
     </div>
 
     <div class="save-bio" role="region" aria-label="Save bio">
-      <label for="saveEmail">Want to save this bio? Enter your email:</label>
+      <label for="saveEmail">Save Your Bio & Get Premium Updates:</label>
       <input type="email" id="saveEmail" placeholder="your.email@example.com">
       <button id="saveBio" class="glowing" aria-label="Save bio">💾 Save Bio</button>
+    </div>
+
+    <div class="upsell-section" role="region" aria-label="Personal branding kit">
+      <h2>Level Up Your Brand</h2>
+      <p>Get our <strong>Personal Branding Kit</strong> with Canva templates and LinkedIn coaching!</p>
+      <a href="https://www.canva.com" target="_blank" class="glowing cta-btn">Get the Kit Now</a>
     </div>
 
     <div class="blog-section" role="region" aria-label="Blog articles">
@@ -147,45 +156,44 @@
       </div>
     </div>
 
-    <!-- Enhanced Testimonials Section -->
     <div class="testimonials" role="region" aria-label="User testimonials">
       <h2>What Our Users Say</h2>
       <div class="testimonials-carousel" role="listbox">
-        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option" aria-selected="true">
+        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option" aria-selected="true">
           <div class="avatar">
-            <img src="/avatars/creativepro.jpg" alt="CreativePro avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-            <span class="avatar-fallback">CP</span>
+            <img src="/avatars/aditi.jpg" alt="Aditi Singh avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <span class="avatar-fallback">AS</span>
           </div>
-          <div class="rating">⭐⭐⭐⭐⭐</div>
-          <p>"SparkVibe made my LinkedIn bio 10x sharper!"</p>
+          <div class="rating">★★★★★</div>
+          <p>"SparkVibe’s Elite plan made my LinkedIn bio a game-changer!"</p>
           <div class="user-info">
-            <span class="username">@CreativePro</span>
+            <span class="username">Aditi Singh</span>
             <span class="platform">LinkedIn</span>
             <span class="verified">✔ Verified User</span>
           </div>
         </div>
-        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option">
+        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option">
           <div class="avatar">
-            <img src="/avatars/vibecreator.jpg" alt="VibeCreator avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-            <span class="avatar-fallback">VC</span>
+            <img src="/avatars/liam.jpg" alt="Liam O’Connor avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <span class="avatar-fallback">LO</span>
           </div>
-          <div class="rating">⭐⭐⭐⭐⭐</div>
-          <p>"Easiest way to get a professional TikTok bio!"</p>
+          <div class="rating">★★★★★</div>
+          <p>"Diamond plan’s custom templates skyrocketed my TikTok presence!"</p>
           <div class="user-info">
-            <span class="username">@VibeCreator</span>
+            <span class="username">Liam O’Connor</span>
             <span class="platform">TikTok</span>
             <span class="verified">✔ Verified User</span>
           </div>
         </div>
-        <div class="testimonial-card" data-tilt data-tilt-max="5" data-tilt-speed="1000" role="option">
+        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option">
           <div class="avatar">
-            <img src="/avatars/digitalnomad.jpg" alt="DigitalNomad avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='block';">
-            <span class="avatar-fallback">DN</span>
+            <img src="/avatars/elena.jpg" alt="Elena Rossi avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+            <span class="avatar-fallback">ER</span>
           </div>
-          <div class="rating">⭐⭐⭐⭐⭐</div>
-          <p>"My Twitter bio now gets more clicks!"</p>
+          <div class="rating">★★★★★</div>
+          <p>"My Twitter bio now drives insane engagement with Elite!"</p>
           <div class="user-info">
-            <span class="username">@DigitalNomad</span>
+            <span class="username">Elena Rossi</span>
             <span class="platform">Twitter</span>
             <span class="verified">✔ Verified User</span>
           </div>
@@ -198,11 +206,83 @@
       </div>
     </div>
 
-    <div class="affiliate-banner" role="region" aria-label="Affiliate promotion">
-      <p>Want to launch your bio as a full personal brand? <a href="https://www.canva.com" target="_blank" rel="noopener">Try Canva for stunning designs!</a></p>
+    <div class="recommended-tools" role="region" aria-label="Recommended tools">
+      <h2>Recommended Tools for Creators</h2>
+      <div class="tools-grid">
+        <div class="tool-card">
+          <h3>Canva</h3>
+          <p>Create stunning visuals for your brand.</p>
+          <a href="https://www.canva.com" target="_blank" class="glowing">Try Canva</a>
+        </div>
+        <div class="tool-card">
+          <h3>Grammarly</h3>
+          <p>Polish your content with perfect grammar.</p>
+          <a href="https://www.grammarly.com" target="_blank" class="glowing">Try Grammarly</a>
+        </div>
+        <div class="tool-card">
+          <h3>Hootsuite</h3>
+          <p>Manage your social media effortlessly.</p>
+          <a href="https://www.hootsuite.com" target="_blank" class="glowing">Try Hootsuite</a>
+        </div>
+      </div>
     </div>
 
-    <p class="footer">Powered by STX Tech & OpenAI | <a href="/privacy">Privacy Policy</a></p>
+    <div class="pricing-section" id="pricing" role="region" aria-label="Pricing plans">
+      <h2>Choose Your Plan</h2>
+      <canvas id="pricingChart" width="400" height="200"></canvas>
+      <div class="pricing-details">
+        <div class="pricing-card">
+          <h3>Free</h3>
+          <p class="price">$0/month</p>
+          <p class="description">Perfect for trying out SparkVibe with basic features to craft SEO-optimized bios.</p>
+          <ul>
+            <li>3 Bios/Day</li>
+            <li>Basic AI Model (GPT-3.5)</li>
+            <li>Dark Theme Only</li>
+            <li>Professional Tone</li>
+          </ul>
+          <button class="glowing cta-btn" disabled>Current Plan</button>
+        </div>
+        <div class="pricing-card popular">
+          <h3>Elite</h3>
+          <p class="price">$9.99/month</p>
+          <p class="description">Unlock unlimited bios, advanced AI, and analytics to dominate your social presence.</p>
+          <ul>
+            <li>Unlimited Bios</li>
+            <li>Advanced AI Model (GPT-4 Turbo)</li>
+            <li>All Themes & Tones</li>
+            <li>Bio Analytics (SEO & Engagement)</li>
+          </ul>
+          <a href="/subscribe/elite" class="glowing cta-btn">Buy Now</a>
+        </div>
+        <div class="pricing-card">
+          <h3>Diamond</h3>
+          <p class="price">$19.99/month</p>
+          <p class="description">The ultimate plan with premium AI, custom templates, and personal branding consultation.</p>
+          <ul>
+            <li>All Elite Features</li>
+            <li>Premium AI Model (GPT-4o)</li>
+            <li>Custom Templates</li>
+            <li>Personal Branding Consultation</li>
+          </ul>
+          <a href="/subscribe/diamond" class="glowing cta-btn">Buy Now</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="subscription-modal" id="subscriptionModal" role="dialog" aria-label="Upgrade plan modal">
+      <div class="modal-content">
+        <h2>Unlock Premium Features!</h2>
+        <p>You’ve reached your daily limit of 3 free bios. Upgrade to Elite or Diamond for unlimited bios, advanced AI, and exclusive tools.</p>
+        <div class="modal-buttons">
+          <a href="/subscribe/elite" class="glowing cta-btn">Go Elite</a>
+          <a href="/subscribe/diamond" class="glowing cta-btn">Go Diamond</a>
+          <button class="close-modal" aria-label="Close modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="footer">Powered by STX Tech & OpenAI | <a href="/privacy">Privacy Policy</a> | <a href="/terms">Terms of Service</a></p>
   </div>
 
   <script src="/script.js"></script>
