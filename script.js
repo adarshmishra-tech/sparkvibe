@@ -21,10 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     velocities[i3] = (Math.random() - 0.5) * 0.006;
     velocities[i3 + 1] = (Math.random() - 0.5) * 0.006;
     velocities[i3 + 2] = (Math.random() - 0.5) * 0.006;
-    const colorChoice = Math.random();
-    colors[i3] = colorChoice < 0.33 ? 0 : colorChoice < 0.66 ? 1 : 0.5;
-    colors[i3 + 1] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 0 : 0.5;
-    colors[i3 + 2] = colorChoice < 0.33 ? 1 : colorChoice < 0.66 ? 1 : 1;
+    colors[i3] = Math.random() < 0.5 ? 0.2 : 1;
+    colors[i3 + 1] = Math.random() < 0.5 ? 0.2 : 0.8;
+    colors[i3 + 2] = 1;
     sizes[i] = 0.2 + Math.random() * 0.3;
   }
 
@@ -110,11 +109,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // 3D Tilt Effect
   VanillaTilt.init(document.querySelector('.container'), {
-    max: 5,
-    speed: 1000,
+    max: 10,
+    speed: 600,
     glare: true,
-    'max-glare': 0.3
+    'max-glare': 0.4
   });
+
+  // Browser Fingerprinting
+  let clientId = localStorage.getItem('sparkvibe_client_id');
+  if (!clientId) {
+    Fingerprint2.get(components => {
+      const values = components.map(component => component.value);
+      clientId = Fingerprint2.x64hash128(values.join(''), 31);
+      localStorage.setItem('sparkvibe_client_id', clientId);
+    });
+  }
+
+  // Countdown Timer
+  const timer = document.getElementById('timer');
+  function updateTimer() {
+    const endTime = new Date();
+    endTime.setHours(23, 59, 59, 999);
+    const now = new Date();
+    const diff = endTime - now;
+    if (diff <= 0) {
+      timer.textContent = '00:00:00';
+      return;
+    }
+    const hours = Math.floor(diff / 3600000);
+    const minutes = Math.floor((diff % 3600000) / 60000);
+    const seconds = Math.floor((diff % 60000) / 1000);
+    timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  }
+  setInterval(updateTimer, 1000);
 
   // Theme Toggle
   const themeSelect = document.getElementById('themeSelect');
@@ -126,16 +153,14 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   themeToggle.addEventListener('click', () => {
-    const currentTheme = themeSelect.value;
-    applyTheme(currentTheme);
+    alert('Upgrade to Elite or Diamond to unlock premium themes!');
   });
 
   themeSelect.addEventListener('change', () => {
-    const newTheme = themeSelect.value;
-    applyTheme(newTheme);
+    alert('Upgrade to Elite or Diamond to unlock premium themes!');
   });
 
-  applyTheme(themeSelect.value);
+  applyTheme('dark-theme');
 
   // Character Counter
   const platformSelect = document.getElementById('platform');
@@ -185,11 +210,67 @@ document.addEventListener('DOMContentLoaded', () => {
     showSlide(currentSlide);
   });
 
-  // Auto-scroll for bio preview slider
   setInterval(() => {
     currentSlide = (currentSlide + 1) % slides.length;
     showSlide(currentSlide);
   }, 5000);
+
+  // Pricing Chart
+  const ctx = document.getElementById('pricingChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Free', 'Elite', 'Diamond'],
+      datasets: [{
+        label: 'Features',
+        data: [3, 10, 15], // Arbitrary scale for visualization
+        backgroundColor: [
+          'rgba(0, 230, 255, 0.4)',
+          'rgba(255, 215, 0, 0.6)',
+          'rgba(255, 0, 204, 0.6)'
+        ],
+        borderColor: [
+          'rgba(0, 230, 255, 1)',
+          'rgba(255, 215, 0, 1)',
+          'rgba(255, 0, 204, 1)'
+        ],
+        borderWidth: 2
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          display: false
+        }
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              const labels = {
+                0: 'Free: 3 bios/day, basic AI, dark theme, professional tone.',
+                1: 'Elite: Unlimited bios, advanced AI, all themes & tones, bio analytics.',
+                2: 'Diamond: All Elite features, premium AI, custom templates, branding consultation.'
+              };
+              return labels[context.dataIndex];
+            }
+          },
+          backgroundColor: 'rgba(10, 10, 30, 0.9)',
+          titleColor: '#ffd700',
+          bodyColor: '#f0f4ff',
+          borderColor: 'rgba(0, 230, 255, 0.9)',
+          borderWidth: 2
+        }
+      },
+      animation: {
+        duration: 2000,
+        easing: 'easeOutBounce'
+      }
+    }
+  });
 
   // Form Submission
   const bioForm = document.getElementById('bioForm');
@@ -201,6 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const shareLinkedIn = document.getElementById('shareLinkedIn');
   const saveBio = document.getElementById('saveBio');
   const saveEmail = document.getElementById('saveEmail');
+  const subscriptionModal = document.getElementById('subscriptionModal');
+  const closeModal = document.querySelector('.close-modal');
 
   bioForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -225,9 +308,19 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const response = await fetch('https://sparkvibe-1.onrender.com/generate-bio', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'X-Client-ID': clientId
+        },
         body: JSON.stringify({ bioPurpose, location, tone, platform })
       });
+
+      if (response.status === 429) {
+        subscriptionModal.classList.add('visible');
+        bioOutput.textContent = 'Daily limit of 3 free bios reached. Upgrade to continue!';
+        loading.classList.remove('visible');
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -244,6 +337,7 @@ document.addEventListener('DOMContentLoaded', () => {
       downloadBio.classList.add('visible');
       shareTwitter.style.display = 'inline-block';
       shareLinkedIn.style.display = 'inline-block';
+      subscriptionModal.classList.add('visible'); // Show upgrade modal after generation for Free users
 
       const history = JSON.parse(localStorage.getItem('bioHistory') || '[]');
       history.unshift({ bio: data.bio, platform, purpose: bioPurpose, timestamp: new Date().toLocaleString() });
@@ -309,6 +403,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  closeModal.addEventListener('click', () => {
+    subscriptionModal.classList.remove('visible');
+  });
+
   function updateHistory() {
     const history = JSON.parse(localStorage.getItem('bioHistory') || '[]');
     const bioHistory = document.getElementById('bioHistory') || document.createElement('div');
@@ -363,18 +461,17 @@ document.addEventListener('DOMContentLoaded', () => {
     gtag('event', 'carousel_next', { 'event_category': 'Testimonials', 'event_label': 'Next' });
   });
 
-  // Auto-scroll testimonials
   setInterval(() => {
     currentTestimonial = (currentTestimonial + 1) % testimonialCards.length;
     showTestimonial(currentTestimonial);
-  }, 7000);
+  }, 6000);
 
   // Initialize VanillaTilt for testimonials
   VanillaTilt.init(document.querySelectorAll('.testimonial-card'), {
-    max: 5,
-    speed: 1000,
+    max: 10,
+    speed: 600,
     glare: true,
-    'max-glare': 0.3
+    'max-glare': 0.4
   });
 
   // Touch support for carousel
