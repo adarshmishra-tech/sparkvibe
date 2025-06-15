@@ -1,10 +1,10 @@
 {
-  "name": "SparkVibe AI Bio Generator",
+  "name": "SparkVibe Premium AI Bio Generator",
   "short_name": "SparkVibe",
-  "description": "Create SEO-optimized AI bios for Instagram, LinkedIn, TikTok, and Twitter.",
+  "description": "Premium AI bio generator to create SEO-optimized professional bios for Instagram, LinkedIn, TikTok, and Twitter.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1c003b",
+  "background_color": "#0d001a",
   "theme_color": "#00e6ff",
   "icons": [
     {
