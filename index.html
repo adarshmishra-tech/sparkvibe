@@ -17,75 +17,49 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
   <link href="https://fonts.cdnfonts.com/css/nebula" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanilla-tilt@1.7.2/dist/vanilla-tilt.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/fingerprintjs2@2.1.4/fingerprint2.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "SparkVibe Premium AI Bio Generator",
-    "description": "Premium AI bio generator powered by STX Tech to create SEO-optimized bios for Instagram, LinkedIn, TikTok, and Twitter.",
-    "url": "https://sparkvibe.ai",
-    "applicationCategory": "Content Creation",
-    "operatingSystem": "All",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
+  <script src="/script.js" defer></script>
 </head>
 <body class="cosmic-theme">
   <div id="particle-bg"></div>
   <header role="banner">
-    <div class="hero-logo" data-tilt data-tilt-max="15"></div>
-    <h1>SPARKVIBE - Premium AI Bio Generator</h1>
-    <p class="tagline typewriter" data-text='["Craft Epic Bios", "Next-Level Branding", "STX-Powered Vibes"]'></p>
+    <div class="hero-logo"></div>
+    <h1>SPARKVIBE - PREMIUM AI BIO GENERATOR</h1>
+    <p class="tagline">Craft Epic Bios with Next-Level Branding</p>
   </header>
-  <div class="container" role="main" aria-label="AI Bio Generator">
+  <main class="container" role="main" aria-label="AI Bio Generator">
     <div class="early-user-badge">🔥 Early Adopter: Limited Spots!</div>
     <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
-    <p class="premium-cta">Start Free, Unlock Elite Features!</p>
     <a href="#pricing" class="cta-btn">Create Your Bio Now</a>
-    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:56:06</span></div>
+    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:49:34</span></div>
 
-    <section class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
+    <section class="bio-preview" role="region" aria-label="Sample Bio Previews">
       <h2>Preview Epic Bios</h2>
-      <div class="slider">
-        <div class="slide active" data-type="Business">
+      <div class="preview-cards">
+        <div class="preview-card">
           <p><strong>Business (LinkedIn):</strong> Digital Marketing Maestro | Skyrocketing brands | NYC 📍 | Let’s grow! #Marketing</p>
         </div>
-        <div class="slide" data-type="Creator">
+        <div class="preview-card">
           <p><strong>Creator (Instagram):</strong> 🌌 Content Alchemist | NYC vibes | DM for collabs! ✨ #CreatorVibes</p>
         </div>
-        <div class="slide" data-type="Funny">
+        <div class="preview-card">
           <p><strong>Funny (Twitter):</strong> Meme Wizard 😂 | Coffee-fueled chaos | #MemeLife #TweetVibes</p>
         </div>
       </div>
-      <button class="slider-prev" aria-label="Previous slide">←</button>
-      <button class="slider-next" aria-label="Next slide">→</button>
     </section>
 
-    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌌 Toggle Theme</button>
-    <div class="theme-selector">
-      <label for="themeSelect">Choose Theme:</label>
-      <select id="themeSelect" aria-label="Select theme">
-        <option value="cosmic-theme">Cosmic</option>
-        <option value="dark-theme">Dark</option>
-        <option value="light-theme">Light</option>
-        <option value="ocean-theme">Ocean</option>
-        <option value="forest-theme">Forest</option>
-      </select>
+    <div class="theme-controls">
+      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌌 Toggle Theme</button>
+      <div class="theme-selector">
+        <label for="themeSelect">Choose Theme:</label>
+        <select id="themeSelect" aria-label="Select theme">
+          <option value="cosmic-theme">Cosmic</option>
+          <option value="dark-theme">Dark</option>
+          <option value="light-theme">Light</option>
+          <option value="ocean-theme">Ocean</option>
+          <option value="forest-theme">Forest</option>
+        </select>
+      </div>
     </div>
 
     <form id="bioForm" aria-label="Bio generation form">
@@ -108,18 +82,18 @@
         <option value="Witty">😎 Witty (Diamond)</option>
       </select>
       <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
-      <button type="submit" class="cta-btn" aria-label="Generate bio">🚀 Generate Epic Bio</button>
+      <button type="submit" class="cta-btn generate-btn" aria-label="Generate bio">🚀 Generate Epic Bio</button>
     </form>
 
     <div id="loading" class="loading" role="alert" aria-live="polite">
       <span class="spinner"></span> Crafting Your Bio...
     </div>
 
-    <p id="bioOutput" aria-live="polite"></p>
+    <div id="bioOutput" aria-live="polite"></div>
     <div class="bio-actions">
-      <button id="copyBio" class="copy-btn" aria-label="Copy bio">📋 Copy Bio</button>
-      <button id="downloadBio" class="copy-btn" aria-label="Download bio">📥 Download Bio</button>
-      <button id="bioAnalytics" class="copy-btn" aria-label="View analytics" disabled title="Upgrade to Elite for Analytics">📊 Bio Analytics</button>
+      <button id="copyBio" class="cta-btn" aria-label="Copy bio">📋 Copy Bio</button>
+      <button id="downloadBio" class="cta-btn" aria-label="Download bio">📥 Download Bio</button>
+      <button id="bioAnalytics" class="cta-btn" aria-label="View analytics" disabled title="Upgrade to Elite for Analytics">📊 Bio Analytics</button>
       <a id="shareTwitter" class="share-btn" href="#" target="_blank" aria-label="Share on Twitter/X">Share on Twitter/X 🐦</a>
       <a id="shareLinkedIn" class="share-btn" href="#" target="_blank" aria-label="Share on LinkedIn">Share on LinkedIn 💼</a>
     </div>
@@ -129,12 +103,6 @@
       <input type="email" id="saveEmail" placeholder="your.email@example.com">
       <button id="saveBio" class="cta-btn" aria-label="Save bio">💾 Save Bio</button>
     </div>
-
-    <section class="upsell-section" role="region" aria-label="Personal branding kit">
-      <h2>Level Up Your Brand</h2>
-      <p>Get our <strong>Personal Branding Kit</strong> with Canva templates and coaching!</p>
-      <a href="https://www.canva.com" target="_blank" class="cta-btn">Get the Kit Now</a>
-    </section>
 
     <section class="recommended-tools" role="region" aria-label="Recommended tools">
       <h2>Top Creator Tools</h2>
@@ -165,12 +133,12 @@
     <section class="pricing-section" id="pricing" role="region" aria-label="Pricing plans">
       <h2>Unlock Premium Power</h2>
       <p class="social-proof">25,000+ creators upgraded to Elite or Diamond!</p>
-      <canvas id="pricingChart" width="600" height="300"></canvas>
+      <canvas id="pricingChart" width="600" height="400"></canvas>
       <div class="pricing-details">
         <div class="pricing-card">
           <h3>Free</h3>
           <p class="price">$0/month</p>
-          <p class="description">Basic STX Tech AI bios.</p>
+          <p>Basic STX Tech AI bios.</p>
           <ul>
             <li>3 Bios/Day</li>
             <li>STX-Basic AI</li>
@@ -182,7 +150,7 @@
         <div class="pricing-card popular">
           <h3>Elite</h3>
           <p class="price"><s>$9.99</s> $7.99/month</p>
-          <p class="description">Unlimited advanced AI bios.</p>
+          <p>Unlimited advanced AI bios.</p>
           <ul>
             <li>Unlimited Bios</li>
             <li>STX-Advanced AI</li>
@@ -194,7 +162,7 @@
         <div class="pricing-card">
           <h3>Diamond</h3>
           <p class="price"><s>$19.99</s> $15.99/month</p>
-          <p class="description">Premium AI with exclusive features.</p>
+          <p>Premium AI with exclusive features.</p>
           <ul>
             <li>All Elite Features</li>
             <li>STX-Ultra AI</li>
@@ -205,7 +173,7 @@
         </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <footer role="contentinfo">
     <p>© 2025 SparkVibe, Powered by STX Tech. All rights reserved.</p>
@@ -215,7 +183,5 @@
       <a href="/contact">Contact</a>
     </nav>
   </footer>
-
-  <script src="/script.js" defer></script>
 </body>
 </html>
