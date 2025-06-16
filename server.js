@@ -4,13 +4,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware for JSON parsing
 app.use(express.json());
-
-// Serve static files from the root directory
 app.use(express.static(__dirname));
 
-// Serve index.html for the root route
 app.get('/', (req, res) => {
   try {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -20,25 +16,21 @@ app.get('/', (req, res) => {
   }
 });
 
-// Rate limiter for Free tier (3 bios/day per IP or fingerprint)
 const bioLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 24 hours
+  windowMs: 24 * 60 * 60 * 1000,
   max: 3,
   message: { error: 'Free tier limit reached (3 bios/day). Upgrade to Elite or Diamond!' },
   keyGenerator: (req) => req.body.fingerprint || req.ip
 });
 
-// Mock database for storing saved bios
 const savedBios = new Map();
 
-// Generate bio endpoint
 app.post('/generate-bio', bioLimiter, async (req, res) => {
   try {
     const { purpose, location, platform, tone, fingerprint } = req.body;
     if (!purpose || !platform || !tone || !fingerprint) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    // Mock AI bio generation
     const platformLimits = {
       Instagram: 150,
       LinkedIn: 2000,
@@ -58,7 +50,6 @@ app.post('/generate-bio', bioLimiter, async (req, res) => {
   }
 });
 
-// Save bio endpoint
 app.post('/save-bio', async (req, res) => {
   try {
     const { email, bio } = req.body;
@@ -73,12 +64,10 @@ app.post('/save-bio', async (req, res) => {
   }
 });
 
-// Handle 404 for unknown routes
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
-// Start server
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
 });
