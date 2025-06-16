@@ -45,11 +45,11 @@
   }
   </script>
 </head>
-<body class="dark-theme">
+<body class="cosmic-theme">
   <div id="particle-bg"></div>
   <header role="banner">
     <div class="hero-logo" data-tilt data-tilt-max="15"></div>
-    <h1>SparkVibe - Premium AI Bio Generator</h1>
+    <h1>SPARKVIBE - Premium AI Bio Generator</h1>
     <p class="tagline typewriter" data-text='["Craft Epic Bios", "Next-Level Branding", "STX-Powered Vibes"]'></p>
   </header>
   <div class="container" role="main" aria-label="AI Bio Generator">
@@ -57,7 +57,7 @@
     <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
     <p class="premium-cta">Start Free, Unlock Elite Features!</p>
     <a href="#pricing" class="cta-btn">Create Your Bio Now</a>
-    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">24:00:00</span></div>
+    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:56:06</span></div>
 
     <section class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
       <h2>Preview Epic Bios</h2>
@@ -76,13 +76,13 @@
       <button class="slider-next" aria-label="Next slide">→</button>
     </section>
 
-    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme" disabled title="Upgrade to Elite for Themes">🌌 Dark Theme</button>
+    <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌌 Toggle Theme</button>
     <div class="theme-selector">
-      <label for="themeSelect">Choose Theme (Elite/Diamond):</label>
-      <select id="themeSelect" aria-label="Select theme" disabled>
-        <option value="dark-theme">Dark (Free)</option>
-        <option value="light-theme">Light</option>
+      <label for="themeSelect">Choose Theme:</label>
+      <select id="themeSelect" aria-label="Select theme">
         <option value="cosmic-theme">Cosmic</option>
+        <option value="dark-theme">Dark</option>
+        <option value="light-theme">Light</option>
         <option value="ocean-theme">Ocean</option>
         <option value="forest-theme">Forest</option>
       </select>
@@ -103,12 +103,9 @@
       <label for="tone">Tone</label>
       <select id="tone" aria-label="Select tone">
         <option value="Professional">💼 Professional (Free)</option>
-        <option value="Friendly" disabled>😄 Friendly (Elite/Diamond)</option>
-        <option value="Luxury" disabled>✨ Luxury (Elite/Diamond)</option>
-        <option value="Sad" disabled>😔 Sad (Elite/Diamond)</option>
-        <option value="Happy" disabled>😊 Happy (Elite/Diamond)</option>
-        <option value="Excited" disabled>🎉 Excited (Elite/Diamond)</option>
-        <option value="Witty" disabled>😎 Witty (Elite/Diamond)</option>
+        <option value="Friendly">😄 Friendly (Elite)</option>
+        <option value="Luxury">✨ Luxury (Elite)</option>
+        <option value="Witty">😎 Witty (Diamond)</option>
       </select>
       <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
       <button type="submit" class="cta-btn" aria-label="Generate bio">🚀 Generate Epic Bio</button>
@@ -133,89 +130,10 @@
       <button id="saveBio" class="cta-btn" aria-label="Save bio">💾 Save Bio</button>
     </div>
 
-    <div id="upsellModal" class="modal" role="dialog" aria-label="Upgrade offer">
-      <div class="modal-content">
-        <span class="modal-close" aria-label="Close modal">×</span>
-        <h2>Unlock Premium Features!</h2>
-        <p>Get <strong>20% off Elite ($7.99/month)</strong> or <strong>Diamond ($15.99/month)</strong> now! Includes unlimited bios, all themes, and a Personal Branding Kit.</p>
-        <p><strong>Hurry, offer ends in <span id="modalTimer">24:00:00</span>!</strong></p>
-        <a href="/subscribe/elite" class="cta-btn">Upgrade to Elite</a>
-        <a href="/subscribe/diamond" class="cta-btn">Upgrade to Diamond</a>
-      </div>
-    </div>
-
     <section class="upsell-section" role="region" aria-label="Personal branding kit">
       <h2>Level Up Your Brand</h2>
       <p>Get our <strong>Personal Branding Kit</strong> with Canva templates and coaching!</p>
       <a href="https://www.canva.com" target="_blank" class="cta-btn">Get the Kit Now</a>
-    </section>
-
-    <section class="blog-section" role="region" aria-label="Blog articles">
-      <h2>Boost Your Presence</h2>
-      <div class="blog-posts">
-        <article class="blog-post">
-          <h3><a href="/blog/linkedin-bio-tips">LinkedIn Bio Tips</a></h3>
-          <p>Craft a bio that attracts recruiters.</p>
-        </article>
-        <article class="blog-post">
-          <h3><a href="/blog/instagram-bio-guide">Instagram Bio Guide</a></h3>
-          <p>Skyrocket engagement with your bio.</p>
-        </article>
-        <article class="blog-post">
-          <h3><a href="/blog/ai-branding-tools">AI Branding Tools</a></h3>
-          <p>Elevate your social media presence.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="testimonials" role="region" aria-label="User testimonials">
-      <h2>What Our Users Say</h2>
-      <div class="testimonials-carousel" role="listbox">
-        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option" aria-selected="true">
-          <div class="avatar">
-            <img src="/avatars/aditi.jpg" alt="Aditi Singh avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-            <span class="avatar-fallback">AS</span>
-          </div>
-          <div class="rating">★★★★★</div>
-          <p>"Elite plan transformed my LinkedIn!"</p>
-          <div class="user-info">
-            <span class="username">Aditi Singh</span>
-            <span class="platform">LinkedIn</span>
-            <span class="verified">✔ Verified</span>
-          </div>
-        </div>
-        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option">
-          <div class="avatar">
-            <img src="/avatars/liam.jpg" alt="Liam O’Connor avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-            <span class="avatar-fallback">LO</span>
-          </div>
-          <div class="rating">★★★★★</div>
-          <p>"Diamond boosted my TikTok fame!"</p>
-          <div class="user-info">
-            <span class="username">Liam O’Connor</span>
-            <span class="platform">TikTok</span>
-            <span class="verified">✔ Verified</span>
-          </div>
-        </div>
-        <div class="testimonial-card" data-tilt data-tilt-max="10" data-tilt-speed="600" role="option">
-          <div class="avatar">
-            <img src="/avatars/elena.jpg" alt="Elena Rossi avatar" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
-            <span class="avatar-fallback">ER</span>
-          </div>
-          <div class="rating">★★★★★</div>
-          <p>"Elite bios rock on Twitter!"</p>
-          <div class="user-info">
-            <span class="username">Elena Rossi</span>
-            <span class="platform">Twitter</span>
-            <span class="verified">✔ Verified</span>
-          </div>
-        </div>
-      </div>
-      <div class="carousel-controls">
-        <button class="carousel-prev" aria-label="Previous testimonial">←</button>
-        <div class="carousel-dots"></div>
-        <button class="carousel-next" aria-label="Next testimonial">→</button>
-      </div>
     </section>
 
     <section class="recommended-tools" role="region" aria-label="Recommended tools">
