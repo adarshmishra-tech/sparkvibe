@@ -3,59 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Create stunning, SEO-optimized AI bios for Instagram, LinkedIn, TikTok, and Twitter with SparkVibe’s premium bio generator, powered by STX Tech!">
-  <meta name="keywords" content="AI bio generator, social media bio, premium bio generator, SEO bio, Instagram bio, LinkedIn bio, TikTok bio, Twitter bio">
-  <meta name="author" content="SparkVibe">
-  <meta property="og:title" content="Premium AI Bio Generator | SparkVibe">
-  <meta property="og:description" content="Craft next-level, SEO-optimized bios with SparkVibe’s premium AI generator, powered by STX Tech. Upgrade for exclusive features!">
-  <meta property="og:image" content="https://sparkvibe.ai/og-image.jpg">
-  <meta property="og:url" content="https://sparkvibe.ai">
-  <meta property="og:type" content="website">
-  <title>Premium AI Bio Generator | SparkVibe</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="manifest" href="/manifest.json">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.cdnfonts.com/css/nebula" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-  <script src="/script.js" defer></script>
+  <title>SPARKVIBE - Premium AI Bio Generator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 </head>
 <body class="cosmic-theme">
   <div id="particle-bg"></div>
-  <header role="banner">
-    <div class="hero-logo" data-tilt data-tilt-max="15"></div>
-    <h1>SPARKVIBE - PREMIUM AI BIO GENERATOR</h1>
-    <p class="tagline typewriter" data-text='["Craft Epic Bios", "Next-Level Branding", "STX-Powered Vibes"]'></p>
-  </header>
-  <main class="container" role="main" aria-label="AI Bio Generator">
-    <div class="early-user-badge">🔥 Early Adopter: Limited Spots!</div>
-    <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
-    <a href="#pricing" class="cta-btn">Create Your Bio Now</a>
-    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:44:44</span></div>
+  <div class="early-user-badge">🔥 Early Adopter: Limited Spots!</div>
+  <div class="container">
+    <header>
+      <div class="hero-logo"></div>
+      <h1 class="typewriter">SPARKVIBE</h1>
+      <p class="tagline">Premium AI Bio Generator</p>
+      <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
+      <a href="#bioForm" class="cta-btn">Create Your Bio Now</a>
+      <p class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:44:44</span></p>
+    </header>
 
-    <section class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
+    <section class="bio-preview-slider">
       <h2>Preview Epic Bios</h2>
       <div class="slider">
-        <div class="slide active" data-type="Business">
-          <p><strong>Business (LinkedIn):</strong> Digital Marketing Maestro | Skyrocketing brands | NYC 📍 | Let’s grow! #Marketing</p>
+        <div class="slide active">
+          <p>Business (LinkedIn): Digital Marketing Maestro | Skyrocketing brands | NYC 📍 | Let’s grow! #Marketing</p>
         </div>
-        <div class="slide" data-type="Creator">
-          <p><strong>Creator (Instagram):</strong> 🌌 Content Alchemist | NYC vibes | DM for collabs! ✨ #CreatorVibes</p>
+        <div class="slide">
+          <p>Creator (Instagram): 🌌 Content Alchemist | NYC vibes | DM for collabs! ✨ #CreatorVibes</p>
         </div>
-        <div class="slide" data-type="Funny">
-          <p><strong>Funny (Twitter):</strong> Meme Wizard 😂 | Coffee-fueled chaos | #MemeLife #TweetVibes</p>
+        <div class="slide">
+          <p>Funny (Twitter): Meme Wizard 😂 | Coffee-fueled chaos | #MemeLife #TweetVibes</p>
         </div>
+        <button class="slider-prev">←</button>
+        <button class="slider-next">→</button>
       </div>
-      <button class="slider-prev" aria-label="Previous slide">←</button>
-      <button class="slider-next" aria-label="Next slide">→</button>
     </section>
 
-    <div class="theme-controls">
-      <button id="themeToggle" class="theme-btn" aria-label="Toggle theme">🌌 Toggle Theme</button>
+    <section class="theme-controls">
+      <button id="themeToggle" class="theme-btn">🌌 Toggle Theme</button>
       <div class="theme-selector">
         <label for="themeSelect">Choose Theme:</label>
-        <select id="themeSelect" aria-label="Select theme">
+        <select id="themeSelect">
           <option value="cosmic-theme">Cosmic</option>
           <option value="dark-theme">Dark</option>
           <option value="light-theme">Light</option>
@@ -63,57 +52,58 @@
           <option value="forest-theme">Forest</option>
         </select>
       </div>
-    </div>
+    </section>
 
-    <form id="bioForm" aria-label="Bio generation form">
+    <form id="bioForm">
       <label for="bioPurpose">Bio Purpose</label>
-      <input type="text" id="bioPurpose" placeholder="e.g., Content Creation, Marketing" required aria-required="true">
+      <input type="text" id="bioPurpose" placeholder="e.g., Grow your brand" required>
       <label for="location">Location (Optional)</label>
       <input type="text" id="location" placeholder="e.g., New York, NY">
       <label for="platform">Platform</label>
-      <select id="platform" aria-label="Select platform">
+      <select id="platform" required>
         <option value="Instagram">📸 Instagram (150 chars)</option>
         <option value="LinkedIn">💼 LinkedIn (2000 chars)</option>
         <option value="TikTok">🎥 TikTok (80 chars)</option>
         <option value="Twitter">🐦 Twitter/X (160 chars)</option>
       </select>
       <label for="tone">Tone</label>
-      <select id="tone" aria-label="Select tone">
+      <select id="tone" required>
         <option value="Professional">💼 Professional (Free)</option>
         <option value="Friendly">😄 Friendly (Elite)</option>
         <option value="Luxury">✨ Luxury (Elite)</option>
         <option value="Witty">😎 Witty (Diamond)</option>
       </select>
-      <p class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></p>
-      <button type="submit" class="cta-btn generate-btn" aria-label="Generate bio">🚀 Generate Epic Bio</button>
+      <div class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></div>
+      <button type="submit" class="cta-btn generate-btn">🚀 Generate Epic Bio</button>
     </form>
 
-    <div id="loading" class="loading" role="alert" aria-live="polite">
+    <div id="loading" class="loading">
       <span class="spinner"></span> Crafting Your Bio...
     </div>
 
-    <div id="bioOutput" aria-live="polite"></div>
+    <div id="bioOutput"></div>
+
     <div class="bio-actions">
-      <button id="copyBio" class="cta-btn" aria-label="Copy bio">📋 Copy Bio</button>
-      <button id="downloadBio" class="cta-btn" aria-label="Download bio">📥 Download Bio</button>
-      <button id="bioAnalytics" class="cta-btn" aria-label="View analytics" disabled title="Upgrade to Elite for Analytics">📊 Bio Analytics</button>
-      <a id="shareTwitter" class="share-btn" href="#" target="_blank" aria-label="Share on Twitter/X">Share on Twitter/X 🐦</a>
-      <a id="shareLinkedIn" class="share-btn" href="#" target="_blank" aria-label="Share on LinkedIn">Share on LinkedIn 💼</a>
+      <button id="copyBio" class="share-btn">📋 Copy Bio</button>
+      <button id="downloadBio" class="share-btn">📥 Download Bio</button>
+      <a href="#" id="analyticsBio" class="share-btn">📊 Bio Analytics</a>
+      <a href="#" id="shareTwitter" class="share-btn">Share on Twitter/X 🐦</a>
+      <a href="#" id="shareLinkedIn" class="share-btn">Share on LinkedIn 💼</a>
     </div>
 
-    <div class="save-bio" role="region" aria-label="Save bio">
-      <label for="saveEmail">Save Bio & Get Updates:</label>
-      <input type="email" id="saveEmail" placeholder="your.email@example.com">
-      <button id="saveBio" class="cta-btn" aria-label="Save bio">💾 Save Bio</button>
+    <div class="save-bio">
+      <h2>Save Bio & Get Updates</h2>
+      <input type="email" id="saveEmail" placeholder="Enter your email" required>
+      <button id="saveBio" class="cta-btn">💾 Save Bio</button>
     </div>
 
-    <section class="upsell-section" role="region" aria-label="Personal branding kit">
+    <section class="upsell-section">
       <h2>Level Up Your Brand</h2>
-      <p>Get our <strong>Personal Branding Kit</strong> with Canva templates and coaching!</p>
-      <a href="https://www.canva.com" target="_blank" class="cta-btn">Get the Kit Now</a>
+      <p>Get our Personal Branding Kit with Canva templates and coaching!</p>
+      <a href="#" class="cta-btn">Get the Kit Now</a>
     </section>
 
-    <section class="recommended-tools" role="region" aria-label="Recommended tools">
+    <section class="recommended-tools">
       <h2>Top Creator Tools</h2>
       <div class="tools-grid">
         <div class="tool-card">
@@ -139,10 +129,10 @@
       </div>
     </section>
 
-    <section class="pricing-section" id="pricing" role="region" aria-label="Pricing plans">
+    <section class="pricing-section">
       <h2>Unlock Premium Power</h2>
-      <p class="social-proof">25,000+ creators upgraded to Elite or Diamond!</p>
-      <canvas id="pricingChart" width="600" height="400"></canvas>
+      <p>25,000+ creators upgraded to Elite or Diamond!</p>
+      <canvas id="pricingChart"></canvas>
       <div class="pricing-details">
         <div class="pricing-card">
           <h3>Free</h3>
@@ -154,7 +144,7 @@
             <li>Dark Theme</li>
             <li>Professional Tone</li>
           </ul>
-          <button class="cta-btn" disabled>Current Plan</button>
+          <button class="cta-btn">Current Plan</button>
         </div>
         <div class="pricing-card popular">
           <h3>Elite</h3>
@@ -166,7 +156,7 @@
             <li>All Themes & Tones</li>
             <li>Bio Analytics</li>
           </ul>
-          <a href="/subscribe/elite" class="cta-btn">Buy Now</a>
+          <a href="#" class="cta-btn">Buy Now</a>
         </div>
         <div class="pricing-card">
           <h3>Diamond</h3>
@@ -178,19 +168,20 @@
             <li>Custom Templates</li>
             <li>Branding Consultation</li>
           </ul>
-          <a href="/subscribe/diamond" class="cta-btn">Buy Now</a>
+          <a href="#" class="cta-btn">Buy Now</a>
         </div>
       </div>
     </section>
-  </main>
 
-  <footer role="contentinfo">
-    <p>© 2025 SparkVibe, Powered by STX Tech. All rights reserved.</p>
-    <nav aria-label="Footer navigation">
-      <a href="/privacy">Privacy</a> | 
-      <a href="/terms">Terms</a> | 
-      <a href="/contact">Contact</a>
-    </nav>
-  </footer>
+    <footer>
+      <p>© 2025 SparkVibe, Powered by STX Tech. All rights reserved.</p>
+      <div>
+        <a href="#">Privacy</a> |
+        <a href="#">Terms</a> |
+        <a href="#">Contact</a>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
