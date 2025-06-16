@@ -21,18 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function checkUserTier() {
-  // Simulate user tier check (e.g., from localStorage or API)
   const storedTier = localStorage.getItem('userTier') || 'Free';
   userTier = storedTier;
-  if (userTier === 'Elite' || userTier === 'Diamond') {
-    isPremiumTrial = localStorage.getItem('trialEnd') > new Date().toISOString() || false;
+  isPremiumTrial = localStorage.getItem('trialEnd') > new Date().toISOString() || false;
+  if (userTier === 'Elite' || userTier === 'Diamond' || isPremiumTrial) {
     enablePremiumFeatures();
   }
 }
 
 function enablePremiumFeatures() {
   document.querySelectorAll('.theme-selector option').forEach(opt => opt.disabled = false);
-  document.getElementById('tone').value = 'Professional'; // Default to first premium tone
+  document.getElementById('tone').value = 'Professional';
 }
 
 function initParticles() {
@@ -87,17 +86,17 @@ function initSlider() {
     });
     current = index;
   }
-  nextBtn.addEventListener('click', () => {
-    showSlide((current + 1) % slides.length);
-  });
-  prevBtn.addEventListener('click', () => {
-    showSlide((current - 1 + slides.length) % slides.length);
-  });
+  nextBtn.addEventListener('click', () => showSlide((current + 1) % slides.length));
+  prevBtn.addEventListener('click', () => showSlide((current - 1 + slides.length) % slides.length));
   setInterval(() => showSlide((current + 1) % slides.length), 5000);
 }
 
 function initPricingChart() {
   const ctx = document.getElementById('pricingChart').getContext('2d');
+  if (!ctx) {
+    console.error('Canvas context not found');
+    return;
+  }
   const gradientFree = ctx.createLinearGradient(0, 0, 0, 350);
   gradientFree.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
   gradientFree.addColorStop(1, 'rgba(255, 215, 0, 0.4)');
@@ -173,6 +172,8 @@ function initForm() {
   const copyBio = document.getElementById('copyBio');
   const downloadBio = document.getElementById('downloadBio');
   const saveBioBtn = document.getElementById('saveBio');
+  const modal = document.getElementById('comparisonModal');
+  const closeBtn = document.querySelector('.close-btn');
 
   platformSelect.addEventListener('change', () => {
     maxChars.textContent = platformLimits[platformSelect.value];
@@ -184,7 +185,7 @@ function initForm() {
     e.preventDefault();
     if (userTier === 'Free' && bioCount >= 3) {
       gsap.to('#bioForm', { x: 10, duration: 0.1, repeat: 3, yoyo: true });
-      showPremiumComparison();
+      modal.style.display = 'flex';
       return;
     }
     if (userTier === 'Free' && !['Professional', 'cosmic-theme'].includes(document.getElementById('tone').value)) {
@@ -211,6 +212,7 @@ function initForm() {
       gsap.fromTo('#bioOutput', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
       if (userTier === 'Free') alert('Upgrade to Elite for unlimited bios and premium features!');
     } catch (err) {
+      console.error('Bio generation error:', err);
       alert('Error generating bios. Try again later.');
     } finally {
       document.getElementById('loading').style.display = 'none';
@@ -252,8 +254,14 @@ function initForm() {
       alert(data.message);
       gsap.to(saveBioBtn, { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1 });
     } catch (err) {
+      console.error('Save bio error:', err);
       alert('Error saving bio. Try again later.');
     }
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.style.display = 'none';
+    gsap.to(modal, { opacity: 0, duration: 0.5, onComplete: () => modal.style.display = 'none' });
   });
 }
 
@@ -301,12 +309,6 @@ function initCountdown() {
   }, 1000);
 }
 
-function showPremiumComparison() {
-  document.getElementById('premiumComparison').style.display = 'block';
-  gsap.fromTo('#premiumComparison', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
-  gsap.fromTo('#pricingCards .pricing-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: 'power2.out' });
-}
-
 function initAnimations() {
   gsap.from('.hero-logo', { y: -60, opacity: 0, duration: 1.2, ease: 'power3.out' });
   gsap.from('h1, .tagline, .social-proof, .cta-btn, .countdown-timer, .early-user-badge', {
@@ -315,13 +317,6 @@ function initAnimations() {
     duration: 1,
     stagger: 0.25,
     ease: 'power3.out'
-  });
-  gsap.from('.pricing-card', {
-    opacity: 0,
-    y: 40,
-    duration: 1,
-    stagger: 0.3,
-    scrollTrigger: { trigger: '.pricing-section', start: 'top 75%' }
   });
   gsap.from('.tool-card', {
     opacity: 0,
