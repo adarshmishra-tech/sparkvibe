@@ -10,10 +10,12 @@ let bioCount = 0;
 
 document.addEventListener('DOMContentLoaded', () => {
   initParticles();
+  initSlider();
   initPricingChart();
   initForm();
   initThemeSelector();
   initCountdown();
+  initFadeAnimations();
 });
 
 function initParticles() {
@@ -51,6 +53,23 @@ function initParticles() {
   window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+  });
+}
+
+function initSlider() {
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+  const nextBtn = document.querySelector('.slider-next');
+  const prevBtn = document.querySelector('.slider-prev');
+  nextBtn.addEventListener('click', () => {
+    slides[current].classList.remove('active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('active');
+  });
+  prevBtn.addEventListener('click', () => {
+    slides[current].classList.remove('active');
+    current = (current - 1 + slides.length) % slides.length;
+    slides[current].classList.add('active');
   });
 }
 
@@ -218,7 +237,7 @@ function initThemeSelector() {
 
 function initCountdown() {
   const timer = document.getElementById('timer');
-  let timeLeft = 23 * 60 * 60 + 49 * 60 + 34; // 09:26 AM +0545 to 09:15 AM tomorrow
+  let timeLeft = 23 * 60 * 60 + 44 * 60 + 44; // 09:31 AM +0545 to 09:15 AM tomorrow
   setInterval(() => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
@@ -227,4 +246,25 @@ function initCountdown() {
     timeLeft--;
     if (timeLeft < 0) timeLeft = 24 * 60 * 60;
   }, 1000);
+}
+
+function initFadeAnimations() {
+  gsap.from('.hero-logo', { y: -50, opacity: 0, duration: 1, delay: 0.5, ease: 'power2.out' });
+  gsap.from('h1, .tagline, .social-proof, .cta-btn, .countdown-timer, .early-user-badge', {
+    opacity: 0,
+    y: 20,
+    duration: 1,
+    stagger: 0.2,
+    ease: 'power2.out'
+  });
+  gsap.from('.pricing-card', {
+    opacity: 0,
+    y: 30,
+    duration: 1,
+    stagger: 0.3,
+    scrollTrigger: {
+      trigger: '.pricing-section',
+      start: 'top 80%'
+    }
+  });
 }
