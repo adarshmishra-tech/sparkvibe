@@ -2,8 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+  background: linear-gradient(to bottom right, #0A0F2E, #1A1A3D, #000000) !important;
+  background-attachment: fixed !important;
+}
+
 body.cosmic-theme {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 50% 50%, rgba(255, 215, 0, 0.1), transparent);
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 50% 50%, rgba(255, 193, 7, 0.1), transparent);
 }
 
 body.neon-pulse {
@@ -22,53 +27,57 @@ body.crystal-dawn {
   background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 40% 60%, #87CEEB, transparent 55%), radial-gradient(circle at 60% 40%, #BA55D3, transparent 55%);
 }
 
-#particle-bg {
-  background: radial-gradient(circle at center, rgba(255, 215, 0, 0.05), transparent);
+.starfield {
+  background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.05), transparent 70%), radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.03), transparent 60%);
+  animation: starTwinkle 10s infinite linear;
+}
+
+@keyframes starTwinkle {
+  0%, 100% { opacity: 0.8; }
+  50% { opacity: 1; }
 }
 
 .hero-logo {
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
 }
 
-.animate-pulse {
-  animation: pulse 2.5s infinite;
+.animate-pulse-smooth {
+  animation: pulseSmooth 2.5s infinite ease-in-out;
 }
 
-@keyframes pulse {
+@keyframes pulseSmooth {
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.05); }
 }
 
 .cta-btn, .buy-btn {
-  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
 }
 
 .cta-btn:hover, .buy-btn:hover {
-  box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.7);
 }
 
 .share-btn {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 }
 
 .bio-generator-wrapper, .ratings-section, .premium-benefits {
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(255, 215, 0, 0.3);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 193, 7, 0.4);
 }
 
-.rating-slide p {
-  margin: 0.75rem 0;
-  font-size: 1.1rem;
+.drop-shadow-xl {
+  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.8));
 }
 
-.drop-shadow-2xl {
-  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.7));
+.transition-smooth {
+  transition: all 0.4s ease-in-out;
 }
 
 @media (max-width: 640px) {
   .container { padding: 1rem; }
-  h1 { font-size: 3rem; }
-  .cta-btn { width: 100%; max-width: 220px; }
-  .bio-generator-wrapper { padding: 1rem; }
+  h1 { font-size: 3.5rem; }
+  .cta-btn { width: 100%; max-width: 250px; }
+  .bio-generator-wrapper { padding: 1.5rem; }
   .chart-container { width: 100%; }
-  .rating-slide p { font-size: 1rem; }
 }
