@@ -1,50 +1,44 @@
 const platformLimits = { Instagram: 150, LinkedIn: 2000, TikTok: 80, Twitter: 160 };
 let bioCount = 0, ipLimit = 2;
-const ratings = [
-  { name: "Aarav Kapoor", rating: "★★★★★", comment: "Revolutionized my career!" },
+const testimonials = [
+  { name: "Aarav Kapoor", rating: "★★★★★", comment: "Transformed my career!" },
   { name: "Sophia Miller", rating: "★★★★☆", comment: "Perfect for branding" },
   { name: "Deepika Reddy", rating: "★★★★★", comment: "Exceptional quality" },
   { name: "James Wilson", rating: "★★★★☆", comment: "Highly effective" },
   { name: "Karan Singh", rating: "★★★★★", comment: "Elite toolset" },
-  { name: "Olivia Brown", rating: "★★★★☆", comment: "Great support" },
-  { name: "Shalini Mehta", rating: "★★★★★", comment: "Top-tier design" },
-  { name: "Thomas Clark", rating: "★★★★☆", comment: "Very reliable" },
-  { name: "Rohan Desai", rating: "★★★★★", comment: "Game-changer" },
-  { name: "Emma Taylor", rating: "★★★★☆", comment: "Excellent results" }
+  { name: "Olivia Brown", rating: "★★★★☆", comment: "Great support" }
 ];
 
 document.addEventListener('DOMContentLoaded', () => {
-  initParticles();
+  initStarfield();
   initForm();
   initThemeSelector();
   initCountdown();
   initAnimations();
-  initRatingCarousel();
+  initTestimonialRotation();
   initChart();
 });
 
-function initParticles() {
-  const canvas = document.createElement('canvas');
-  document.getElementById('particle-bg').appendChild(canvas);
+function initStarfield() {
+  const canvas = document.getElementById('starCanvas');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-  const particles = Array(120).fill().map(() => ({
+  const stars = Array(100).fill().map(() => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    radius: Math.random() * 2 + 1
+    size: Math.random() * 2 + 1,
+    speed: Math.random() * 0.5 + 0.1
   }));
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    particles.forEach(p => {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-      if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.9)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(star => {
+      star.y += star.speed;
+      if (star.y > canvas.height) star.y = 0;
       ctx.beginPath();
-      ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 215, 0, 0.15)';
+      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 215, 0, 0.8)';
       ctx.fill();
     });
     requestAnimationFrame(animate);
@@ -165,20 +159,24 @@ function initCountdown() {
 }
 
 function initAnimations() {
-  gsap.from('.hero-logo', { y: -40, opacity: 0, duration: 1.2, ease: 'power2.out' });
-  gsap.from('h1, .cta-btn, .countdown-timer', { opacity: 0, y: 20, duration: 1, stagger: 0.3, ease: 'power2.out' });
+  gsap.from('.hero-logo', { y: -50, opacity: 0, duration: 1.5, ease: "power3.out" });
+  gsap.from('h1, .cta-btn, .countdown-timer', { opacity: 0, y: 30, duration: 1.2, stagger: 0.3, ease: "power3.out" });
 }
 
-function initRatingCarousel() {
-  const carousel = document.getElementById('ratingCarousel');
-  const slides = carousel.getElementsByClassName('rating-slide');
-  let currentSlide = 0;
+function initTestimonialRotation() {
+  const display = document.getElementById('ratingDisplay');
+  let index = 0;
 
-  setInterval(() => {
-    slides[currentSlide].classList.add('hidden');
-    currentSlide = (currentSlide + 1) % slides.length;
-    slides[currentSlide].classList.remove('hidden');
-  }, 5000);
+  function showTestimonial() {
+    const testimonial = testimonials[index];
+    gsap.fromTo(display, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.5, ease: "power2.out", onStart: () => {
+      display.textContent = `${testimonial.name}: ${testimonial.rating} (${testimonial.comment})`;
+    }});
+    index = (index + 1) % testimonials.length;
+  }
+
+  showTestimonial();
+  setInterval(showTestimonial, 5000);
 }
 
 function initChart() {
@@ -186,18 +184,19 @@ function initChart() {
   new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: ['Unlimited Bios', 'All Themes', 'Analytics', 'Custom Templates'],
+      labels: ['Unlimited Bios', 'Premium Themes', 'Analytics', 'Templates'],
       datasets: [{
         label: 'Premium Benefits',
-        data: [90, 85, 70, 60],
-        backgroundColor: 'rgba(255, 215, 0, 0.7)',
-        borderColor: 'rgba(255, 215, 0, 1)',
-        borderWidth: 1
+        data: [95, 90, 75, 65],
+        backgroundColor: 'rgba(255, 193, 7, 0.8)',
+        borderColor: 'rgba(255, 193, 7, 1)',
+        borderWidth: 2
       }]
     },
     options: {
-      scales: { y: { beginAtZero: true, max: 100, ticks: { color: 'rgba(255, 215, 0, 0.9)' } } },
-      plugins: { legend: { labels: { color: 'rgba(255, 215, 0, 0.9)' } } }
+      scales: { y: { beginAtZero: true, max: 100, ticks: { color: 'rgba(255, 193, 7, 0.9)' } } },
+      plugins: { legend: { labels: { color: 'rgba(255, 193, 7, 0.9)' } } },
+      animation: { duration: 1000, easing: 'easeInOutQuad' }
     }
   });
 }
