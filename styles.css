@@ -2,9 +2,11 @@
   --primary: #0A001F;
   --neon-cyan: #00E6FF;
   --neon-pink: #FF00CC;
-  --gold: #FFD700;
+  --neon-violet: #8A00FF;
+  --cosmic-blue: #0022AA;
+  --stardust-gold: #FFCC33;
   --text: #E0E0E0;
-  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-bg: rgba(255, 255, 255, 0.08);
   --spacing-sm: 1rem;
   --spacing-md: 2rem;
   --spacing-lg: 3rem;
@@ -31,7 +33,7 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: radial-gradient(circle at center, rgba(0, 230, 255, 0.1), transparent);
+  background: radial-gradient(circle at center, rgba(138, 0, 255, 0.15), transparent);
 }
 
 .container {
@@ -43,30 +45,60 @@ body {
 header {
   text-align: center;
   padding: var(--spacing-md) 0;
+  position: relative;
+}
+
+.hero-logo {
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, var(--neon-cyan) 10%, var(--neon-violet) 50%, transparent);
+  border-radius: 50%;
+  margin: 0 auto var(--spacing-sm);
+  animation: pulseLogo 3s infinite ease-in-out;
 }
 
 h1, h2, h3 {
-  font-family: 'Orbitron', sans-serif;
+  font-family: 'Nebula', 'Orbitron', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
 }
 
-h1 {
-  font-size: clamp(2rem, 5vw, 3rem);
-  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+.neon-text {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-violet), var(--neon-pink));
   -webkit-background-clip: text;
   color: transparent;
-  animation: glow 2s infinite alternate;
+  text-shadow: 0 0 10px var(--neon-violet);
+  animation: neonPulse 2s infinite alternate, letterReveal 1s ease-in-out;
+  display: inline-block;
+  position: relative;
 }
 
-h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  color: var(--gold);
-  margin-bottom: var(--spacing-sm);
+.neon-text::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--neon-pink), transparent);
+  animation: slideGlow 3s infinite;
+}
+
+h1.neon-text {
+  font-size: clamp(2rem, 5vw, 3.5rem);
 }
 
 .tagline {
   font-size: clamp(1rem, 3vw, 1.2rem);
+  color: var(--stardust-gold);
+  position: relative;
+  min-height: 1.5em;
+}
+
+.typewriter::after {
+  content: '|';
+  animation: blink 0.7s infinite;
   color: var(--neon-cyan);
 }
 
@@ -74,10 +106,11 @@ h2 {
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   text-align: center;
   margin: 0.5rem 0;
+  color: var(--neon-cyan);
 }
 
 .glowing {
-  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-pink));
+  background: linear-gradient(45deg, var(--neon-violet), var(--neon-pink));
   border: none;
   color: var(--primary);
   padding: 0.8rem 1.5rem;
@@ -85,10 +118,10 @@ h2 {
   font-weight: 700;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-pink);
+  box-shadow: 0 0 15px var(--neon-violet), 0 0 30px var(--neon-pink);
   transition: transform 0.3s, box-shadow 0.3s;
-  display: inline-block;
-  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
 .glowing:hover {
@@ -96,10 +129,30 @@ h2 {
   box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-pink);
 }
 
+.sparkle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 10%, transparent);
+  transform: translate(-50%, -50%) scale(0);
+  pointer-events: none;
+}
+
+.sparkle:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
 .countdown-timer {
   text-align: center;
   font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--neon-cyan);
+  color: var(--stardust-gold);
+  background: var(--glass-bg);
+  padding: 0.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 15px var(--neon-violet);
   animation: flicker 1.5s infinite;
   margin: var(--spacing-sm) 0;
 }
@@ -109,10 +162,10 @@ h2 {
   top: var(--spacing-sm);
   right: var(--spacing-sm);
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  color: var(--gold);
+  color: var(--stardust-gold);
   font-weight: 700;
   box-shadow: 0 0 10px var(--neon-pink);
   animation: pulse 2s infinite;
@@ -123,9 +176,9 @@ section {
   margin: var(--spacing-lg) 0;
   padding: var(--spacing-md);
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(0, 230, 255, 0.2);
+  box-shadow: 0 0 20px rgba(138, 0, 255, 0.2);
 }
 
 .slider, .testimonials-carousel {
@@ -145,7 +198,20 @@ section {
   border-radius: 15px;
   padding: var(--spacing-md);
   margin: 0 0.5rem;
-  box-shadow: 0 0 15px var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-violet);
+  position: relative;
+}
+
+.testimonial-card:hover::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid var(--neon-cyan);
+  border-radius: 15px;
+  animation: glowBorder 2s infinite;
 }
 
 .avatar {
@@ -154,7 +220,7 @@ section {
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 0.5rem;
-  border: 2px solid var(--gold);
+  border: 2px solid var(--stardust-gold);
 }
 
 .avatar-fallback {
@@ -170,7 +236,7 @@ section {
 }
 
 .rating {
-  color: var(--gold);
+  color: var(--stardust-gold);
   font-size: 1.2rem;
   margin: 0.5rem 0;
 }
@@ -193,7 +259,7 @@ section {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--neon-cyan);
+  background: var(--neon-violet);
   color: var(--primary);
   border: none;
   padding: 0.5rem;
@@ -302,7 +368,7 @@ button {
 }
 
 .copy-btn {
-  background: var(--gold);
+  background: var(--stardust-gold);
 }
 
 .share-btn {
@@ -333,7 +399,7 @@ button {
   padding: var(--spacing-sm);
   background: var(--glass-bg);
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 230, 255, 0.2);
+  box-shadow: 0 0 10px rgba(138, 0, 255, 0.2);
 }
 
 .pricing-section {
@@ -343,6 +409,9 @@ button {
 #pricingChart {
   max-width: 100%;
   margin: var(--spacing-md) auto;
+  background: var(--glass-bg);
+  padding: 1rem;
+  border-radius: 15px;
 }
 
 .pricing-details {
@@ -355,7 +424,7 @@ button {
   padding: var(--spacing-md);
   background: var(--glass-bg);
   border-radius: 15px;
-  box-shadow: 0 0 15px var(--neon-cyan);
+  box-shadow: 0 0 15px var(--neon-violet);
   position: relative;
   text-align: center;
 }
@@ -366,7 +435,7 @@ button {
   top: -0.8rem;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--gold);
+  background: var(--stardust-gold);
   color: var(--primary);
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
@@ -377,6 +446,12 @@ button {
   font-size: 1.8rem;
   color: var(--neon-pink);
   margin: 0.8rem 0;
+}
+
+.price s {
+  color: var(--text);
+  font-size: 1.2rem;
+  margin-right: 0.5rem;
 }
 
 .description {
@@ -424,14 +499,93 @@ footer a {
   margin-left: 0.5rem;
 }
 
-@keyframes glow {
-  from { text-shadow: 0 0 8px var(--neon-cyan); }
-  to { text-shadow: 0 0 16px var(--neon-pink); }
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  padding: var(--spacing-md);
+  border-radius: 15px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 0 20px var(--neon-violet);
+  position: relative;
+}
+
+.stardust::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255, 204, 51, 0.2) 10%, transparent);
+  animation: stardustFade 3s infinite;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: var(--neon-pink);
+  cursor: pointer;
+}
+
+.modal h2 {
+  margin-bottom: 1rem;
+}
+
+.modal p {
+  margin-bottom: 1rem;
+  color: var(--text);
+}
+
+.modal .cta-btn {
+  margin: 0.5rem;
+}
+
+@keyframes pulseLogo {
+  0% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.8; }
+}
+
+@keyframes neonPulse {
+  from { text-shadow: 0 0 8px var(--neon-cyan), 0 0 12px var(--neon-violet); }
+  to { text-shadow: 0 0 12px var(--neon-pink), 0 0 20px var(--neon-violet); }
+}
+
+@keyframes letterReveal {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideGlow {
+  0% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
 }
 
 @keyframes flicker {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes pulse {
@@ -444,14 +598,30 @@ footer a {
   to { transform: rotate(360deg); }
 }
 
+@keyframes ripple {
+  to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+}
+
+@keyframes glowBorder {
+  0% { box-shadow: 0 0 5px var(--neon-cyan); }
+  50% { box-shadow: 0 0 15px var(--neon-cyan); }
+  100% { box-shadow: 0 0 5px var(--neon-cyan); }
+}
+
+@keyframes stardustFade {
+  0% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0.3; }
+}
+
 @media (max-width: 768px) {
   .container {
     padding: 0.5rem;
   }
-  h1 {
+  h1.neon-text {
     font-size: 2rem;
   }
-  h2 {
+  h2.neon-text {
     font-size: 1.5rem;
   }
   .pricing-details, .tools-grid, .blog-posts {
@@ -479,10 +649,14 @@ footer a {
   .save-bio input {
     min-width: 100%;
   }
+  .hero-logo {
+    width: 80px;
+    height: 80px;
+  }
 }
 
 @media (max-width: 480px) {
-  h1 {
+  h1.neon-text {
     font-size: 1.8rem;
   }
   .glowing {
