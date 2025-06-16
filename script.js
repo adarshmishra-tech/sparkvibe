@@ -7,6 +7,7 @@ const platformLimits = {
 
 let userTier = 'Free';
 let bioCount = 0;
+let isPremiumTrial = false;
 
 document.addEventListener('DOMContentLoaded', () => {
   initParticles();
@@ -16,7 +17,23 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeSelector();
   initCountdown();
   initAnimations();
+  checkUserTier();
 });
+
+function checkUserTier() {
+  // Simulate user tier check (e.g., from localStorage or API)
+  const storedTier = localStorage.getItem('userTier') || 'Free';
+  userTier = storedTier;
+  if (userTier === 'Elite' || userTier === 'Diamond') {
+    isPremiumTrial = localStorage.getItem('trialEnd') > new Date().toISOString() || false;
+    enablePremiumFeatures();
+  }
+}
+
+function enablePremiumFeatures() {
+  document.querySelectorAll('.theme-selector option').forEach(opt => opt.disabled = false);
+  document.getElementById('tone').value = 'Professional'; // Default to first premium tone
+}
 
 function initParticles() {
   const canvas = document.createElement('canvas');
@@ -76,7 +93,7 @@ function initSlider() {
   prevBtn.addEventListener('click', () => {
     showSlide((current - 1 + slides.length) % slides.length);
   });
-  setInterval(() => showSlide((current + 1) % slides.length), 5000); // Auto-slide every 5s
+  setInterval(() => showSlide((current + 1) % slides.length), 5000);
 }
 
 function initPricingChart() {
@@ -108,9 +125,7 @@ function initPricingChart() {
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      layout: {
-        padding: 20
-      },
+      layout: { padding: 20 },
       plugins: {
         legend: { display: false },
         tooltip: {
@@ -122,7 +137,7 @@ function initPricingChart() {
           callbacks: {
             label: context => {
               const labels = {
-                Free: '3 Bios/Day, STX-Basic AI, Dark Theme, Professional Tone',
+                Free: '3 Bios/Day, STX-Basic AI, Cosmic Theme, Professional Tone',
                 Elite: 'Unlimited Bios, STX-Advanced AI, All Themes & Tones, Analytics',
                 Diamond: 'All Elite + STX-Ultra AI, Custom Templates, Branding Consultation'
               };
@@ -144,10 +159,7 @@ function initPricingChart() {
           grid: { display: false }
         }
       },
-      animation: {
-        duration: 1500,
-        easing: 'easeOutQuart'
-      }
+      animation: { duration: 1500, easing: 'easeOutQuart' }
     }
   });
 }
@@ -172,12 +184,18 @@ function initForm() {
     e.preventDefault();
     if (userTier === 'Free' && bioCount >= 3) {
       gsap.to('#bioForm', { x: 10, duration: 0.1, repeat: 3, yoyo: true });
-      alert('Free tier limit reached. Upgrade for unlimited bios!');
+      showPremiumComparison();
+      return;
+    }
+    if (userTier === 'Free' && !['Professional', 'cosmic-theme'].includes(document.getElementById('tone').value)) {
+      gsap.to('#bioForm', { x: 10, duration: 0.1, repeat: 3, yoyo: true });
+      alert('Premium tones and themes require an upgrade!');
+      document.getElementById('tone').value = 'Professional';
       return;
     }
     document.getElementById('loading').style.display = 'block';
-    const purpose = document.getElementById('bioPurpose').value;
-    const location = document.getElementById('location').value;
+    const purpose = document.getElementById('bioPurpose').value || 'Grow your brand';
+    const location = document.getElementById('location').value || '';
     const platform = platformSelect.value;
     const tone = document.getElementById('tone').value;
     try {
@@ -187,13 +205,13 @@ function initForm() {
         body: JSON.stringify({ purpose, location, platform, tone, fingerprint: navigator.userAgent + screen.width + screen.height })
       });
       const data = await response.json();
-      bioOutput.textContent = data.bio;
-      charCount.textContent = data.bio.length;
-      bioCount++;
+      bioOutput.innerHTML = `<h3>Bio 1:</h3><p>${data.bio1}</p><h3>Bio 2:</h3><p>${data.bio2}</p>`;
+      charCount.textContent = Math.max(data.bio1.length, data.bio2.length);
+      if (userTier === 'Free') bioCount++;
       gsap.fromTo('#bioOutput', { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' });
-      if (userTier === 'Free') alert('Upgrade to Elite for unlimited bios!');
+      if (userTier === 'Free') alert('Upgrade to Elite for unlimited bios and premium features!');
     } catch (err) {
-      alert('Error generating bio. Try again later.');
+      alert('Error generating bios. Try again later.');
     } finally {
       document.getElementById('loading').style.display = 'none';
     }
@@ -211,7 +229,7 @@ function initForm() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'sparkvibe_bio.txt';
+    a.download = 'sparkvibe_bios.txt';
     a.click();
     URL.revokeObjectURL(url);
     gsap.to(downloadBio, { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1 });
@@ -244,15 +262,20 @@ function initThemeSelector() {
   const themeToggle = document.getElementById('themeToggle');
   themeSelect.value = document.body.className || 'cosmic-theme';
   themeToggle.addEventListener('click', () => {
-    const themes = ['cosmic-theme', 'dark-theme', 'light-theme', 'ocean-theme', 'forest-theme'];
+    const themes = ['cosmic-theme', 'neon-pulse', 'aurora-blaze', 'stellar-gold', 'crystal-dawn'];
     const current = themes.indexOf(document.body.className);
     const nextTheme = themes[(current + 1) % themes.length];
+    if (userTier === 'Free' && !['cosmic-theme'].includes(nextTheme)) {
+      gsap.to('#themeSelect', { x: 10, duration: 0.1, repeat: 3, yoyo: true });
+      alert('Premium themes require Elite or Diamond upgrade!');
+      return;
+    }
     document.body.className = nextTheme;
     themeSelect.value = nextTheme;
     gsap.fromTo('body', { opacity: 0.5 }, { opacity: 1, duration: 0.5 });
   });
   themeSelect.addEventListener('change', () => {
-    if (userTier === 'Free' && !['dark-theme', 'cosmic-theme'].includes(themeSelect.value)) {
+    if (userTier === 'Free' && !['cosmic-theme'].includes(themeSelect.value)) {
       gsap.to('#themeSelect', { x: 10, duration: 0.1, repeat: 3, yoyo: true });
       alert('Premium themes require Elite or Diamond upgrade!');
       themeSelect.value = 'cosmic-theme';
@@ -266,16 +289,22 @@ function initThemeSelector() {
 
 function initCountdown() {
   const timer = document.getElementById('timer');
-  let timeLeft = 23 * 60 * 60 + 44 * 60 + 44;
+  let timeLeft = Math.floor((new Date('2025-06-17T09:15:00+0545') - new Date()) / 1000); // Until 09:15 AM tomorrow
   setInterval(() => {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
     const seconds = timeLeft % 60;
     timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     timeLeft--;
-    if (timeLeft < 0) timeLeft = 24 * 60 * 60;
+    if (timeLeft < 0) timeLeft = 0;
     gsap.to('#timer', { scale: 1.05, duration: 0.5, yoyo: true, repeat: 1 });
   }, 1000);
+}
+
+function showPremiumComparison() {
+  document.getElementById('premiumComparison').style.display = 'block';
+  gsap.fromTo('#premiumComparison', { opacity: 0, y: 50 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out' });
+  gsap.fromTo('#pricingCards .pricing-card', { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, stagger: 0.2, ease: 'power2.out' });
 }
 
 function initAnimations() {
@@ -292,19 +321,13 @@ function initAnimations() {
     y: 40,
     duration: 1,
     stagger: 0.3,
-    scrollTrigger: {
-      trigger: '.pricing-section',
-      start: 'top 75%'
-    }
+    scrollTrigger: { trigger: '.pricing-section', start: 'top 75%' }
   });
   gsap.from('.tool-card', {
     opacity: 0,
     y: 40,
     duration: 1,
     stagger: 0.2,
-    scrollTrigger: {
-      trigger: '.recommended-tools',
-      start: 'top 75%'
-    }
+    scrollTrigger: { trigger: '.recommended-tools', start: 'top 75%' }
   });
 }
