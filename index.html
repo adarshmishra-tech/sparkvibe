@@ -20,20 +20,20 @@
       <p class="tagline">Premium AI Bio Generator</p>
       <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
       <a href="#bioForm" class="cta-btn">Create Your Bio Now</a>
-      <p class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:44:44</span></p>
+      <p class="countdown-timer">20% Off Elite & Diamond! Ends in <span id="timer">23:29:14</span> (Until 09:15 AM Tomorrow)</p>
     </header>
 
     <section class="bio-preview-slider">
       <h2>Preview Epic Bios</h2>
       <div class="slider">
         <div class="slide active">
-          <p>Business (LinkedIn): Digital Marketing Maestro | Skyrocketing brands | NYC 📍 | Let’s grow! #Marketing</p>
+          <p>Business (LinkedIn): Visionary Marketing Leader | Elevating brands globally | London 📍 | Connect to soar! #Leadership</p>
         </div>
         <div class="slide">
-          <p>Creator (Instagram): 🌌 Content Alchemist | NYC vibes | DM for collabs! ✨ #CreatorVibes</p>
+          <p>Creator (Instagram): 🌟 Creative Trailblazer | LA dreams | Collab invites open! ✨ #InstaStar</p>
         </div>
         <div class="slide">
-          <p>Funny (Twitter): Meme Wizard 😂 | Coffee-fueled chaos | #MemeLife #TweetVibes</p>
+          <p>Funny (Twitter): Joke Jedi 😂 | Espresso-powered antics | #TweetStorm #Humor</p>
         </div>
         <button class="slider-prev">←</button>
         <button class="slider-next">→</button>
@@ -45,11 +45,11 @@
       <div class="theme-selector">
         <label for="themeSelect">Choose Theme:</label>
         <select id="themeSelect">
-          <option value="cosmic-theme">Cosmic</option>
-          <option value="dark-theme">Dark</option>
-          <option value="light-theme">Light</option>
-          <option value="ocean-theme">Ocean</option>
-          <option value="forest-theme">Forest</option>
+          <option value="cosmic-theme">Cosmic (Default)</option>
+          <option value="neon-pulse" disabled>Neon Pulse (Premium)</option>
+          <option value="aurora-blaze" disabled>Aurora Blaze (Premium)</option>
+          <option value="stellar-gold" disabled>Stellar Gold (Premium)</option>
+          <option value="crystal-dawn" disabled>Crystal Dawn (Premium)</option>
         </select>
       </div>
     </section>
@@ -68,17 +68,17 @@
       </select>
       <label for="tone">Tone</label>
       <select id="tone" required>
-        <option value="Professional">💼 Professional (Free)</option>
-        <option value="Friendly">😄 Friendly (Elite)</option>
-        <option value="Luxury">✨ Luxury (Elite)</option>
-        <option value="Witty">😎 Witty (Diamond)</option>
+        <option value="Professional">💼 Professional</option>
+        <option value="Friendly">😄 Friendly</option>
+        <option value="Luxury">✨ Luxury</option>
+        <option value="Witty">😎 Witty</option>
       </select>
       <div class="char-counter">Characters: <span id="charCount">0</span>/<span id="maxChars">150</span></div>
-      <button type="submit" class="cta-btn generate-btn">🚀 Generate Epic Bio</button>
+      <button type="submit" class="cta-btn generate-btn">🚀 Generate 2 Epic Bios</button>
     </form>
 
     <div id="loading" class="loading">
-      <span class="spinner"></span> Crafting Your Bio...
+      <span class="spinner"></span> Crafting Your Bios...
     </div>
 
     <div id="bioOutput"></div>
@@ -95,6 +95,7 @@
       <h2>Save Bio & Get Updates</h2>
       <input type="email" id="saveEmail" placeholder="Enter your email" required>
       <button id="saveBio" class="cta-btn">💾 Save Bio</button>
+      <p class="trial-note">Try Premium for 7 Days Free!</p>
     </div>
 
     <section class="upsell-section">
@@ -129,11 +130,11 @@
       </div>
     </section>
 
-    <section class="pricing-section">
+    <section class="pricing-section" id="premiumComparison">
       <h2>Unlock Premium Power</h2>
       <p>25,000+ creators upgraded to Elite or Diamond!</p>
       <canvas id="pricingChart"></canvas>
-      <div class="pricing-details">
+      <div class="pricing-details" id="pricingCards">
         <div class="pricing-card">
           <h3>Free</h3>
           <p class="price">$0/month</p>
@@ -141,10 +142,10 @@
           <ul>
             <li>3 Bios/Day</li>
             <li>STX-Basic AI</li>
-            <li>Dark Theme</li>
+            <li>Cosmic Theme</li>
             <li>Professional Tone</li>
           </ul>
-          <button class="cta-btn">Current Plan</button>
+          <button class="cta-btn" disabled>Current Plan</button>
         </div>
         <div class="pricing-card popular">
           <h3>Elite</h3>
@@ -156,7 +157,7 @@
             <li>All Themes & Tones</li>
             <li>Bio Analytics</li>
           </ul>
-          <a href="#" class="cta-btn">Buy Now</a>
+          <a href="#" class="cta-btn">Buy Now (7-Day Free Trial)</a>
         </div>
         <div class="pricing-card">
           <h3>Diamond</h3>
@@ -168,7 +169,7 @@
             <li>Custom Templates</li>
             <li>Branding Consultation</li>
           </ul>
-          <a href="#" class="cta-btn">Buy Now</a>
+          <a href="#" class="cta-btn">Buy Now (7-Day Free Trial)</a>
         </div>
       </div>
     </section>
