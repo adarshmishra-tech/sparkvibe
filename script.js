@@ -90,7 +90,7 @@ function initParticles() {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(229, 214, 138, 0.3)';
+        ctx.fillStyle = 'rgba(255, 215, 0, 0.3)';
         ctx.fill();
       });
       requestAnimationFrame(animate);
@@ -171,14 +171,14 @@ function initPricingChart() {
     const ctx = document.getElementById('pricingChart').getContext('2d');
     if (!ctx) return;
     const gradientFree = ctx.createLinearGradient(0, 0, 0, 300);
-    gradientFree.addColorStop(0, 'rgba(229, 214, 138, 0.7)');
-    gradientFree.addColorStop(1, 'rgba(229, 214, 138, 0.3)');
+    gradientFree.addColorStop(0, 'rgba(255, 215, 0, 0.7)');
+    gradientFree.addColorStop(1, 'rgba(255, 215, 0, 0.3)');
     const gradientElite = ctx.createLinearGradient(0, 0, 0, 300);
-    gradientElite.addColorStop(0, 'rgba(22, 33, 62, 0.7)');
-    gradientElite.addColorStop(1, 'rgba(22, 33, 62, 0.3)');
+    gradientElite.addColorStop(0, 'rgba(26, 26, 46, 0.7)');
+    gradientElite.addColorStop(1, 'rgba(26, 26, 46, 0.3)');
     const gradientDiamond = ctx.createLinearGradient(0, 0, 0, 300);
-    gradientDiamond.addColorStop(0, 'rgba(26, 26, 46, 0.7)');
-    gradientDiamond.addColorStop(1, 'rgba(26, 26, 46, 0.3)');
+    gradientDiamond.addColorStop(0, 'rgba(10, 15, 46, 0.7)');
+    gradientDiamond.addColorStop(1, 'rgba(10, 15, 46, 0.3)');
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -187,8 +187,9 @@ function initPricingChart() {
           label: 'Features',
           data: [4, 8, 12],
           backgroundColor: [gradientFree, gradientElite, gradientDiamond],
-          borderColor: ['#E5D68A', '#16213E', '#1A1A2E'],
-          borderWidth: 1
+          borderColor: ['#FFD700', '#1A1A3D', '#0A0F2E'],
+          borderWidth: 1,
+          borderRadius: 5
         }]
       },
       options: {
@@ -196,9 +197,9 @@ function initPricingChart() {
         maintainAspectRatio: false,
         plugins: {
           tooltip: {
-            backgroundColor: 'rgba(26, 26, 46, 0.9)',
-            titleColor: '#E0E0E0',
-            bodyColor: '#E0E0E0',
+            backgroundColor: 'rgba(10, 15, 46, 0.9)',
+            titleColor: '#F5F5F5',
+            bodyColor: '#F5F5F5',
             callbacks: {
               label: context => {
                 const labels = {
@@ -211,19 +212,19 @@ function initPricingChart() {
             }
           },
           legend: {
-            labels: { color: '#E0E0E0', font: { size: 14 } }
+            labels: { color: '#F5F5F5', font: { size: 14 } }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
-            title: { display: true, text: 'Feature Count', color: '#E0E0E0', font: { size: 14 } },
-            grid: { color: 'rgba(229, 214, 138, 0.1)' },
-            ticks: { color: '#E0E0E0', font: { size: 12 } }
+            title: { display: true, text: 'Feature Count', color: '#F5F5F5', font: { size: 14 } },
+            grid: { color: 'rgba(255, 215, 0, 0.1)' },
+            ticks: { color: '#F5F5F5', font: { size: 12 } }
           },
           x: {
-            title: { display: true, text: 'Plan', color: '#E0E0E0', font: { size: 14 } },
-            ticks: { color: '#E0E0E0', font: { size: 12 } }
+            title: { display: true, text: 'Plan', color: '#F5F5F5', font: { size: 14 } },
+            ticks: { color: '#F5F5F5', font: { size: 12 } }
           }
         }
       }
@@ -371,18 +372,21 @@ function initThemeSelector() {
     const themeSelect = document.getElementById('themeSelect');
     const themeToggle = document.getElementById('themeToggle');
     if (!themeSelect || !themeToggle) return;
-    if (userTier !== 'Free') {
-      themeSelect.disabled = false;
-      themeToggle.disabled = false;
-    }
+    themeSelect.value = document.body.className || 'cosmic-theme';
+    themeToggle.addEventListener('click', () => {
+      const themes = ['cosmic-theme', 'dark-theme', 'light-theme', 'ocean-theme', 'forest-theme'];
+      const current = themes.indexOf(document.body.className);
+      const nextTheme = themes[(current + 1) % themes.length];
+      document.body.className = nextTheme;
+      themeSelect.value = nextTheme;
+    });
     themeSelect.addEventListener('change', () => {
       document.body.className = themeSelect.value;
-    });
-    themeToggle.addEventListener('click', () => {
-      const themes = ['dark-theme', 'light-theme', 'cosmic-theme', 'ocean-theme', 'forest-theme'];
-      const current = themes.indexOf(document.body.className);
-      document.body.className = themes[(current + 1) % themes.length];
-      themeSelect.value = document.body.className;
+      if (userTier === 'Free' && !['dark-theme', 'cosmic-theme'].includes(themeSelect.value)) {
+        alert('Premium themes require Elite or Diamond upgrade!');
+        themeSelect.value = 'cosmic-theme';
+        document.body.className = 'cosmic-theme';
+      }
     });
   } catch (err) {
     console.error('Theme selector error:', err);
@@ -392,16 +396,14 @@ function initThemeSelector() {
 function initCountdown() {
   try {
     const timer = document.getElementById('timer');
-    const modalTimer = document.getElementById('modalTimer');
-    if (!timer || !modalTimer) return;
-    let timeLeft = 24 * 60 * 60;
+    if (!timer) return;
+    let timeLeft = 23 * 60 * 60 + 56 * 60 + 6; // Current time: 09:19 AM +0545, ends at 09:15 AM tomorrow
     setInterval(() => {
       const hours = Math.floor(timeLeft / 3600);
       const minutes = Math.floor((timeLeft % 3600) / 60);
       const seconds = timeLeft % 60;
       const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
       timer.textContent = timeString;
-      modalTimer.textContent = timeString;
       timeLeft--;
       if (timeLeft < 0) timeLeft = 24 * 60 * 60;
     }, 1000);
