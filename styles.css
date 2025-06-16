@@ -1,12 +1,10 @@
 :root {
-  --primary: #0A001F;
-  --neon-cyan: #00E6FF;
-  --neon-pink: #FF00CC;
-  --neon-violet: #8A00FF;
-  --cosmic-blue: #0022AA;
-  --stardust-gold: #FFCC33;
-  --text: #E0E0E0;
-  --glass-bg: rgba(255, 255, 255, 0.08);
+  --primary: #1A1A2E;
+  --secondary: #16213E;
+  --accent: #E5D68A;
+  --text-light: #E0E0E0;
+  --text-dark: #FFFFFF;
+  --glass-bg: rgba(255, 255, 255, 0.05);
   --spacing-sm: 1rem;
   --spacing-md: 2rem;
   --spacing-lg: 3rem;
@@ -21,7 +19,7 @@
 body {
   font-family: 'Poppins', sans-serif;
   background: var(--primary);
-  color: var(--text);
+  color: var(--text-light);
   overflow-x: hidden;
   line-height: 1.6;
 }
@@ -33,7 +31,7 @@ body {
   width: 100%;
   height: 100%;
   z-index: -1;
-  background: radial-gradient(circle at center, rgba(138, 0, 255, 0.15), transparent);
+  background: radial-gradient(circle at center, rgba(229, 214, 138, 0.1), transparent);
 }
 
 .container {
@@ -51,47 +49,26 @@ header {
 .hero-logo {
   width: 100px;
   height: 100px;
-  background: radial-gradient(circle, var(--neon-cyan) 10%, var(--neon-violet) 50%, transparent);
+  background: radial-gradient(circle, var(--accent) 10%, var(--secondary) 50%, transparent);
   border-radius: 50%;
   margin: 0 auto var(--spacing-sm);
   animation: pulseLogo 3s infinite ease-in-out;
 }
 
 h1, h2, h3 {
-  font-family: 'Nebula', 'Orbitron', sans-serif;
+  font-family: 'Orbitron', sans-serif;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 2px;
+  color: var(--text-light);
 }
 
-.neon-text {
-  font-size: clamp(1.5rem, 4vw, 2rem);
-  background: linear-gradient(45deg, var(--neon-cyan), var(--neon-violet), var(--neon-pink));
-  -webkit-background-clip: text;
-  color: transparent;
-  text-shadow: 0 0 10px var(--neon-violet);
-  animation: neonPulse 2s infinite alternate, letterReveal 1s ease-in-out;
-  display: inline-block;
-  position: relative;
-}
-
-.neon-text::after {
-  content: '';
-  position: absolute;
-  bottom: -5px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--neon-pink), transparent);
-  animation: slideGlow 3s infinite;
-}
-
-h1.neon-text {
+h1 {
   font-size: clamp(2rem, 5vw, 3.5rem);
 }
 
 .tagline {
   font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--stardust-gold);
+  color: var(--accent);
   position: relative;
   min-height: 1.5em;
 }
@@ -99,18 +76,18 @@ h1.neon-text {
 .typewriter::after {
   content: '|';
   animation: blink 0.7s infinite;
-  color: var(--neon-cyan);
+  color: var(--accent);
 }
 
 .social-proof, .premium-cta {
   font-size: clamp(0.9rem, 2.5vw, 1rem);
   text-align: center;
   margin: 0.5rem 0;
-  color: var(--neon-cyan);
+  color: var(--text-light);
 }
 
-.glowing {
-  background: linear-gradient(45deg, var(--neon-violet), var(--neon-pink));
+.cta-btn {
+  background: var(--accent);
   border: none;
   color: var(--primary);
   padding: 0.8rem 1.5rem;
@@ -118,43 +95,23 @@ h1.neon-text {
   font-weight: 700;
   border-radius: 50px;
   cursor: pointer;
-  box-shadow: 0 0 15px var(--neon-violet), 0 0 30px var(--neon-pink);
-  transition: transform 0.3s, box-shadow 0.3s;
-  position: relative;
-  overflow: hidden;
+  transition: transform 0.3s, background 0.3s;
 }
 
-.glowing:hover {
+.cta-btn:hover {
   transform: scale(1.05);
-  box-shadow: 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-pink);
-}
-
-.sparkle::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 10%, transparent);
-  transform: translate(-50%, -50%) scale(0);
-  pointer-events: none;
-}
-
-.sparkle:active::after {
-  animation: ripple 0.6s ease-out;
+  background: #D4C76A;
 }
 
 .countdown-timer {
   text-align: center;
   font-size: clamp(1rem, 3vw, 1.2rem);
-  color: var(--stardust-gold);
+  color: var(--accent);
   background: var(--glass-bg);
   padding: 0.5rem;
   border-radius: 10px;
-  box-shadow: 0 0 15px var(--neon-violet);
-  animation: flicker 1.5s infinite;
   margin: var(--spacing-sm) 0;
+  animation: fadeIn 1s ease-in;
 }
 
 .early-user-badge {
@@ -162,13 +119,11 @@ h1.neon-text {
   top: var(--spacing-sm);
   right: var(--spacing-sm);
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
   padding: 0.5rem 1rem;
   border-radius: 20px;
-  color: var(--stardust-gold);
+  color: var(--text-light);
   font-weight: 700;
-  box-shadow: 0 0 10px var(--neon-pink);
-  animation: pulse 2s infinite;
+  animation: fadeIn 1.5s ease-in-out;
   z-index: 1000;
 }
 
@@ -176,9 +131,7 @@ section {
   margin: var(--spacing-lg) 0;
   padding: var(--spacing-md);
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
   border-radius: 20px;
-  box-shadow: 0 0 20px rgba(138, 0, 255, 0.2);
 }
 
 .slider, .testimonials-carousel {
@@ -198,20 +151,6 @@ section {
   border-radius: 15px;
   padding: var(--spacing-md);
   margin: 0 0.5rem;
-  box-shadow: 0 0 15px var(--neon-violet);
-  position: relative;
-}
-
-.testimonial-card:hover::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  border: 2px solid var(--neon-cyan);
-  border-radius: 15px;
-  animation: glowBorder 2s infinite;
 }
 
 .avatar {
@@ -220,14 +159,14 @@ section {
   border-radius: 50%;
   overflow: hidden;
   margin: 0 auto 0.5rem;
-  border: 2px solid var(--stardust-gold);
+  border: 2px solid var(--accent);
 }
 
 .avatar-fallback {
   display: none;
   width: 60px;
   height: 60px;
-  background: var(--neon-pink);
+  background: var(--accent);
   color: var(--primary);
   font-size: 1.5rem;
   line-height: 60px;
@@ -236,7 +175,7 @@ section {
 }
 
 .rating {
-  color: var(--stardust-gold);
+  color: var(--accent);
   font-size: 1.2rem;
   margin: 0.5rem 0;
 }
@@ -248,19 +187,19 @@ section {
 
 .username {
   font-weight: 700;
-  color: var(--neon-cyan);
+  color: var(--text-light);
 }
 
 .platform, .verified {
-  color: var(--text);
+  color: var(--text-light);
 }
 
 .slider-prev, .slider-next, .carousel-prev, .carousel-next {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: var(--neon-violet);
-  color: var(--primary);
+  background: var(--secondary);
+  color: var(--text-light);
   border: none;
   padding: 0.5rem;
   cursor: pointer;
@@ -285,14 +224,14 @@ section {
   display: inline-block;
   width: 8px;
   height: 8px;
-  background: var(--text);
+  background: var(--text-light);
   border-radius: 50%;
   margin: 0 4px;
   cursor: pointer;
 }
 
 .carousel-dots .active {
-  background: var(--neon-pink);
+  background: var(--accent);
 }
 
 form {
@@ -310,33 +249,29 @@ input, select {
   border: none;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
-  color: var(--text);
-  font-size: 0.9rem;
-}
-
-button {
+  color: var(--text-light);
   font-size: 0.9rem;
 }
 
 .char-counter {
   text-align: right;
   font-size: 0.8rem;
-  color: var(--neon-cyan);
+  color: var(--text-light);
 }
 
 .loading {
   display: none;
   text-align: center;
   margin: var(--spacing-sm) 0;
-  color: var(--neon-pink);
+  color: var(--accent);
 }
 
 .spinner {
   display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid var(--neon-cyan);
-  border-top: 2px solid var(--neon-pink);
+  border: 2px solid var(--accent);
+  border-top: 2px solid var(--secondary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }
@@ -348,7 +283,7 @@ button {
   border-radius: 10px;
   text-align: center;
   font-size: 1rem;
-  color: var(--neon-cyan);
+  color: var(--text-light);
 }
 
 .bio-actions {
@@ -368,11 +303,11 @@ button {
 }
 
 .copy-btn {
-  background: var(--stardust-gold);
+  background: var(--accent);
 }
 
 .share-btn {
-  background: var(--neon-cyan);
+  background: var(--secondary);
 }
 
 .save-bio {
@@ -399,7 +334,6 @@ button {
   padding: var(--spacing-sm);
   background: var(--glass-bg);
   border-radius: 10px;
-  box-shadow: 0 0 10px rgba(138, 0, 255, 0.2);
 }
 
 .pricing-section {
@@ -412,6 +346,7 @@ button {
   background: var(--glass-bg);
   padding: 1rem;
   border-radius: 15px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .pricing-details {
@@ -424,8 +359,6 @@ button {
   padding: var(--spacing-md);
   background: var(--glass-bg);
   border-radius: 15px;
-  box-shadow: 0 0 15px var(--neon-violet);
-  position: relative;
   text-align: center;
 }
 
@@ -435,7 +368,7 @@ button {
   top: -0.8rem;
   left: 50%;
   transform: translateX(-50%);
-  background: var(--stardust-gold);
+  background: var(--accent);
   color: var(--primary);
   padding: 0.4rem 0.8rem;
   border-radius: 8px;
@@ -444,12 +377,12 @@ button {
 
 .price {
   font-size: 1.8rem;
-  color: var(--neon-pink);
+  color: var(--accent);
   margin: 0.8rem 0;
 }
 
 .price s {
-  color: var(--text);
+  color: var(--text-light);
   font-size: 1.2rem;
   margin-right: 0.5rem;
 }
@@ -466,8 +399,7 @@ button {
 
 .pricing-card li {
   margin: 0.4rem 0;
-  color: var(--neon-cyan);
-  font-size: 0.9rem;
+  color: var(--text-light);
 }
 
 .pricing-card .cta-btn {
@@ -484,10 +416,9 @@ footer {
 }
 
 footer a {
-  color: var(--neon-cyan);
+  color: var(--accent);
   text-decoration: none;
   margin: 0 0.4rem;
-  font-size: 0.9rem;
 }
 
 .theme-btn, .theme-selector {
@@ -506,7 +437,7 @@ footer a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   justify-content: center;
   align-items: center;
@@ -514,25 +445,11 @@ footer a {
 
 .modal-content {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
   padding: var(--spacing-md);
   border-radius: 15px;
   text-align: center;
   max-width: 500px;
   width: 90%;
-  box-shadow: 0 0 20px var(--neon-violet);
-  position: relative;
-}
-
-.stardust::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(circle, rgba(255, 204, 51, 0.2) 10%, transparent);
-  animation: stardustFade 3s infinite;
 }
 
 .modal-close {
@@ -540,7 +457,7 @@ footer a {
   top: 1rem;
   right: 1rem;
   font-size: 1.5rem;
-  color: var(--neon-pink);
+  color: var(--text-light);
   cursor: pointer;
 }
 
@@ -550,7 +467,6 @@ footer a {
 
 .modal p {
   margin-bottom: 1rem;
-  color: var(--text);
 }
 
 .modal .cta-btn {
@@ -563,65 +479,27 @@ footer a {
   100% { transform: scale(1); opacity: 0.8; }
 }
 
-@keyframes neonPulse {
-  from { text-shadow: 0 0 8px var(--neon-cyan), 0 0 12px var(--neon-violet); }
-  to { text-shadow: 0 0 12px var(--neon-pink), 0 0 20px var(--neon-violet); }
-}
-
-@keyframes letterReveal {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-@keyframes slideGlow {
-  0% { transform: translateX(-100%); }
-  50% { transform: translateX(100%); }
-  100% { transform: translateX(-100%); }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes blink {
   50% { opacity: 0; }
 }
 
-@keyframes flicker {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.03); }
-  100% { transform: scale(1); }
-}
-
 @keyframes spin {
   to { transform: rotate(360deg); }
-}
-
-@keyframes ripple {
-  to { transform: translate(-50%, -50%) scale(1); opacity: 0; }
-}
-
-@keyframes glowBorder {
-  0% { box-shadow: 0 0 5px var(--neon-cyan); }
-  50% { box-shadow: 0 0 15px var(--neon-cyan); }
-  100% { box-shadow: 0 0 5px var(--neon-cyan); }
-}
-
-@keyframes stardustFade {
-  0% { opacity: 0.3; }
-  50% { opacity: 0.6; }
-  100% { opacity: 0.3; }
 }
 
 @media (max-width: 768px) {
   .container {
     padding: 0.5rem;
   }
-  h1.neon-text {
+  h1 {
     font-size: 2rem;
   }
-  h2.neon-text {
+  h2 {
     font-size: 1.5rem;
   }
   .pricing-details, .tools-grid, .blog-posts {
@@ -656,10 +534,10 @@ footer a {
 }
 
 @media (max-width: 480px) {
-  h1.neon-text {
+  h1 {
     font-size: 1.8rem;
   }
-  .glowing {
+  .cta-btn {
     padding: 0.6rem 1rem;
     font-size: 0.8rem;
   }
