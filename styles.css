@@ -73,6 +73,7 @@ body.crystal-dawn {
   padding: var(--spacing-md);
   display: grid;
   gap: var(--spacing-lg);
+  min-height: 100vh;
 }
 
 header {
@@ -430,8 +431,10 @@ input:focus, select:focus {
   margin-top: var(--spacing-sm);
 }
 
-.pricing-section {
-  text-align: center;
+#pricingContainer {
+  position: relative;
+  max-height: 500px;
+  overflow: hidden;
 }
 
 #pricingChart {
@@ -442,64 +445,59 @@ input:focus, select:focus {
   border-radius: 15px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
   border: 1px solid var(--glass-border);
-  overflow: hidden;
 }
 
-.pricing-details {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: var(--glass-bg);
+  border-radius: 20px;
+  padding: var(--spacing-lg);
+  width: 80%;
+  max-width: 800px;
+  text-align: center;
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.4);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 2rem;
+  color: var(--text-light);
+  cursor: pointer;
+}
+
+.pricing-comparison {
+  display: flex;
+  justify-content: space-around;
   gap: var(--spacing-md);
   margin-top: var(--spacing-lg);
 }
 
-.pricing-card {
-  padding: var(--spacing-lg);
-  background: var(--glass-bg);
+.modal-card {
+  flex: 1;
+  padding: var(--spacing-md);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
-  text-align: center;
   transition: all 0.3s ease;
-  border: 1px solid var(--glass-border);
 }
 
-.pricing-card:hover {
+.modal-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 10px 30px rgba(255, 215, 0, 0.5);
-}
-
-.pricing-card.popular::before {
-  content: 'Most Popular';
-  position: absolute;
-  top: -1.2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--accent);
-  color: var(--primary);
-  padding: 0.6rem 1.2rem;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  text-shadow: 0 0 6px rgba(255, 215, 0, 0.5);
-}
-
-.price {
-  font-size: 2.2rem;
-  color: var(--accent);
-  margin: 1rem 0;
-}
-
-.price s {
-  color: #B0B0B0;
-  font-size: 1.5rem;
-  margin-right: 0.6rem;
-}
-
-.pricing-card ul {
-  list-style: none;
-  margin: 1.2rem 0;
-}
-
-.pricing-card li {
-  margin: 0.8rem 0;
-  color: var(--text-light);
 }
 
 footer {
@@ -549,7 +547,7 @@ footer a:hover {
   h1 {
     font-size: 2.5rem;
   }
-  .slider, .pricing-details, .tools-grid {
+  .slider, .pricing-comparison, .tools-grid {
     grid-template-columns: 1fr;
   }
   .cta-btn {
@@ -572,6 +570,9 @@ footer a:hover {
   }
   #pricingChart {
     height: 300px;
+  }
+  .modal-content {
+    width: 90%;
   }
 }
 
