@@ -1,5 +1,17 @@
 const platformLimits = { Instagram: 150, LinkedIn: 2000, TikTok: 80, Twitter: 160 };
-let userTier = 'Free', bioCount = 0;
+let bioCount = 0, ipLimit = 2;
+const ratings = [
+  { name: "Aarav Kapoor", rating: "★★★★★", comment: "Revolutionized my career!" },
+  { name: "Sophia Miller", rating: "★★★★☆", comment: "Perfect for branding" },
+  { name: "Deepika Reddy", rating: "★★★★★", comment: "Exceptional quality" },
+  { name: "James Wilson", rating: "★★★★☆", comment: "Highly effective" },
+  { name: "Karan Singh", rating: "★★★★★", comment: "Elite toolset" },
+  { name: "Olivia Brown", rating: "★★★★☆", comment: "Great support" },
+  { name: "Shalini Mehta", rating: "★★★★★", comment: "Top-tier design" },
+  { name: "Thomas Clark", rating: "★★★★☆", comment: "Very reliable" },
+  { name: "Rohan Desai", rating: "★★★★★", comment: "Game-changer" },
+  { name: "Emma Taylor", rating: "★★★★☆", comment: "Excellent results" }
+];
 
 document.addEventListener('DOMContentLoaded', () => {
   initParticles();
@@ -7,22 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initThemeSelector();
   initCountdown();
   initAnimations();
-  checkUserTier();
+  initRatingCarousel();
+  initChart();
 });
-
-function checkUserTier() {
-  userTier = localStorage.getItem('userTier') || 'Free';
-  if (userTier !== 'Elite' && userTier !== 'Diamond') {
-    document.getElementById('themeSelect').value = 'cosmic-theme';
-    document.getElementById('themeToggle').disabled = true;
-    const options = document.querySelectorAll('#themeSelect option');
-    options.forEach(opt => opt.disabled = opt.value !== 'cosmic-theme');
-  } else {
-    document.getElementById('themeToggle').disabled = false;
-    document.querySelectorAll('#themeSelect option').forEach(opt => opt.disabled = false);
-  }
-  applyTheme(document.getElementById('themeSelect').value);
-}
 
 function initParticles() {
   const canvas = document.createElement('canvas');
@@ -30,11 +29,11 @@ function initParticles() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const ctx = canvas.getContext('2d');
-  const particles = Array(100).fill().map(() => ({
+  const particles = Array(120).fill().map(() => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.2,
-    vy: (Math.random() - 0.5) * 0.2,
+    vx: (Math.random() - 0.5) * 0.3,
+    vy: (Math.random() - 0.5) * 0.3,
     radius: Math.random() * 2 + 1
   }));
   function animate() {
@@ -65,9 +64,7 @@ function initForm() {
   const bioOutput = document.getElementById('bioOutput');
   const copyBio = document.getElementById('copyBio');
   const downloadBio = document.getElementById('downloadBio');
-  const saveBioBtn = document.getElementById('saveBio');
-  const modal = document.getElementById('comparisonModal');
-  const closeBtn = document.querySelector('.close-btn');
+  const buyNow = document.getElementById('buyNow');
 
   platformSelect.addEventListener('change', () => {
     maxChars.textContent = platformLimits[platformSelect.value];
@@ -76,8 +73,9 @@ function initForm() {
 
   form.addEventListener('submit', async e => {
     e.preventDefault();
-    if (userTier === 'Free' && bioCount >= 3) {
-      modal.classList.remove('hidden');
+    if (bioCount >= ipLimit) {
+      buyNow.classList.remove('hidden');
+      alert('Free limit (2 bios) reached. Upgrade to Premium.');
       return;
     }
     document.getElementById('loading').classList.remove('hidden');
@@ -90,12 +88,13 @@ function initForm() {
       const response = await fetch('/generate-bio', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ purpose, location, platform, tone })
+        body: JSON.stringify({ purpose, location, platform, tone, ip: getIP() })
       });
       const data = await response.json();
-      bioOutput.innerHTML = `<p class="text-gray-100 drop-shadow-md">${data.bio1}</p><p class="text-gray-100 drop-shadow-md mt-1">${data.bio2}</p>`;
+      bioOutput.textContent = `${data.bio1}\n${data.bio2}`;
       charCount.textContent = Math.max(data.bio1.length, data.bio2.length);
-      if (userTier === 'Free') bioCount++;
+      bioCount++;
+      if (bioCount === 2) buyNow.classList.remove('hidden');
     } catch (err) {
       alert('Error generating bios.');
     } finally {
@@ -119,22 +118,9 @@ function initForm() {
     URL.revokeObjectURL(url);
   });
 
-  saveBioBtn.addEventListener('click', async () => {
-    const email = document.getElementById('saveEmail').value;
-    if (!email || !bioOutput.textContent) return alert('Enter email and generate a bio.');
-    try {
-      const response = await fetch('/save-bio', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, bio: bioOutput.textContent })
-      });
-      alert((await response.json()).message);
-    } catch (err) {
-      alert('Error saving bio.');
-    }
-  });
-
-  closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+  function getIP() {
+    return '127.0.0.1'; // Placeholder; replace with actual IP service in production
+  }
 }
 
 function initThemeSelector() {
@@ -144,6 +130,7 @@ function initThemeSelector() {
   applyTheme('cosmic-theme');
 
   themeToggle.addEventListener('click', () => {
+    const userTier = localStorage.getItem('userTier') || 'Free';
     if (userTier === 'Elite' || userTier === 'Diamond') {
       const themes = ['cosmic-theme', 'neon-pulse', 'aurora-blaze', 'stellar-gold', 'crystal-dawn'];
       const current = themes.indexOf(document.body.className);
@@ -154,6 +141,7 @@ function initThemeSelector() {
   });
 
   themeSelect.addEventListener('change', (e) => {
+    const userTier = localStorage.getItem('userTier') || 'Free';
     if (userTier === 'Elite' || userTier === 'Diamond' || e.target.value === 'cosmic-theme') {
       applyTheme(e.target.value);
     }
@@ -171,12 +159,45 @@ function initCountdown() {
     const hours = Math.floor(timeLeft / 3600);
     const minutes = Math.floor((timeLeft % 3600) / 60);
     const seconds = timeLeft % 60;
-    timer.textContent = `${hours}:${minutes}:${seconds}`.replace(/\b\d\b/g, '0$&');
+    timer.textContent = `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
     if (timeLeft-- <= 0) timeLeft = 0;
   }, 1000);
 }
 
 function initAnimations() {
-  gsap.from('.hero-logo', { y: -30, opacity: 0, duration: 1, ease: 'power2.out' });
-  gsap.from('h1, .cta-btn, .countdown-timer', { opacity: 0, y: 10, duration: 0.8, stagger: 0.2, ease: 'power2.out' });
+  gsap.from('.hero-logo', { y: -40, opacity: 0, duration: 1.2, ease: 'power2.out' });
+  gsap.from('h1, .cta-btn, .countdown-timer', { opacity: 0, y: 20, duration: 1, stagger: 0.3, ease: 'power2.out' });
+}
+
+function initRatingCarousel() {
+  const carousel = document.getElementById('ratingCarousel');
+  const slides = carousel.getElementsByClassName('rating-slide');
+  let currentSlide = 0;
+
+  setInterval(() => {
+    slides[currentSlide].classList.add('hidden');
+    currentSlide = (currentSlide + 1) % slides.length;
+    slides[currentSlide].classList.remove('hidden');
+  }, 5000);
+}
+
+function initChart() {
+  const ctx = document.getElementById('premiumChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Unlimited Bios', 'All Themes', 'Analytics', 'Custom Templates'],
+      datasets: [{
+        label: 'Premium Benefits',
+        data: [90, 85, 70, 60],
+        backgroundColor: 'rgba(255, 215, 0, 0.7)',
+        borderColor: 'rgba(255, 215, 0, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true, max: 100, ticks: { color: 'rgba(255, 215, 0, 0.9)' } } },
+      plugins: { legend: { labels: { color: 'rgba(255, 215, 0, 0.9)' } } }
+    }
+  });
 }
