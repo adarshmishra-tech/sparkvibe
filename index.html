@@ -18,34 +18,37 @@
   <link href="https://fonts.cdnfonts.com/css/nebula" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <script src="/script.js" defer></script>
 </head>
 <body class="cosmic-theme">
   <div id="particle-bg"></div>
   <header role="banner">
-    <div class="hero-logo"></div>
+    <div class="hero-logo" data-tilt data-tilt-max="15"></div>
     <h1>SPARKVIBE - PREMIUM AI BIO GENERATOR</h1>
-    <p class="tagline">Craft Epic Bios with Next-Level Branding</p>
+    <p class="tagline typewriter" data-text='["Craft Epic Bios", "Next-Level Branding", "STX-Powered Vibes"]'></p>
   </header>
   <main class="container" role="main" aria-label="AI Bio Generator">
     <div class="early-user-badge">🔥 Early Adopter: Limited Spots!</div>
     <p class="social-proof">Trusted by 25,000+ creators worldwide</p>
     <a href="#pricing" class="cta-btn">Create Your Bio Now</a>
-    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:49:34</span></div>
+    <div class="countdown-timer">20% Off Elite & Diamond Plans! Ends in <span id="timer">23:44:44</span></div>
 
-    <section class="bio-preview" role="region" aria-label="Sample Bio Previews">
+    <section class="bio-preview-slider" role="region" aria-label="Sample Bio Previews">
       <h2>Preview Epic Bios</h2>
-      <div class="preview-cards">
-        <div class="preview-card">
+      <div class="slider">
+        <div class="slide active" data-type="Business">
           <p><strong>Business (LinkedIn):</strong> Digital Marketing Maestro | Skyrocketing brands | NYC 📍 | Let’s grow! #Marketing</p>
         </div>
-        <div class="preview-card">
+        <div class="slide" data-type="Creator">
           <p><strong>Creator (Instagram):</strong> 🌌 Content Alchemist | NYC vibes | DM for collabs! ✨ #CreatorVibes</p>
         </div>
-        <div class="preview-card">
+        <div class="slide" data-type="Funny">
           <p><strong>Funny (Twitter):</strong> Meme Wizard 😂 | Coffee-fueled chaos | #MemeLife #TweetVibes</p>
         </div>
       </div>
+      <button class="slider-prev" aria-label="Previous slide">←</button>
+      <button class="slider-next" aria-label="Next slide">→</button>
     </section>
 
     <div class="theme-controls">
@@ -103,6 +106,12 @@
       <input type="email" id="saveEmail" placeholder="your.email@example.com">
       <button id="saveBio" class="cta-btn" aria-label="Save bio">💾 Save Bio</button>
     </div>
+
+    <section class="upsell-section" role="region" aria-label="Personal branding kit">
+      <h2>Level Up Your Brand</h2>
+      <p>Get our <strong>Personal Branding Kit</strong> with Canva templates and coaching!</p>
+      <a href="https://www.canva.com" target="_blank" class="cta-btn">Get the Kit Now</a>
+    </section>
 
     <section class="recommended-tools" role="region" aria-label="Recommended tools">
       <h2>Top Creator Tools</h2>
