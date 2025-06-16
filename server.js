@@ -14,24 +14,24 @@ app.get('/', (req, res) => {
 const bioLimiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000,
   max: 3,
-  message: { error: 'Free limit reached (3 bios/day). Upgrade to Elite or Diamond!' },
-  keyGenerator: (req) => req.body.fingerprint || req.ip
+  message: { error: 'Free limit reached (3 bios/day). Upgrade to Luxe!' },
+  keyGenerator: (req) => req.ip
 });
 
 const savedBios = new Map();
 
 app.post('/generate-bio', bioLimiter, async (req, res) => {
-  const { purpose, location, platform, tone, fingerprint } = req.body;
-  if (!purpose || !platform || !tone || !fingerprint) return res.status(400).json({ error: 'Missing fields' });
+  const { purpose, location, platform, tone } = req.body;
+  if (!purpose || !platform || !tone) return res.status(400).json({ error: 'Missing fields' });
 
   const platformLimits = { Instagram: 150, LinkedIn: 2000, TikTok: 80, Twitter: 160 };
   const generateBio = (toneVar) => {
-    let bio = `${purpose} | ${toneVar === 'Witty' ? 'Quirky' : toneVar} Pro`;
+    let bio = `${purpose} | ${toneVar === 'Witty' ? 'Quirky Elite' : toneVar} Visionary`;
     if (location) bio += ` | ${location} 📍`;
-    bio += ` | #${platform}Elite`;
-    if (toneVar === 'Luxury') bio += ' | Luxe Vibes';
-    if (toneVar === 'Friendly') bio += ' | Warm Welcome';
-    if (toneVar === 'Witty') bio += ' | Wit Unleashed';
+    bio += ` | #${platform}Luxe`;
+    if (toneVar === 'Luxury') bio += ' | Opulent Style';
+    if (toneVar === 'Friendly') bio += ' | Warm Elite';
+    if (toneVar === 'Witty') bio += ' | Humor Master';
     return bio.length > platformLimits[platform] ? bio.slice(0, platformLimits[platform] - 3) + '...' : bio;
   };
 
@@ -49,4 +49,4 @@ app.post('/save-bio', async (req, res) => {
 
 app.use((req, res) => res.status(404).json({ error: 'Route not found' }));
 
-app.listen(port, () => console.log(`Server at http://localhost:${port}`));
+app.listen(port, () => console.log(`Server running on http://localhost:${port}`));
