@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initThemeSelector();
     initCountdown();
     initTypewriter();
-    initGSAPAnimations();
+    initFadeAnimations();
   } catch (err) {
     console.error('Initialization error:', err);
   }
@@ -72,34 +72,15 @@ function initParticles() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const particles = [];
-    const comets = [];
-    for (let i = 0; i < 80; i++) {
+    for (let i = 0; i < 50; i++) {
       particles.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
-        vx: Math.random() * 0.4 - 0.2,
-        vy: Math.random() * 0.4 - 0.2,
-        radius: Math.random() * 1.5 + 1
+        vx: Math.random() * 0.2 - 0.1,
+        vy: Math.random() * 0.2 - 0.1,
+        radius: Math.random() * 1 + 0.5
       });
     }
-    for (let i = 0; i < 3; i++) {
-      comets.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: Math.random() * 2 - 1,
-        vy: Math.random() * 2 - 1,
-        length: Math.random() * 20 + 10
-      });
-    }
-    let mouse = { x: null, y: null };
-    canvas.addEventListener('mousemove', e => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    });
-    canvas.addEventListener('touchmove', e => {
-      mouse.x = e.touches[0].clientX;
-      mouse.y = e.touches[0].clientY;
-    });
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
@@ -109,29 +90,8 @@ function initParticles() {
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(0, 230, 255, 0.5)';
+        ctx.fillStyle = 'rgba(229, 214, 138, 0.3)';
         ctx.fill();
-        if (mouse.x && mouse.y) {
-          const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
-          if (dist < 100) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = 'rgba(138, 0, 255, 0.1)';
-            ctx.stroke();
-          }
-        }
-      });
-      comets.forEach(c => {
-        c.x += c.vx;
-        c.y += c.vy;
-        if (c.x < 0 || c.x > canvas.width) c.vx *= -1;
-        if (c.y < 0 || c.y > canvas.height) c.vy *= -1;
-        ctx.beginPath();
-        ctx.moveTo(c.x, c.y);
-        ctx.lineTo(c.x - c.vx * c.length, c.y - c.vy * c.length);
-        ctx.strokeStyle = 'rgba(255, 204, 51, 0.7)';
-        ctx.stroke();
       });
       requestAnimationFrame(animate);
     }
@@ -156,13 +116,11 @@ function initSlider() {
       slides[current].classList.remove('active');
       current = (current + 1) % slides.length;
       slides[current].classList.add('active');
-      gsap.from(slides[current], { x: 100, opacity: 0, duration: 0.5 });
     });
     prevBtn.addEventListener('click', () => {
       slides[current].classList.remove('active');
       current = (current - 1 + slides.length) % slides.length;
       slides[current].classList.add('active');
-      gsap.from(slides[current], { x: -100, opacity: 0, duration: 0.5 });
     });
   } catch (err) {
     console.error('Slider error:', err);
@@ -182,10 +140,8 @@ function initTestimonials() {
       dot.classList.toggle('active', i === 0);
       dot.addEventListener('click', () => {
         cards[current].removeAttribute('aria-selected');
-        gsap.to(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
         current = i;
         cards[current].setAttribute('aria-selected', 'true');
-        gsap.from(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
         dotsContainer.querySelector('.active').classList.remove('active');
         dot.classList.add('active');
       });
@@ -193,19 +149,15 @@ function initTestimonials() {
     });
     nextBtn.addEventListener('click', () => {
       cards[current].removeAttribute('aria-selected');
-      gsap.to(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
       current = (current + 1) % cards.length;
       cards[current].setAttribute('aria-selected', 'true');
-      gsap.from(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
       dotsContainer.querySelector('.active').classList.remove('active');
       dotsContainer.children[current].classList.add('active');
     });
     prevBtn.addEventListener('click', () => {
       cards[current].removeAttribute('aria-selected');
-      gsap.to(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
       current = (current - 1 + cards.length) % cards.length;
       cards[current].setAttribute('aria-selected', 'true');
-      gsap.from(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
       dotsContainer.querySelector('.active').classList.remove('active');
       dotsContainer.children[current].classList.add('active');
     });
@@ -218,15 +170,15 @@ function initPricingChart() {
   try {
     const ctx = document.getElementById('pricingChart').getContext('2d');
     if (!ctx) return;
-    const gradientFree = ctx.createLinearGradient(0, 0, 0, 200);
-    gradientFree.addColorStop(0, 'rgba(255, 204, 51, 0.5)');
-    gradientFree.addColorStop(1, 'rgba(255, 204, 51, 0.2)');
-    const gradientElite = ctx.createLinearGradient(0, 0, 0, 200);
-    gradientElite.addColorStop(0, '#00E6FF');
-    gradientElite.addColorStop(1, '#8A00FF');
-    const gradientDiamond = ctx.createLinearGradient(0, 0, 0, 200);
-    gradientDiamond.addColorStop(0, '#8A00FF');
-    gradientDiamond.addColorStop(1, '#FFCC33');
+    const gradientFree = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientFree.addColorStop(0, 'rgba(229, 214, 138, 0.7)');
+    gradientFree.addColorStop(1, 'rgba(229, 214, 138, 0.3)');
+    const gradientElite = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientElite.addColorStop(0, 'rgba(22, 33, 62, 0.7)');
+    gradientElite.addColorStop(1, 'rgba(22, 33, 62, 0.3)');
+    const gradientDiamond = ctx.createLinearGradient(0, 0, 0, 300);
+    gradientDiamond.addColorStop(0, 'rgba(26, 26, 46, 0.7)');
+    gradientDiamond.addColorStop(1, 'rgba(26, 26, 46, 0.3)');
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -235,7 +187,7 @@ function initPricingChart() {
           label: 'Features',
           data: [4, 8, 12],
           backgroundColor: [gradientFree, gradientElite, gradientDiamond],
-          borderColor: ['#FFCC33', '#00E6FF', '#8A00FF'],
+          borderColor: ['#E5D68A', '#16213E', '#1A1A2E'],
           borderWidth: 1
         }]
       },
@@ -244,10 +196,9 @@ function initPricingChart() {
         maintainAspectRatio: false,
         plugins: {
           tooltip: {
-            backgroundColor: 'rgba(10, 0, 31, 0.9)',
-            borderColor: '#8A00FF',
-            borderWidth: 1,
-            bodyColor: '#FFCC33',
+            backgroundColor: 'rgba(26, 26, 46, 0.9)',
+            titleColor: '#E0E0E0',
+            bodyColor: '#E0E0E0',
             callbacks: {
               label: context => {
                 const labels = {
@@ -260,24 +211,19 @@ function initPricingChart() {
             }
           },
           legend: {
-            labels: { color: '#FFCC33', font: { size: 12 } }
+            labels: { color: '#E0E0E0', font: { size: 14 } }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
-            title: { display: true, text: 'Feature Count', color: '#FFCC33', font: { size: 12 } },
-            grid: { color: 'rgba(138, 0, 255, 0.1)' },
-            ticks: { color: '#E0E0E0', font: { size: 10 } }
+            title: { display: true, text: 'Feature Count', color: '#E0E0E0', font: { size: 14 } },
+            grid: { color: 'rgba(229, 214, 138, 0.1)' },
+            ticks: { color: '#E0E0E0', font: { size: 12 } }
           },
           x: {
-            title: { display: true, text: 'Plan', color: '#FFCC33', font: { size: 12 } },
-            ticks: { color: '#E0E0E0', font: { size: 10 } }
-          }
-        },
-        animation: {
-          onComplete: () => {
-            gsap.to(ctx.canvas, { scaleY: 1, duration: 1, ease: 'elastic.out(1, 0.5)' });
+            title: { display: true, text: 'Plan', color: '#E0E0E0', font: { size: 14 } },
+            ticks: { color: '#E0E0E0', font: { size: 12 } }
           }
         }
       }
@@ -332,7 +278,6 @@ function initForm() {
         }
         bioOutput.textContent = data.bio;
         charCount.textContent = data.bio.length;
-        gsap.from(bioOutput, { opacity: 0, y: 20, duration: 0.5 });
         bioCount++;
         const storedData = JSON.parse(localStorage.getItem('sparkvibe_data') || '{}');
         storedData.count = bioCount;
@@ -353,7 +298,6 @@ function initForm() {
       try {
         navigator.clipboard.writeText(bioOutput.textContent);
         copyBio.textContent = 'Copied!';
-        gsap.to(copyBio, { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1 });
         setTimeout(() => {
           copyBio.textContent = '📋 Copy Bio';
         }, 2000);
@@ -409,13 +353,12 @@ function showUpsellModal() {
     const closeBtn = document.querySelector('.modal-close');
     if (!modal || !closeBtn) return;
     modal.style.display = 'flex';
-    gsap.from('.modal-content', { scale: 0.8, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' });
     closeBtn.addEventListener('click', () => {
-      gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => modal.style.display = 'none' });
+      modal.style.display = 'none';
     });
     window.addEventListener('click', e => {
       if (e.target === modal) {
-        gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => modal.style.display = 'none' });
+        modal.style.display = 'none';
       }
     });
   } catch (err) {
@@ -434,14 +377,12 @@ function initThemeSelector() {
     }
     themeSelect.addEventListener('change', () => {
       document.body.className = themeSelect.value;
-      gsap.from('body', { opacity: 0, duration: 0.5 });
     });
     themeToggle.addEventListener('click', () => {
       const themes = ['dark-theme', 'light-theme', 'cosmic-theme', 'ocean-theme', 'forest-theme'];
       const current = themes.indexOf(document.body.className);
       document.body.className = themes[(current + 1) % themes.length];
       themeSelect.value = document.body.className;
-      gsap.from('body', { opacity: 0, duration: 0.5 });
     });
   } catch (err) {
     console.error('Theme selector error:', err);
@@ -498,36 +439,27 @@ function initTypewriter() {
   }
 }
 
-function initGSAPAnimations() {
+function initFadeAnimations() {
   try {
-    gsap.from('.hero-logo', { y: -100, opacity: 0, duration: 1, delay: 0.5 });
-    gsap.from('.neon-text', {
-      stagger: 0.2,
-      y: 20,
+    gsap.from('.hero-logo', { y: -50, opacity: 0, duration: 1, delay: 0.5, ease: 'power2.out' });
+    gsap.from('h1, .tagline, .social-proof, .premium-cta, .countdown-timer, .early-user-badge', {
       opacity: 0,
+      y: 20,
       duration: 1,
+      stagger: 0.2,
       ease: 'power2.out'
     });
-    gsap.from('.glowing', {
-      stagger: 0.1,
-      scale: 0.8,
+    gsap.from('.cta-btn, .pricing-card', {
       opacity: 0,
-      duration: 0.5,
-      ease: 'back.out(1.7)',
-      delay: 1
-    });
-    gsap.from('.pricing-card', {
-      stagger: 0.2,
-      y: 50,
-      opacity: 0,
-      duration: 0.8,
-      ease: 'power2.out',
+      y: 30,
+      duration: 1,
+      stagger: 0.3,
       scrollTrigger: {
-        trigger: '.pricing-section',
+        trigger: '.container',
         start: 'top 80%'
       }
     });
   } catch (err) {
-    console.error('GSAP animations error:', err);
+    console.error('Fade animations error:', err);
   }
 }
