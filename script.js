@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initForm();
     initThemeSelector();
     initCountdown();
+    initTypewriter();
+    initGSAPAnimations();
   } catch (err) {
     console.error('Initialization error:', err);
   }
@@ -52,6 +54,7 @@ function checkBioLimit() {
     if (userTier === 'Free' && bioCount >= 3) {
       alert('Free tier limit reached (3 bios/day). Upgrade to Elite or Diamond!');
       document.querySelector('#bioForm button').disabled = true;
+      showUpsellModal();
     }
   } catch (err) {
     console.error('Bio limit check error:', err);
@@ -69,6 +72,7 @@ function initParticles() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
     const particles = [];
+    const comets = [];
     for (let i = 0; i < 80; i++) {
       particles.push({
         x: Math.random() * canvas.width,
@@ -78,6 +82,24 @@ function initParticles() {
         radius: Math.random() * 1.5 + 1
       });
     }
+    for (let i = 0; i < 3; i++) {
+      comets.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: Math.random() * 2 - 1,
+        vy: Math.random() * 2 - 1,
+        length: Math.random() * 20 + 10
+      });
+    }
+    let mouse = { x: null, y: null };
+    canvas.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+    canvas.addEventListener('touchmove', e => {
+      mouse.x = e.touches[0].clientX;
+      mouse.y = e.touches[0].clientY;
+    });
     function animate() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       particles.forEach(p => {
@@ -89,16 +111,27 @@ function initParticles() {
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(0, 230, 255, 0.5)';
         ctx.fill();
-        particles.forEach(other => {
-          const dist = Math.hypot(p.x - other.x, p.y - other.y);
-          if (dist < 80) {
+        if (mouse.x && mouse.y) {
+          const dist = Math.hypot(p.x - mouse.x, p.y - mouse.y);
+          if (dist < 100) {
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
-            ctx.lineTo(other.x, other.y);
-            ctx.strokeStyle = 'rgba(255, 0, 204, 0.1)';
+            ctx.lineTo(mouse.x, mouse.y);
+            ctx.strokeStyle = 'rgba(138, 0, 255, 0.1)';
             ctx.stroke();
           }
-        });
+        }
+      });
+      comets.forEach(c => {
+        c.x += c.vx;
+        c.y += c.vy;
+        if (c.x < 0 || c.x > canvas.width) c.vx *= -1;
+        if (c.y < 0 || c.y > canvas.height) c.vy *= -1;
+        ctx.beginPath();
+        ctx.moveTo(c.x, c.y);
+        ctx.lineTo(c.x - c.vx * c.length, c.y - c.vy * c.length);
+        ctx.strokeStyle = 'rgba(255, 204, 51, 0.7)';
+        ctx.stroke();
       });
       requestAnimationFrame(animate);
     }
@@ -123,11 +156,13 @@ function initSlider() {
       slides[current].classList.remove('active');
       current = (current + 1) % slides.length;
       slides[current].classList.add('active');
+      gsap.from(slides[current], { x: 100, opacity: 0, duration: 0.5 });
     });
     prevBtn.addEventListener('click', () => {
       slides[current].classList.remove('active');
       current = (current - 1 + slides.length) % slides.length;
       slides[current].classList.add('active');
+      gsap.from(slides[current], { x: -100, opacity: 0, duration: 0.5 });
     });
   } catch (err) {
     console.error('Slider error:', err);
@@ -147,10 +182,10 @@ function initTestimonials() {
       dot.classList.toggle('active', i === 0);
       dot.addEventListener('click', () => {
         cards[current].removeAttribute('aria-selected');
-        cards[current].style.transform = 'translateX(-100%)';
+        gsap.to(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
         current = i;
         cards[current].setAttribute('aria-selected', 'true');
-        cards[current].style.transform = 'translateX(0)';
+        gsap.from(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
         dotsContainer.querySelector('.active').classList.remove('active');
         dot.classList.add('active');
       });
@@ -158,19 +193,19 @@ function initTestimonials() {
     });
     nextBtn.addEventListener('click', () => {
       cards[current].removeAttribute('aria-selected');
-      cards[current].style.transform = 'translateX(-100%)';
+      gsap.to(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
       current = (current + 1) % cards.length;
       cards[current].setAttribute('aria-selected', 'true');
-      cards[current].style.transform = 'translateX(0)';
+      gsap.from(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
       dotsContainer.querySelector('.active').classList.remove('active');
       dotsContainer.children[current].classList.add('active');
     });
     prevBtn.addEventListener('click', () => {
       cards[current].removeAttribute('aria-selected');
-      cards[current].style.transform = 'translateX(100%)';
+      gsap.to(cards[current], { x: '100%', opacity: 0, duration: 0.5 });
       current = (current - 1 + cards.length) % cards.length;
       cards[current].setAttribute('aria-selected', 'true');
-      cards[current].style.transform = 'translateX(0)';
+      gsap.from(cards[current], { x: '-100%', opacity: 0, duration: 0.5 });
       dotsContainer.querySelector('.active').classList.remove('active');
       dotsContainer.children[current].classList.add('active');
     });
@@ -184,14 +219,14 @@ function initPricingChart() {
     const ctx = document.getElementById('pricingChart').getContext('2d');
     if (!ctx) return;
     const gradientFree = ctx.createLinearGradient(0, 0, 0, 200);
-    gradientFree.addColorStop(0, 'rgba(255, 215, 0, 0.5)');
-    gradientFree.addColorStop(1, 'rgba(255, 215, 0, 0.2)');
+    gradientFree.addColorStop(0, 'rgba(255, 204, 51, 0.5)');
+    gradientFree.addColorStop(1, 'rgba(255, 204, 51, 0.2)');
     const gradientElite = ctx.createLinearGradient(0, 0, 0, 200);
     gradientElite.addColorStop(0, '#00E6FF');
-    gradientElite.addColorStop(1, '#FF00CC');
+    gradientElite.addColorStop(1, '#8A00FF');
     const gradientDiamond = ctx.createLinearGradient(0, 0, 0, 200);
-    gradientDiamond.addColorStop(0, '#FF00CC');
-    gradientDiamond.addColorStop(1, '#FFD700');
+    gradientDiamond.addColorStop(0, '#8A00FF');
+    gradientDiamond.addColorStop(1, '#FFCC33');
     new Chart(ctx, {
       type: 'bar',
       data: {
@@ -200,7 +235,7 @@ function initPricingChart() {
           label: 'Features',
           data: [4, 8, 12],
           backgroundColor: [gradientFree, gradientElite, gradientDiamond],
-          borderColor: ['#FFD700', '#00E6FF', '#FF00CC'],
+          borderColor: ['#FFCC33', '#00E6FF', '#8A00FF'],
           borderWidth: 1
         }]
       },
@@ -210,9 +245,9 @@ function initPricingChart() {
         plugins: {
           tooltip: {
             backgroundColor: 'rgba(10, 0, 31, 0.9)',
-            borderColor: '#00E6FF',
+            borderColor: '#8A00FF',
             borderWidth: 1,
-            bodyColor: '#FFD700',
+            bodyColor: '#FFCC33',
             callbacks: {
               label: context => {
                 const labels = {
@@ -223,18 +258,26 @@ function initPricingChart() {
                 return labels[context.label];
               }
             }
+          },
+          legend: {
+            labels: { color: '#FFCC33', font: { size: 12 } }
           }
         },
         scales: {
           y: {
             beginAtZero: true,
-            title: { display: true, text: 'Feature Count', color: '#FFD700', font: { size: 12 } },
-            grid: { color: 'rgba(0, 230, 255, 0.1)' },
+            title: { display: true, text: 'Feature Count', color: '#FFCC33', font: { size: 12 } },
+            grid: { color: 'rgba(138, 0, 255, 0.1)' },
             ticks: { color: '#E0E0E0', font: { size: 10 } }
           },
           x: {
-            title: { display: true, text: 'Plan', color: '#FFD700', font: { size: 12 } },
+            title: { display: true, text: 'Plan', color: '#FFCC33', font: { size: 12 } },
             ticks: { color: '#E0E0E0', font: { size: 10 } }
+          }
+        },
+        animation: {
+          onComplete: () => {
+            gsap.to(ctx.canvas, { scaleY: 1, duration: 1, ease: 'elastic.out(1, 0.5)' });
           }
         }
       }
@@ -267,6 +310,7 @@ function initForm() {
       e.preventDefault();
       if (userTier === 'Free' && bioCount >= 3) {
         alert('Free tier limit reached. Upgrade for unlimited bios!');
+        showUpsellModal();
         return;
       }
       document.getElementById('loading').style.display = 'block';
@@ -288,6 +332,7 @@ function initForm() {
         }
         bioOutput.textContent = data.bio;
         charCount.textContent = data.bio.length;
+        gsap.from(bioOutput, { opacity: 0, y: 20, duration: 0.5 });
         bioCount++;
         const storedData = JSON.parse(localStorage.getItem('sparkvibe_data') || '{}');
         storedData.count = bioCount;
@@ -295,6 +340,7 @@ function initForm() {
         checkBioLimit();
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(data.bio + ' Created with SparkVibe! https://sparkvibe.ai')}`;
         shareLinkedIn.href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent('https://sparkvibe.ai')}&title=${encodeURIComponent('Check out my new bio created with SparkVibe!')}`;
+        if (userTier === 'Free') showUpsellModal();
       } catch (err) {
         console.error('Bio generation error:', err);
         alert('Error generating bio. Try again later.');
@@ -307,10 +353,9 @@ function initForm() {
       try {
         navigator.clipboard.writeText(bioOutput.textContent);
         copyBio.textContent = 'Copied!';
-        copyBio.style.transform = 'scale(1.1)';
+        gsap.to(copyBio, { scale: 1.1, duration: 0.2, yoyo: true, repeat: 1 });
         setTimeout(() => {
           copyBio.textContent = '📋 Copy Bio';
-          copyBio.style.transform = 'scale(1)';
         }, 2000);
       } catch (err) {
         console.error('Copy error:', err);
@@ -358,6 +403,26 @@ function initForm() {
   }
 }
 
+function showUpsellModal() {
+  try {
+    const modal = document.getElementById('upsellModal');
+    const closeBtn = document.querySelector('.modal-close');
+    if (!modal || !closeBtn) return;
+    modal.style.display = 'flex';
+    gsap.from('.modal-content', { scale: 0.8, opacity: 0, duration: 0.5, ease: 'back.out(1.7)' });
+    closeBtn.addEventListener('click', () => {
+      gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => modal.style.display = 'none' });
+    });
+    window.addEventListener('click', e => {
+      if (e.target === modal) {
+        gsap.to('.modal-content', { scale: 0.8, opacity: 0, duration: 0.3, onComplete: () => modal.style.display = 'none' });
+      }
+    });
+  } catch (err) {
+    console.error('Upsell modal error:', err);
+  }
+}
+
 function initThemeSelector() {
   try {
     const themeSelect = document.getElementById('themeSelect');
@@ -369,12 +434,14 @@ function initThemeSelector() {
     }
     themeSelect.addEventListener('change', () => {
       document.body.className = themeSelect.value;
+      gsap.from('body', { opacity: 0, duration: 0.5 });
     });
     themeToggle.addEventListener('click', () => {
       const themes = ['dark-theme', 'light-theme', 'cosmic-theme', 'ocean-theme', 'forest-theme'];
       const current = themes.indexOf(document.body.className);
       document.body.className = themes[(current + 1) % themes.length];
       themeSelect.value = document.body.className;
+      gsap.from('body', { opacity: 0, duration: 0.5 });
     });
   } catch (err) {
     console.error('Theme selector error:', err);
@@ -384,17 +451,83 @@ function initThemeSelector() {
 function initCountdown() {
   try {
     const timer = document.getElementById('timer');
-    if (!timer) return;
+    const modalTimer = document.getElementById('modalTimer');
+    if (!timer || !modalTimer) return;
     let timeLeft = 24 * 60 * 60;
     setInterval(() => {
       const hours = Math.floor(timeLeft / 3600);
       const minutes = Math.floor((timeLeft % 3600) / 60);
       const seconds = timeLeft % 60;
-      timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+      timer.textContent = timeString;
+      modalTimer.textContent = timeString;
       timeLeft--;
       if (timeLeft < 0) timeLeft = 24 * 60 * 60;
     }, 1000);
   } catch (err) {
     console.error('Countdown error:', err);
+  }
+}
+
+function initTypewriter() {
+  try {
+    const typewriter = document.querySelector('.typewriter');
+    if (!typewriter) return;
+    const texts = JSON.parse(typewriter.dataset.text);
+    let index = 0;
+    let charIndex = 0;
+    let currentText = '';
+    function type() {
+      if (charIndex < texts[index].length) {
+        currentText += texts[index][charIndex];
+        typewriter.textContent = currentText;
+        charIndex++;
+        setTimeout(type, 100);
+      } else {
+        setTimeout(() => {
+          charIndex = 0;
+          currentText = '';
+          index = (index + 1) % texts.length;
+          type();
+        }, 2000);
+      }
+    }
+    type();
+  } catch (err) {
+    console.error('Typewriter error:', err);
+  }
+}
+
+function initGSAPAnimations() {
+  try {
+    gsap.from('.hero-logo', { y: -100, opacity: 0, duration: 1, delay: 0.5 });
+    gsap.from('.neon-text', {
+      stagger: 0.2,
+      y: 20,
+      opacity: 0,
+      duration: 1,
+      ease: 'power2.out'
+    });
+    gsap.from('.glowing', {
+      stagger: 0.1,
+      scale: 0.8,
+      opacity: 0,
+      duration: 0.5,
+      ease: 'back.out(1.7)',
+      delay: 1
+    });
+    gsap.from('.pricing-card', {
+      stagger: 0.2,
+      y: 50,
+      opacity: 0,
+      duration: 0.8,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: '.pricing-section',
+        start: 'top 80%'
+      }
+    });
+  } catch (err) {
+    console.error('GSAP animations error:', err);
   }
 }
