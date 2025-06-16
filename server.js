@@ -4,11 +4,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Serve index.html
 app.get('/', (req, res) => {
   try {
     res.sendFile(path.join(__dirname, 'index.html'));
@@ -18,18 +16,15 @@ app.get('/', (req, res) => {
   }
 });
 
-// Rate limiter for Free tier
 const bioLimiter = rateLimit({
-  windowMs: 24 * 60 * 60 * 1000, // 24 hours
+  windowMs: 24 * 60 * 60 * 1000,
   max: 3,
   message: { error: 'Free tier limit reached (3 bios/day). Upgrade to Elite or Diamond!' },
   keyGenerator: (req) => req.body.fingerprint || req.ip
 });
 
-// Mock database
 const savedBios = new Map();
 
-// Generate bio endpoint with OpenAI-like logic
 app.post('/generate-bio', bioLimiter, async (req, res) => {
   try {
     const { purpose, location, platform, tone, fingerprint } = req.body;
@@ -43,14 +38,13 @@ app.post('/generate-bio', bioLimiter, async (req, res) => {
       Twitter: 160
     };
 
-    // Simulated OpenAI-enhanced bio generation
     const generateBio = (toneVariation) => {
       let bio = `${purpose} | ${toneVariation === 'Witty' ? 'Quirky' : toneVariation} Expert`;
       if (location) bio += ` | ${location} 📍`;
       bio += ` | #${platform}Vibes`;
-      if (tone === 'Luxury') bio += ' | Exquisite Style';
-      if (tone === 'Friendly') bio += ' | Always Welcoming';
-      if (tone === 'Witty') bio += ' | Humor Unleashed';
+      if (toneVariation === 'Luxury') bio += ' | Exquisite Style';
+      if (toneVariation === 'Friendly') bio += ' | Always Welcoming';
+      if (toneVariation === 'Witty') bio += ' | Humor Unleashed';
       if (bio.length > platformLimits[platform]) {
         bio = bio.substring(0, platformLimits[platform] - 3) + '...';
       }
@@ -66,7 +60,6 @@ app.post('/generate-bio', bioLimiter, async (req, res) => {
   }
 });
 
-// Save bio endpoint
 app.post('/save-bio', async (req, res) => {
   try {
     const { email, bio } = req.body;
@@ -81,7 +74,6 @@ app.post('/save-bio', async (req, res) => {
   }
 });
 
-// Handle 404
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
