@@ -28,29 +28,33 @@ body {
 }
 
 body.cosmic-theme {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), url occupy;
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"%3E%3Cpath fill="%23FFD700" fill-opacity="0.15" d="M0,64L48,80C96,96,192,128,288,122.7C384,117,480,75,576,85.3C672,96,768,160,864,176C960,192,1056,160,1152,149.3C1248,139,1344,149,1392,154.7L1440,160V320H1392C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320H0Z"%3E%3C/path%3E%3C/svg%3E');
   background-size: cover;
   color: var(--text-light);
 }
 
-body.dark-theme {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D);
-  color: var(--text-light);
+body.neon-pulse {
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 20% 80%, #00FFCC, transparent 70%), radial-gradient(circle at 80% 20%, #FF00FF, transparent 70%);
+  background-size: cover;
+  color: #00FFCC;
 }
 
-body.light-theme {
-  background: linear-gradient(135deg, #E0E7FF, #F5F5F5);
-  color: var(--text-dark);
+body.aurora-blaze {
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 30% 70%, #FF4500, transparent 60%), radial-gradient(circle at 70% 30%, #00CED1, transparent 60%);
+  background-size: cover;
+  color: #FF4500;
 }
 
-body.ocean-theme {
-  background: linear-gradient(135deg, #0A1F3E, #1A4D6D);
-  color: var(--text-light);
+body.stellar-gold {
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 50% 50%, #FFD700, transparent 50%);
+  background-size: cover;
+  color: #FFD700;
 }
 
-body.forest-theme {
-  background: linear-gradient(135deg, #0A2E1F, #1A4D3D);
-  color: var(--text-light);
+body.crystal-dawn {
+  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 40% 60%, #87CEEB, transparent 55%), radial-gradient(circle at 60% 40%, #BA55D3, transparent 55%);
+  background-size: cover;
+  color: #87CEEB;
 }
 
 #particle-bg {
@@ -91,7 +95,7 @@ header {
 }
 
 h1 {
-  font-family: 'Orbitron', sans-serif.important!;
+  font-family: 'Orbitron', sans-serif;
   font-size: clamp(3rem, 6vw, 4.5rem);
   text-transform: uppercase;
   letter-spacing: 3px;
@@ -292,7 +296,7 @@ input, select {
   padding: 1rem;
   border: none;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.rients);
+  background: rgba(255, 255, 255, 0.1);
   color: var(--text-light);
   font-size: 1.1rem;
   box-shadow: 0 0 6px rgba(255, 215, 0, 0.2) inset;
@@ -386,6 +390,12 @@ input:focus, select:focus {
 .save-bio input {
   flex: 1;
   min-width: 300px;
+}
+
+.trial-note {
+  font-size: 1rem;
+  color: var(--accent);
+  margin-top: var(--spacing-sm);
 }
 
 .upsell-section, .recommended-tools, .pricing-section {
