@@ -1,94 +1,84 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const cors = require('cors');
-
+const path = require('path');
+const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
 
-app.use(cors());
-app.use(bodyParser.json());
-app.use(express.static('public'));
+// Middleware for JSON parsing
+app.use(express.json());
 
-const bioDatabase = {};
-const userLimits = {};
+// Serve static files from the root directory
+app.use(express.static(__dirname));
 
-function generateBio(purpose, location, platform, tone) {
+// Serve index.html for the root route
+app.get('/', (req, res) => {
   try {
-    const platformSpecifics = {
-      Instagram: { maxChars: 150, style: 'emojis, hashtags, casual CTA' },
-      LinkedIn: { maxChars: 2000, style: 'professional, detailed, formal CTA' },
-      TikTok: { maxChars: 80, style: 'emojis, short, trendy CTA' },
-      Twitter: { maxChars: 160, style: 'witty, hashtags, casual CTA' }
-    };
-    const { maxChars, style } = platformSpecifics[platform] || { maxChars: 160, style: 'default' };
-    let bio = '';
-    switch (platform) {
-      case 'Instagram':
-        bio = `🌌 ${purpose} | ${location ? `${location} 📍` : ''} | DM for collabs! ✨ #${purpose.replace(/\s/g, '')}`;
-        break;
-      case 'LinkedIn':
-        bio = `${purpose} Expert | Driving success with innovative strategies | ${location ? `${location} | ` : ''}Let’s connect! 💼 #${purpose.replace(/\s/g, '')}`;
-        break;
-      case 'TikTok':
-        bio = `🎬 ${purpose} | ${tone === 'Excited' ? 'Vibes!' : 'Chill'} | Join me! 😎 #${purpose.replace(/\s/g, '')}`;
-        break;
-      case 'Twitter':
-        bio = `${purpose} ${tone === 'Witty' ? '😎' : '😂'} | ${location ? `${location} | ` : ''}#${purpose.replace(/\s/g, '')}`;
-        break;
-      default:
-        bio = `${purpose} | ${location ? `${location} | ` : ''}Created with SparkVibe!`;
-    }
-    if (tone !== 'Professional') {
-      bio = bio.replace('Expert', tone === 'Luxury' ? 'Icon' : tone);
-    }
-    return bio.slice(0, maxChars);
+    res.sendFile(path.join(__dirname, 'index.html'));
   } catch (err) {
-    console.error('Bio generation error:', err);
-    return 'Error generating bio.';
+    console.error('Error serving index.html:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-}
+});
 
-app.post('/generate-bio', (req, res) => {
+// Rate limiter for Free tier (3 bios/day per IP or fingerprint)
+const bioLimiter = rateLimit({
+  windowMs: 24 * 60 * 60 * 1000, // 24 hours
+  max: 3,
+  message: { error: 'Free tier limit reached (3 bios/day). Upgrade to Elite or Diamond!' },
+  keyGenerator: (req) => req.body.fingerprint || req.ip
+});
+
+// Mock database for storing saved bios
+const savedBios = new Map();
+
+// Generate bio endpoint
+app.post('/generate-bio', bioLimiter, async (req, res) => {
   try {
     const { purpose, location, platform, tone, fingerprint } = req.body;
     if (!purpose || !platform || !tone || !fingerprint) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    const today = new Date().toISOString().split('T')[0];
-    if (!userLimits[fingerprint]) {
-      userLimits[fingerprint] = { date: today, count: 0 };
+    // Mock AI bio generation
+    const platformLimits = {
+      Instagram: 150,
+      LinkedIn: 2000,
+      TikTok: 80,
+      Twitter: 160
+    };
+    let bio = `${purpose} | ${tone} vibe`;
+    if (location) bio += ` | ${location} 📍`;
+    bio += ` | #${platform}`;
+    if (bio.length > platformLimits[platform]) {
+      bio = bio.substring(0, platformLimits[platform] - 3) + '...';
     }
-    if (userLimits[fingerprint].date !== today) {
-      userLimits[fingerprint].date = today;
-      userLimits[fingerprint].count = 0;
-    }
-    if (userLimits[fingerprint].count >= 3) {
-      return res.status(403).json({ error: 'Free tier limit reached (3 bios/day). Upgrade for unlimited bios!' });
-    }
-    userLimits[fingerprint].count++;
-    const bio = generateBio(purpose, location, platform, tone);
     res.json({ bio });
   } catch (err) {
-    console.error('Generate bio endpoint error:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Bio generation error:', err);
+    res.status(500).json({ error: 'Error generating bio' });
   }
 });
 
-app.post('/save-bio', (req, res) => {
+// Save bio endpoint
+app.post('/save-bio', async (req, res) => {
   try {
     const { email, bio } = req.body;
     if (!email || !bio) {
       return res.status(400).json({ error: 'Email and bio are required' });
     }
-    bioDatabase[email] = bioDatabase[email] || [];
-    bioDatabase[email].push(bio);
-    res.json({ message: 'Bio saved successfully! You’ll receive premium updates.' });
+    savedBios.set(email, bio);
+    res.json({ message: 'Bio saved successfully!' });
   } catch (err) {
-    console.error('Save bio endpoint error:', err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Save bio error:', err);
+    res.status(500).json({ error: 'Error saving bio' });
   }
 });
 
+// Handle 404 for unknown routes
+app.use((req, res) => {
+  res.status(404).json({ error: 'Route not found' });
+});
+
+// Start server
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server running at http://localhost:${port}`);
 });
