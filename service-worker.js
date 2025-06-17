@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sparkvibe-ai-v1';
+const CACHE_NAME = 'sparkvibe-ai-v2';
 const urlsToCache = [
   '/',
   '/index.html',
