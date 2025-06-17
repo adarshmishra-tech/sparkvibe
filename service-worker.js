@@ -1,11 +1,12 @@
-```javascript
 const CACHE_NAME = 'sparkvibe-ai-v1';
 const urlsToCache = [
   '/',
   '/index.html',
   '/styles.css',
   '/script.js',
-  '/manifest.json'
+  '/manifest.json',
+  '/contact.html',
+  '/privacy.html'
 ];
 
 self.addEventListener('install', event => {
@@ -38,4 +39,3 @@ self.addEventListener('activate', event => {
     })
   );
 });
-```
