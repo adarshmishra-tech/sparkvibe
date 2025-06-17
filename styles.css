@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 :root {
-  --teal-100: #ccfbf1;
+  --teal-50: #e6fffa;
   --teal-600: #0d9488;
   --teal-700: #0f766e;
   --teal-800: #115e59;
-  --pink-50: #fdf2f8;
+  --pink-100: #fce7f3;
   --pink-600: #db2777;
   --pink-700: #be185d;
 }
@@ -31,12 +31,12 @@ body {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%230d9488'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 1rem center;
+  background-position: right 0.75rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 15px var(--pink-600);
+  box-shadow: 0 0 12px var(--pink-600);
 }
 
 button {
@@ -44,20 +44,20 @@ button {
 }
 
 button:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-1px) scale(1.03);
 }
 
 #bioOutput .bio-box {
   transition: all 0.3s ease;
-  min-height: 160px;
-  max-height: 200px;
+  min-height: 140px;
+  max-height: 180px;
   overflow-y: auto;
   border-radius: 12px;
 }
 
 #bioOutput .bio-box:hover {
   transform: scale(1.02);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 
 .theme-vibrant {
@@ -65,17 +65,17 @@ button:hover {
 }
 
 .theme-elegant {
-  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(15, 118, 110, 0.1));
+  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(17, 94, 89, 0.1));
 }
 
 .theme-vibrant .bio-box {
   border-color: var(--pink-600);
-  background: rgba(253, 242, 248, 0.05);
+  background: rgba(252, 231, 243, 0.05);
 }
 
 .theme-elegant .bio-box {
   border-color: var(--teal-800);
-  background: rgba(204, 251, 241, 0.05);
+  background: rgba(230, 255, 250, 0.05);
 }
 
 .copy-btn {
@@ -95,7 +95,15 @@ button:hover {
 }
 
 .animate-fade-in {
-  animation: fadeIn 1s ease-out;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.dropdown-content {
+  transition: all 0.3s ease-in-out;
+}
+
+.dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content {
+  display: block;
 }
 
 @keyframes pulse {
@@ -109,31 +117,38 @@ button:hover {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(10px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* Responsive design */
 @media (max-width: 640px) {
-  header h1 { font-size: 2.8rem; }
-  header p { font-size: 1.1rem; }
-  #bioForm { grid-template-columns: 1fr; gap: 0.75rem; }
-  #bioOutput { grid-template-columns: 1fr; gap: 0.75rem; }
-  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
-  #keywords { padding-right: 8rem; }
-  #suggestKeywords { right: 0.5rem; padding: 0.4rem 1rem; font-size: 0.9rem; }
-  #bioOutput .bio-box { max-height: 160px; min-height: 140px; }
+  header h1 { font-size: 2.5rem; }
+  header p { font-size: 1rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 0.5rem; }
+  #bioOutput { grid-template-columns: 1fr; gap: 0.5rem; }
+  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
+  #keywordDropdown { max-height: 200px; overflow-y: auto; }
+  #bioOutput .bio-box { max-height: 160px; min-height: 120px; }
   #reviewSlider div { width: 100%; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioOutput .bio-box { max-height: 180px; min-height: 150px; }
-  #bioForm { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  #bioOutput { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #bioOutput .bio-box { max-height: 170px; min-height: 130px; }
+  #bioForm { gap: 0.75rem; }
+  #bioOutput { gap: 0.75rem; }
 }
 
 @media (min-width: 1025px) {
-  #bioOutput .bio-box { max-height: 200px; min-height: 160px; }
-  #bioForm { gap: 1.5rem; }
-  #bioOutput { gap: 1.5rem; }
+  #bioOutput .bio-box { max-height: 180px; min-height: 140px; }
+  #bioForm { gap: 1rem; }
+  #bioOutput { gap: 1rem; }
+}
+
+/* Landscape mobile */
+@media (max-height: 640px) and (orientation: landscape) {
+  #bioForm { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
+  #bioOutput { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+  #bioForm button { padding: 0.6rem; font-size: 1rem; }
+  #bioOutput .bio-box { max-height: 150px; min-height: 110px; }
 }
