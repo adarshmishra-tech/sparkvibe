@@ -10,11 +10,11 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "https://sparkvibe-1.onrender.com"}})
 load_dotenv()
 
-# Word dictionaries for dynamic bio generation
+# Enhanced word dictionaries
 power_words = {
-    'vibrant': ['radiant', 'bold', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'dazzling', 'charismatic', 'vibrant'],
-    'elegant': ['sophisticated', 'refined', 'graceful', 'timeless', 'exquisite', 'classy', 'chic', 'poised', 'alluring', 'elegant'],
-    'general': ['guru', 'visionary', 'maestro', 'pro', 'innovator', 'master', 'trailblazer', 'icon', 'expert', 'legend']
+    'cosmic_glow': ['stellar', 'radiant', 'luminous', 'celestial', 'ethereal', 'galactic', 'cosmic', 'astral', 'shimmering', 'infinite'],
+    'neon_pulse': ['electric', 'vibrant', 'neon', 'pulsing', 'dynamic', 'bold', 'striking', 'vivid', 'charged', 'radiant'],
+    'general': ['guru', 'visionary', 'maestro', 'pro', 'innovator', 'pioneer', 'legend', 'icon', 'trailblazer', 'master']
 }
 
 tone_styles = {
@@ -24,6 +24,7 @@ tone_styles = {
     'friendly': {'adjective': 'warm', 'action': 'sharing', 'vibe': 'connection', 'focus': 'approachability'},
     'inspirational': {'adjective': 'uplifting', 'action': 'inspiring', 'vibe': 'motivation', 'focus': 'drive'},
     'romantic': {'adjective': 'passionate', 'action': 'weaving', 'vibe': 'romance', 'focus': 'heart'},
+    'engaging': {'adjective': 'captivating', 'action': 'sparking', 'vibe': 'energy', 'focus': 'engagement'},
     'casual': {'adjective': 'chill', 'action': 'bringing', 'vibe': 'vibes', 'focus': 'ease'}
 }
 
@@ -32,67 +33,76 @@ platform_context = {
     'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedPro', 'limit': 200},
     'Twitter': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetLegend', 'limit': 160},
     'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#TikTokIcon', 'limit': 150},
-    'Tinder': {'focus': 'personal connection', 'style': 'flirty', 'hashtag': '#LoveSpark', 'limit': 300}
+    'Tinder': {'focus': 'personal connection', 'style': 'engaging', 'hashtag': '#LoveSpark', 'limit': 300}
 }
 
 emojis = {
-    'with_emojis': ['✨', '🌟', '💖', '💡'],
+    'with_emojis': ['✨', '🌟', '💖', '💡', '🔥', '🎉'],
     'minimal_emojis': ['✨', '🌟'],
-    'vibrant_emojis': ['🌈', '🚀', '🎉', '🔥'],
+    'vibrant_emojis': ['🌈', '🚀', '🎆', '⚡️'],
     'without_emojis': ['']
 }
 
-# Keyword suggestion logic
+# Real-time keyword suggestion
 def suggest_keywords(bio_purpose):
     keyword_base = {
-        'dancing': ['dance icon', 'rhythm guru', 'movement maestro', 'choreography pro', 'dance legend'],
-        'marketing': ['SEO titan', 'digital guru', 'ad maestro', 'growth wizard', 'brand pro'],
-        'photography': ['visual titan', 'photo guru', 'portrait maestro', 'lens legend', 'image pro'],
-        'technology': ['tech titan', 'innovation guru', 'code maestro', 'digital pro', 'tech legend'],
-        'dating': ['romance titan', 'connection guru', 'flirt maestro', 'love pro', 'heart legend']
+        'dancing': ['dance icon', 'rhythm pioneer', 'movement maestro', 'choreography legend', 'dance visionary'],
+        'marketing': ['SEO titan', 'digital master', 'brand strategist', 'growth innovator', 'marketing guru'],
+        'photography': ['visual storyteller', 'lens legend', 'photo maestro', 'capture pro', 'image pioneer'],
+        'technology': ['tech visionary', 'code master', 'innovation titan', 'digital pioneer', 'tech icon'],
+        'dating': ['connection guru', 'romance maestro', 'heart pioneer', 'spark innovator', 'love legend']
     }
     words = re.findall(r'\w+', bio_purpose.lower())
     relevant = [kw for word in words for kw in keyword_base.get(word, [])]
-    custom = [f"{word} {random.choice(power_words['general'])}" for word in words][:5]
-    keywords = list(set(custom + relevant + power_words['general'][:3]))[:10]
-    return keywords if keywords else ['pro', 'expert', 'icon']
+    custom = [f"{word} {random.choice(power_words['general'])}" for word in words][:6]
+    weighted = list(set(custom + relevant + random.sample(power_words['general'], 4)))[:12]
+    return weighted if weighted else ['pro', 'icon', 'master']
 
-# Dynamic bio generation
+# Advanced bio generation
 def generate_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
     char_limit = platform_context[platform]['limit']
     tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
     platform_data = platform_context[platform]
-    location_part = f"in {location}" if location else "worldwide"
-    theme_words = power_words.get(theme.lower(), power_words['vibrant'])
+    location_part = f" based in {location}" if location else " worldwide"
+    theme_words = power_words.get(theme.lower(), power_words['cosmic_glow'])
     emoji = random.choice(emojis[emoji_style]) if emoji_style != 'without_emojis' else ''
 
-    # Sentence components for varied, professional bios
+    # Three-layer bio structure
     intros = [
         f"{random.choice(theme_words).capitalize()} {tone_data['adjective']} {bio_purpose}",
         f"{tone_data['vibe'].capitalize()}-driven {bio_purpose}",
-        f"{bio_purpose} with {random.choice(theme_words)} {tone_data['focus']}"
+        f"{bio_purpose} with {random.choice(theme_words)} {tone_data['focus']}",
+        f"{random.choice(theme_words).capitalize()} {bio_purpose} {tone_data['action']} {tone_data['focus']}"
     ]
     actions = [
         f"{tone_data['action']} {keywords} {platform_data['focus']}",
-        f"crafting {keywords} with {tone_data['vibe']}",
-        f"sparking {keywords} through {tone_data['focus']}"
+        f"shaping {keywords} with {tone_data['vibe']}",
+        f"amplifying {keywords} through {platform_data['focus']}",
+        f"creating {keywords} moments with {tone_data['vibe']}"
     ]
     closers = [
         f"{location_part}{emoji} {platform_data['hashtag']}",
-        f"on {platform} {location_part}{emoji} {platform_data['hashtag']}",
-        f"chasing {tone_data['focus']} {location_part}{emoji} {platform_data['hashtag']}"
+        f"on {platform}{location_part}{emoji} {platform_data['hashtag']}",
+        f"pursuing {tone_data['focus']}{location_part}{emoji} {platform_data['hashtag']}",
+        f"igniting {tone_data['vibe']}{location_part}{emoji} {platform_data['hashtag']}"
     ]
 
     bios = []
     used_phrases = set()
+    target_length = char_limit * 0.85  # Aim for 85% of limit
     for _ in range(3):
         intro = random.choice(intros)
         action = random.choice([a for a in actions if a not in used_phrases])
         closer = random.choice([c for c in closers if c not in used_phrases])
         used_phrases.update([action, closer])
-        bio = f"{intro} {action} {closer}".replace('\s+', ' ').strip()
+        bio = f"{intro}, {action}, {closer}".replace('\s+', ' ').strip()
+        # Adjust length
         if len(bio) > char_limit:
             bio = bio[:char_limit - 3] + '...'
+        elif len(bio) < target_length:
+            bio = f"{intro}, {action}, {random.choice(theme_words)} {closer}".strip()
+            if len(bio) > char_limit:
+                bio = bio[:char_limit - 3] + '...'
         bios.append({'text': bio, 'length': len(bio)})
     
     return bios
