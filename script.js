@@ -7,11 +7,12 @@ document.getElementById('suggestKeywords').addEventListener('click', async () =>
     return;
   }
   try {
-    const res = await fetch('/api/suggest-keywords', {
+    const res = await fetch('https://sparkvibe-1.onrender.com/api/suggest-keywords', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ bioPurpose })
     });
+    if (!res.ok) throw new Error('Server response not OK');
     const data = await res.json();
     if (data.error) {
       alert(data.error);
@@ -26,7 +27,7 @@ document.getElementById('suggestKeywords').addEventListener('click', async () =>
       });
     }
   } catch (err) {
-    alert('Failed to suggest keywords. Please check your connection or try again.');
+    alert(`Failed to suggest keywords: ${err.message}. Please try again.`);
     console.error('Suggest Error:', err);
   }
 });
@@ -50,7 +51,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
   }
 
   try {
-    const res = await fetch('/api/generate-bios', {
+    const res = await fetch('https://sparkvibe-1.onrender.com/api/generate-bios', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
@@ -80,7 +81,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       });
     }
   } catch (err) {
-    document.getElementById('bioOutput').innerHTML = '<div class="p-4 text-red-500">Network error. Please check your connection or try again later.</div>';
+    document.getElementById('bioOutput').innerHTML = `<div class="p-4 text-red-500">Network error: ${err.message}. Please try again later.</div>`;
     console.error('Generate Error:', err);
   }
 });
@@ -92,7 +93,7 @@ document.getElementById('bioPurpose').addEventListener('input', () => {
 });
 
 // Dynamic date
-fetch('/api/current-date')
+fetch('https://sparkvibe-1.onrender.com/api/current-date')
   .then(res => res.json())
   .then(data => {
     document.getElementById('currentDate').textContent = data.date;
