@@ -1,16 +1,18 @@
+```json
 {
   "name": "sparkvibe-ai",
   "version": "1.0.0",
-  "description": "SparkVibe AI - Free SEO-Optimized Bio Generator",
+  "description": "SEO-optimized bio generator for social media platforms",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "cors": "^2.8.5",
-    "dotenv": "^10.0.0"
+    "dotenv": "^16.0.3"
   },
   "author": "STX Tech",
-  "license": "MIT"
+  "license": "ISC"
 }
+```
