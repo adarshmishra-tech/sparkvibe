@@ -4,22 +4,20 @@
 @tailwind utilities;
 
 :root {
-  --gold-100: #fff3cd;
-  --gold-300: #ffd700;
-  --gold-500: #ffcc00;
-  --neon-purple: #bf00ff;
-  --neon-blue: #00ffff;
-  --purple-900: #2a004a;
+  --teal-100: #e6fffa;
+  --teal-500: #00b4a8;
+  --teal-600: #009d92;
+  --coral-500: #ff7f50;
+  --coral-600: #ff7043;
+  --coral-700: #ff5e2e;
+  --silver-800: #4a4a4a;
 }
 
-.text-gold-300 { color: var(--gold-300); }
-.text-gold-500 { color: var(--gold-500); }
-.border-gold-500 { border-color: var(--gold-500); }
-.bg-gold-500 { background-color: var(--gold-500); }
-.text-neon-purple { color: var(--neon-purple); }
-.text-neon-blue { color: var(--neon-blue); }
-.border-neon-blue { border-color: var(--neon-blue); }
-.bg-neon-purple { background-color: var(--neon-purple); }
+.text-coral-600 { color: var(--coral-600); }
+.border-teal-500 { border-color: var(--teal-500); }
+.bg-teal-500 { background-color: var(--teal-500); }
+.bg-coral-500 { background-color: var(--coral-500); }
+.bg-coral-600 { background-color: var(--coral-600); }
 
 body {
   margin: 0;
@@ -29,14 +27,14 @@ body {
 
 #bioForm select, #bioForm input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%23ffd700'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2300b4a8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 15px var(--gold-300);
+  box-shadow: 0 0 15px var(--coral-500);
 }
 
 button {
@@ -57,6 +55,15 @@ button:hover {
   transform: translateY(-50%);
 }
 
+.animate-slide {
+  animation: slide 20s linear infinite;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -71,4 +78,5 @@ button:hover {
   #bioForm button { padding: 1rem; font-size: 1rem; }
   #keywords { padding-right: 6rem; }
   #suggestKeywords { right: 0.5rem; padding: 0.25rem 0.5rem; }
+  #reviewSlider div { width: 100%; }
 }
