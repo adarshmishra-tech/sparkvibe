@@ -1,3 +1,10 @@
+// Theme selection visual feedback
+document.getElementById('theme').addEventListener('change', (e) => {
+  const form = document.getElementById('bioForm');
+  form.classList.remove('theme-vibrant', 'theme-elegant');
+  form.classList.add(`theme-${e.target.value}`);
+});
+
 // Keyword suggestion dropdown
 document.getElementById('suggestKeywords').addEventListener('click', async () => {
   const bioPurpose = document.getElementById('bioPurpose').value.trim();
@@ -25,14 +32,14 @@ document.getElementById('suggestKeywords').addEventListener('click', async () =>
         option.textContent = keyword;
         select.appendChild(option);
       });
+      select.focus();
     }
   } catch (err) {
     alert(`Failed to suggest keywords: ${err.message}. Using fallback keywords.`);
     console.error('Suggest Error:', err);
-    // Fallback keywords
     const select = document.getElementById('keywords');
     select.innerHTML = '<option value="" disabled selected>Select a Keyword</option>';
-    ['expert', 'guru', 'innovator'].forEach(keyword => {
+    ['expert', 'guru', 'innovator', 'pro', 'visionary'].forEach(keyword => {
       const option = document.createElement('option');
       option.value = keyword;
       option.textContent = keyword;
@@ -75,10 +82,13 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       output.innerHTML = `<div class="p-4 text-red-500">${data.error}</div>`;
     } else {
       output.innerHTML = data.bios.map((bio, index) => `
-        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-60 md:max-h-80">
+        <div class="bio-box bg-white/90 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-64 sm:max-h-56 md:max-h-72 theme-${formData.theme}">
           <p class="text-gray-900 break-words">${bio.text}</p>
           <div class="mt-4 flex justify-between">
-            <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
+            <button class="copy-btn bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-700 transition-all duration-300 text-sm" data-index="${index}">
+              <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
+              Copy
+            </button>
           </div>
           <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
         </div>
@@ -92,21 +102,23 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     }
   } catch (err) {
     console.error('Generate Error:', err);
-    // Fallback bio generation
     const maxChars = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[formData.platform] || 200;
     const fallbackBios = [
-      { text: `${formData.bioPurpose} crafting excellence in ${formData.location || 'the world'}.`, length: 0 },
-      { text: `${formData.bioPurpose} with ${formData.tone} vibes, ${formData.keywords}.`, length: 0 },
-      { text: `${formData.bioPurpose} shining in ${formData.platform}, ${formData.keywords}.`, length: 0 }
+      { text: `${formData.bioPurpose} excelling in ${formData.location || 'the world'} with ${formData.tone} flair. ${formData.keywords}`, length: 0 },
+      { text: `${formData.bioPurpose} crafting ${formData.tone} stories on ${formData.platform}. ${formData.keywords}`, length: 0 },
+      { text: `${formData.bioPurpose} leading with ${formData.keywords} in ${formData.location || 'global'} scenes.`, length: 0 }
     ].map(bio => {
       const length = bio.text.length;
       return { text: bio.text.length > maxChars ? bio.text.substring(0, maxChars - 3) + '...' : bio.text, length: Math.min(length, maxChars) };
     });
     document.getElementById('bioOutput').innerHTML = fallbackBios.map((bio, index) => `
-      <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-60 md:max-h-80">
+      <div class="bio-box bg-white/90 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-64 sm:max-h-56 md:max-h-72 theme-${formData.theme}">
         <p class="text-gray-900 break-words">${bio.text}</p>
         <div class="mt-4 flex justify-between">
-          <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
+          <button class="copy-btn bg-teal-600 text-white px-3 py-1 rounded-lg hover:bg-teal-700 transition-all duration-300 text-sm" data-index="${index}">
+            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
+            Copy
+          </button>
         </div>
         <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
       </div>
