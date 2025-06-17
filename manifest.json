@@ -1,12 +1,11 @@
-```json
 {
   "name": "SparkVibe AI",
   "short_name": "SparkVibe",
-  "description": "Generate stunning, SEO-optimized bios free forever, no login required.",
+  "description": "Craft unignorable, professional Tinder bios free forever, no login required.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#e6fffb",
-  "theme_color": "#009d92",
+  "background_color": "#fdf2f8",
+  "theme_color": "#0d9488",
   "icons": [
     {
       "src": "/icon-192x192.png",
@@ -20,4 +19,3 @@
     }
   ]
 }
-```
