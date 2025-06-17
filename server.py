@@ -1,126 +1,158 @@
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+from flask import Flask, request, jsonify, send_from_directory
+from flask_cors import CORS
+import random
+import re
+from datetime import datetime
+import os
 
-const app = express();
-const port = process.env.PORT || 10000;
+app = Flask(__name__)
+CORS(app, resources={r"/api/*": {"origins": "https://sparkvibe-1.onrender.com"}})
 
-// Middleware
-app.use(cors({
-  origin: 'https://sparkvibe-1.onrender.com',
-  methods: ['GET', 'POST'],
-  credentials: true,
-  optionsSuccessStatus: 200
-}));
-app.use(express.json());
-app.use(express.static(__dirname));
+# Word dictionaries for dynamic bio generation
+power_words = {
+    'vibrant': ['dynamic', 'radiant', 'bold', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'bustling', 'vibrant'],
+    'elegant': ['sophisticated', 'refined', 'polished', 'graceful', 'timeless', 'exquisite', 'classy', 'cultivated', 'distinguished', 'chic'],
+    'general': ['expert', 'guru', 'pioneer', 'visionary', 'maestro', 'oracle', 'pro', 'legend', 'innovator', 'master', 'authority', 'trailblazer']
+}
 
-// SEO Power Words Dictionary
-const powerWords = {
-  vibrant: ['dynamic', 'bold', 'radiant', 'striking', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'bustling'],
-  elegant: ['sophisticated', 'refined', 'polished', 'graceful', 'timeless', 'exquisite', 'classy', 'cultivated', 'distinguished', 'chic'],
-  general: ['expert', 'guru', 'pioneer', 'visionary', 'maestro', 'oracle', 'pro', 'legend', 'innovator', 'master']
-};
+tone_styles = {
+    'professional': {'adjective': 'refined', 'action': 'delivering', 'vibe': 'excellence', 'focus': 'expertise'},
+    'witty': {'adjective': 'clever', 'action': 'sprinkling', 'vibe': 'charm', 'focus': 'wit'},
+    'bold': {'adjective': 'fearless', 'action': 'unleashing', 'vibe': 'impact', 'focus': 'strength'},
+    'friendly': {'adjective': 'warm', 'action': 'sharing', 'vibe': 'connection', 'focus': 'approachability'},
+    'inspirational': {'adjective': 'uplifting', 'action': 'igniting', 'vibe': 'inspiration', 'focus': 'motivation'},
+    'romantic': {'adjective': 'passionate', 'action': 'weaving', 'vibe': 'romance', 'focus': 'heart'},
+    'casual': {'adjective': 'relaxed', 'action': 'bringing', 'vibe': 'chill', 'focus': 'ease'}
+}
 
-// Advanced keyword suggestion with SEO focus
-const suggestKeywords = (bioPurpose) => {
-  const keywordBase = {
-    'marketing': ['SEO titan', 'digital guru', 'ad maestro', 'growth wizard', 'brand oracle'],
-    'bakery': ['artisan titan', 'pastry guru', 'bread maestro', 'dessert wizard', 'cake oracle'],
-    'branding': ['identity titan', 'self-growth guru', 'influence maestro', 'personal wizard', 'brand oracle'],
-    'business': ['entrepreneurial titan', 'corporate guru', 'startup maestro', 'growth wizard', 'business oracle'],
-    'fitness': ['fitness titan', 'health guru', 'workout maestro', 'wellness wizard', 'strength oracle'],
-    'photography': ['visual poetry titan', 'photo odyssey guru', 'portrait maestro', 'landscape wizard', 'image oracle'],
-    'travel': ['global wanderer titan', 'journey weaver guru', 'adventure maestro', 'cultural wizard', 'pathfinder oracle'],
-    'fashion': ['style titan', 'trendsetting guru', 'design maestro', 'couture wizard', 'fabric oracle'],
-    'technology': ['tech titan', 'innovation guru', 'code maestro', 'digital wizard', 'future oracle'],
-    'dating': ['romance titan', 'connection guru', 'flirt maestro', 'love wizard', 'charm oracle']
-  };
-  const words = bioPurpose.toLowerCase().match(/\w+/g) || [];
-  const relevant = words.map(w => keywordBase[w] || []).flat();
-  const custom = words.map(w => `${w} ${powerWords.general[Math.floor(Math.random() * powerWords.general.length)]}`).slice(0, 3);
-  return [...new Set([...custom, ...relevant.slice(0, 4), ...powerWords.general.slice(0, 2)])];
-};
+platform_context = {
+    'Instagram': {'focus': 'visual storytelling', 'style': 'trendy', 'hashtag': '#BioBlaze'},
+    'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedPro'},
+    'Twitter': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetLegend'},
+    'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#TikTokIcon'},
+    'Tinder': {'focus': 'personal connection', 'style': 'flirty', 'hashtag': '#LoveSpark'},
+    'Bumble': {'focus': 'authentic relationships', 'style': 'engaging', 'hashtag': '#DateVibe'}
+}
 
-// Advanced bio generation with distinct theme impact
-const generateBios = (theme, bioPurpose, location, platform, tone, keywords, emojiStyle) => {
-  const charLimit = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[platform] || 200;
-  const toneStyles = {
-    professional: { style: 'refined', energy: 'precision', vibe: 'excellence', connector: 'delivering' },
-    witty: { style: 'playful', energy: 'wit', vibe: 'charm', connector: 'sprinkling' },
-    bold: { style: 'daring', energy: 'intensity', vibe: 'impact', connector: 'unleashing' },
-    friendly: { style: 'heartfelt', energy: 'warmth', vibe: 'connection', connector: 'sharing' },
-    inspirational: { style: 'uplifting', energy: 'motivation', vibe: 'hope', connector: 'igniting' },
-    romantic: { style: 'passionate', energy: 'love', vibe: 'affection', connector: 'weaving' },
-    casual: { style: 'laid-back', energy: 'chill', vibe: 'vibe', connector: 'bringing' }
-  };
-  const toneData = toneStyles[tone] || toneStyles.professional;
-  const keywordArray = keywords ? keywords.split(', ').slice(0, 3) : [];
-  const locationPart = location ? `rooted in ${location}` : 'globally inspired';
-  const themeWords = powerWords[theme] || powerWords.vibrant;
-  const themeStyle = theme === 'elegant' 
-    ? `${themeWords[Math.floor(Math.random() * themeWords.length)]} with timeless sophistication` 
-    : `${themeWords[Math.floor(Math.random() * themeWords.length)]} with bold energy`;
-  const platformTag = { Instagram: '#BioBlaze', Twitter: '#TweetLegend', LinkedIn: '#LinkedPro', TikTok: '#TikTokIcon', Tinder: '#LoveSpark', Bumble: '#DateVibe' }[platform] || '';
-  const emojis = {
-    minimal: ['✨', '🌟', '💡'],
-    vibrant: ['🌈', '🚀', '🎉', '🔥'],
-    none: ['']
-  };
-  const emoji = emojiStyle !== 'none' ? emojis[emojiStyle][Math.floor(Math.random() * emojis[emojiStyle].length)] : '';
+emojis = {
+    'minimal': ['✨', '🌟', '💡', '⚡'],
+    'vibrant': ['🌈', '🚀', '🎉', '🔥', '💥'],
+    'none': ['']
+}
 
-  const templates = [
-    `${themeWords[0]} ${toneData.style} ${bioPurpose} ${themeStyle}, mastering ${keywordArray.join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.energy}${emoji} on ${platform}. ${platformTag}`,
-    `${toneData.vibe}-driven ${bioPurpose} ${themeStyle}, excelling as ${keywordArray[0] || 'expert'} ${locationPart}, crafting ${toneData.energy}${emoji} for ${platform}. ${platformTag}`,
-    `${themeWords[1]} ${bioPurpose} pioneer ${themeStyle}, leading with ${keywordArray.slice(0, 2).join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.vibe}${emoji} across ${platform}. ${platformTag}`
-  ];
+# Keyword suggestion logic
+def suggest_keywords(bio_purpose):
+    keyword_base = {
+        'marketing': ['SEO titan', 'digital guru', 'ad maestro', 'growth wizard', 'brand oracle', 'marketing pro', 'content legend'],
+        'bakery': ['artisan titan', 'pastry guru', 'bread maestro', 'dessert wizard', 'cake oracle', 'baking pro', 'sweet innovator'],
+        'branding': ['identity titan', 'self-growth guru', 'influence maestro', 'personal wizard', 'brand oracle', 'branding expert', 'image pro'],
+        'business': ['entrepreneurial titan', 'corporate guru', 'startup maestro', 'growth wizard', 'business oracle', 'strategy pro', 'venture legend'],
+        'fitness': ['fitness titan', 'health guru', 'workout maestro', 'wellness wizard', 'strength oracle', 'fitness pro', 'health innovator'],
+        'photography': ['visual titan', 'photo guru', 'portrait maestro', 'landscape wizard', 'image oracle', 'photography pro', 'lens legend'],
+        'travel': ['wanderer titan', 'journey guru', 'adventure maestro', 'cultural wizard', 'pathfinder oracle', 'travel pro', 'explorer legend'],
+        'fashion': ['style titan', 'trend guru', 'design maestro', 'couture wizard', 'fabric oracle', 'fashion pro', 'trendsetter'],
+        'technology': ['tech titan', 'innovation guru', 'code maestro', 'digital wizard', 'future oracle', 'tech pro', 'software legend'],
+        'dating': ['romance titan', 'connection guru', 'flirt maestro', 'love wizard', 'charm oracle', 'dating pro', 'heart innovator']
+    }
+    words = re.findall(r'\w+', bio_purpose.lower())
+    relevant = [kw for word in words for kw in keyword_base.get(word, [])]
+    custom = [f"{word} {random.choice(power_words['general'])}" for word in words][:5]
+    return list(set(custom + relevant + power_words['general'][:3]))[:10]
 
-  return templates.map(template => {
-    let bio = template.replace(/\s+/g, ' ').trim();
-    return { text: bio.length > charLimit ? bio.substring(0, charLimit - 3) + '...' : bio, length: bio.length };
-  });
-};
+# Dynamic bio generation
+def generate_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
+    char_limit = {'Instagram': 150, 'Twitter': 160, 'LinkedIn': 200, 'TikTok': 150, 'Tinder': 500, 'Bumble': 300}.get(platform, 200)
+    tone_data = tone_styles.get(tone, tone_styles['professional'])
+    platform_data = platform_context.get(platform, platform_context['Instagram'])
+    location_part = f"in {location}" if location else "worldwide"
+    theme_words = power_words.get(theme, power_words['vibrant'])
+    emoji = random.choice(emojis[emoji_style]) if emoji_style != 'none' else ''
 
-// Keyword suggestion route
-app.post('/api/suggest-keywords', (req, res) => {
-  const { bioPurpose } = req.body;
-  if (!bioPurpose) return res.status(400).json({ error: 'Please enter a Bio Purpose (e.g., Dating Coach).' });
-  try {
-    const keywords = suggestKeywords(bioPurpose);
-    res.json({ keywords });
-  } catch (error) {
-    console.error('Keyword Suggestion Error:', error);
-    res.status(500).json({ error: 'Failed to suggest keywords. Please try again.' });
-  }
-});
+    # Sentence structure components
+    intros = [
+        f"{random.choice(theme_words)} {tone_data['adjective']} {bio_purpose}",
+        f"{tone_data['vibe'].capitalize()} {bio_purpose}",
+        f"{bio_purpose} with {random.choice(theme_words)} {tone_data['focus']}"
+    ]
+    actions = [
+        f"{tone_data['action']} {keywords}",
+        f"crafting {platform_data['focus']} with {keywords}",
+        f"leading {keywords} with {tone_data['vibe']}"
+    ]
+    closers = [
+        f"{location_part}{emoji}",
+        f"on {platform} {location_part}{emoji}",
+        f"with {tone_data['focus']} {location_part}{emoji}"
+    ]
 
-// Bio generation route
-app.post('/api/generate-bios', (req, res) => {
-  const { theme, bioPurpose, location, platform, tone, keywords, emojiStyle } = req.body;
-  if (!theme || !bioPurpose || !platform || !tone) {
-    return res.status(400).json({ error: 'Theme, Bio Purpose, Platform, and Tone are required.' });
-  }
-  try {
-    const bios = generateBios(theme, bioPurpose, location, platform, tone, keywords, emojiStyle);
-    if (!bios || bios.length < 3) throw new Error('Failed to generate sufficient bios');
-    res.json({ bios });
-  } catch (error) {
-    console.error('Generation Error:', error);
-    res.status(500).json({ error: 'Failed to generate bios. Please try again later.' });
-  }
-});
+    bios = []
+    used_phrases = set()
+    for _ in range(3):
+        intro = random.choice(intros)
+        action = random.choice([a for a in actions if a not in used_phrases])
+        closer = random.choice([c for c in closers if c not in used_phrases])
+        used_phrases.update([action, closer])
+        bio = f"{intro} {action} {closer} {platform_data['hashtag']}".replace('\s+', ' ').strip()
+        if len(bio) > char_limit:
+            bio = bio[:char_limit - 3] + '...'
+        bios.append({'text': bio, 'length': len(bio)})
+    
+    return bios
 
-// Contact and Privacy
-app.get('/contact', (req, res) => res.sendFile(__dirname + '/contact.html'));
-app.get('/privacy', (req, res) => res.sendFile(__dirname + '/privacy.html'));
+@app.route('/api/suggest-keywords', methods=['POST'])
+def suggest_keywords_route():
+    data = request.get_json()
+    bio_purpose = data.get('bioPurpose')
+    if not bio_purpose:
+        return jsonify({'error': 'Please enter a Bio Purpose (e.g., Dating Coach).'}, status=400)
+    try:
+        keywords = suggest_keywords(bio_purpose)
+        return jsonify({'keywords': keywords})
+    except Exception as e:
+        print(f"Keyword Suggestion Error: {e}")
+        return jsonify({'error': 'Failed to suggest keywords. Please try again.'}, status=500)
 
-// Dynamic date
-app.get('/api/current-date', (req, res) => {
-  const date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kathmandu', hour12: true });
-  res.json({ date });
-});
+@app.route('/api/generate-bios', methods=['POST'])
+def generate_bios_route():
+    data = request.get_json()
+    required_fields = ['theme', 'bioPurpose', 'platform', 'tone']
+    if not all(data.get(field) for field in required_fields):
+        return jsonify({'error': 'Theme, Bio Purpose, Platform, and Tone are required.'}, status=400)
+    try:
+        bios = generate_bios(
+            data.get('theme'),
+            data.get('bioPurpose'),
+            data.get('location', ''),
+            data.get('platform'),
+            data.get('tone'),
+            data.get('keywords', ''),
+            data.get('emojiStyle', 'none')
+        )
+        if not bios or len(bios) < 3:
+            raise Exception('Failed to generate sufficient bios')
+        return jsonify({'bios': bios})
+    except Exception as e:
+        print(f"Generation Error: {e}")
+        return jsonify({'error': 'Failed to generate bios. Please try again later.'}, status=500)
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server running on port ${port} | SparkVibe AI - Free Forever!`);
-});
+@app.route('/contact')
+def contact():
+    return send_from_directory('.', 'contact.html')
+
+@app.route('/privacy')
+def privacy():
+    return send_from_directory('.', 'privacy.html')
+
+@app.route('/api/current-date')
+def current_date():
+    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    return jsonify({'date': date})
+
+@app.route('/')
+@app.route('/<path:path>')
+def serve_static(path='index.html'):
+    return send_from_directory('.', path)
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))
+    app.run(host='0.0.0.0', port=port, debug=True)
