@@ -1,83 +1,31 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+/* styles.css */
 body {
-  background: linear-gradient(to bottom right, #0A0F2E, #1A1A3D, #000000) !important;
-  background-attachment: fixed !important;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
 }
 
-body.cosmic-theme {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 50% 50%, rgba(255, 193, 7, 0.1), transparent);
+#reviews {
+  transition: transform 0.5s ease-in-out;
 }
 
-body.neon-pulse {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 20% 80%, #00FFCC, transparent 70%), radial-gradient(circle at 80% 20%, #FF00FF, transparent 70%);
+.review {
+  min-width: 20rem; /* 320px */
 }
 
-body.aurora-blaze {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 30% 70%, #FF4500, transparent 60%), radial-gradient(circle at 70% 30%, #00CED1, transparent 60%);
+input, select, button {
+  transition: all 0.3s ease;
 }
 
-body.stellar-gold {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 50% 50%, #FFD700, transparent 50%);
+button:hover {
+  transform: translateY(-2px);
 }
 
-body.crystal-dawn {
-  background: linear-gradient(135deg, #0A0F2E, #1A1A3D), radial-gradient(circle at 40% 60%, #87CEEB, transparent 55%), radial-gradient(circle at 60% 40%, #BA55D3, transparent 55%);
+#bioOutput:not(.hidden) {
+  animation: fadeIn 0.5s ease-in;
 }
 
-.starfield {
-  background: radial-gradient(circle at 30% 30%, rgba(255, 215, 0, 0.05), transparent 70%), radial-gradient(circle at 70% 70%, rgba(255, 215, 0, 0.03), transparent 60%);
-  animation: starTwinkle 10s infinite linear;
-}
-
-@keyframes starTwinkle {
-  0%, 100% { opacity: 0.8; }
-  50% { opacity: 1; }
-}
-
-.hero-logo {
-  box-shadow: 0 0 25px rgba(255, 193, 7, 0.6);
-}
-
-.animate-pulse-smooth {
-  animation: pulseSmooth 2.5s infinite ease-in-out;
-}
-
-@keyframes pulseSmooth {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-.cta-btn, .buy-btn {
-  box-shadow: 0 8px 25px rgba(255, 193, 7, 0.5);
-}
-
-.cta-btn:hover, .buy-btn:hover {
-  box-shadow: 0 10px 30px rgba(255, 193, 7, 0.7);
-}
-
-.share-btn {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-}
-
-.bio-generator-wrapper, .ratings-section, .premium-benefits {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 193, 7, 0.4);
-}
-
-.drop-shadow-xl {
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.8));
-}
-
-.transition-smooth {
-  transition: all 0.4s ease-in-out;
-}
-
-@media (max-width: 640px) {
-  .container { padding: 1rem; }
-  h1 { font-size: 3.5rem; }
-  .cta-btn { width: 100%; max-width: 250px; }
-  .bio-generator-wrapper { padding: 1.5rem; }
-  .chart-container { width: 100%; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
