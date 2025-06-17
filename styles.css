@@ -18,6 +18,8 @@
 .bg-teal-500 { background-color: var(--teal-500); }
 .bg-coral-500 { background-color: var(--coral-500); }
 .bg-coral-600 { background-color: var(--coral-600); }
+.text-gray-800 { color: #2d3748; } /* Darker gray for better contrast */
+.text-gray-100 { color: #f7fafc; } /* Lighter gray for headers */
 
 body {
   margin: 0;
