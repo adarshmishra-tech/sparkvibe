@@ -1,10 +1,10 @@
-/* styles.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
   --teal-50: #e6fffb;
+  --teal-500: #00b7ab;
   --teal-600: #009d92;
   --teal-700: #007d74;
   --coral-500: #ff7f50;
@@ -49,7 +49,9 @@ button:hover {
 
 #bioOutput div {
   transition: all 0.3s ease;
-  min-height: 200px;
+  min-height: 150px;
+  max-height: 200px;
+  overflow-y: auto;
 }
 
 #bioOutput div:hover {
@@ -77,23 +79,25 @@ button:hover {
 
 /* Responsive design */
 @media (max-width: 640px) {
-  header h1 { font-size: 3rem; }
-  header p { font-size: 1.2rem; }
-  #bioForm { grid-template-columns: 1fr; gap: 2px; }
-  #bioOutput { grid-template-columns: 1fr; gap: 2px; }
+  header h1 { font-size: 2.5rem; }
+  header p { font-size: 1.1rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 0.5rem; }
+  #bioOutput { grid-template-columns: 1fr; gap: 0.5rem; }
   #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
   #keywords { padding-right: 6rem; }
   #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.8rem; }
-  #bioOutput div { max-h-48; min-height: 150px; }
+  #bioOutput div { max-height: 150px; min-height: 120px; }
   #reviewSlider div { width: 100%; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioOutput div { max-h-60; }
-  #bioForm { gap: 4px; }
-  #bioOutput { gap: 4px; }
+  #bioOutput div { max-height: 180px; min-height: 140px; }
+  #bioForm { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #bioOutput { grid-template-columns: 1fr 1fr; gap: 1rem; }
 }
 
 @media (min-width: 1025px) {
-  #bioOutput div { max-h-80; }
+  #bioOutput div { max-height: 200px; min-height: 150px; }
+  #bioForm { gap: 1rem; }
+  #bioOutput { gap: 1rem; }
 }
