@@ -2,38 +2,38 @@ from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import random
 import re
+import spacy
 from datetime import datetime
 import os
 from dotenv import load_dotenv
+from functools import lru_cache
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "https://sparkvibe-1.onrender.com"}})
 load_dotenv()
 
-# Enhanced word dictionaries
-power_words = {
-    'cosmic_glow': ['stellar', 'radiant', 'luminous', 'celestial', 'ethereal', 'galactic', 'cosmic', 'astral', 'shimmering', 'infinite'],
-    'neon_pulse': ['electric', 'vibrant', 'neon', 'pulsing', 'dynamic', 'bold', 'striking', 'vivid', 'charged', 'radiant'],
-    'general': ['guru', 'visionary', 'maestro', 'pro', 'innovator', 'pioneer', 'legend', 'icon', 'trailblazer', 'master']
-}
+# Load spaCy model
+nlp = spacy.load("en_core_web_sm")
 
-tone_styles = {
-    'professional': {'adjective': 'polished', 'action': 'delivering', 'vibe': 'excellence', 'focus': 'expertise'},
-    'witty': {'adjective': 'clever', 'action': 'sprinkling', 'vibe': 'charm', 'focus': 'wit'},
-    'bold': {'adjective': 'fearless', 'action': 'igniting', 'vibe': 'passion', 'focus': 'intensity'},
-    'friendly': {'adjective': 'warm', 'action': 'sharing', 'vibe': 'connection', 'focus': 'approachability'},
-    'inspirational': {'adjective': 'uplifting', 'action': 'inspiring', 'vibe': 'motivation', 'focus': 'drive'},
-    'romantic': {'adjective': 'passionate', 'action': 'weaving', 'vibe': 'romance', 'focus': 'heart'},
-    'engaging': {'adjective': 'captivating', 'action': 'sparking', 'vibe': 'energy', 'focus': 'engagement'},
-    'casual': {'adjective': 'chill', 'action': 'bringing', 'vibe': 'vibes', 'focus': 'ease'}
-}
-
+# Platform configurations
 platform_context = {
-    'Instagram': {'focus': 'visual storytelling', 'style': 'trendy', 'hashtag': '#BioBlaze', 'limit': 150},
-    'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedPro', 'limit': 200},
-    'Twitter': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetLegend', 'limit': 160},
-    'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#TikTokIcon', 'limit': 150},
-    'Tinder': {'focus': 'personal connection', 'style': 'engaging', 'hashtag': '#LoveSpark', 'limit': 300}
+    'Instagram': {'focus': 'visual storytelling', 'style': 'trendy', 'hashtag': '#InstaVibes', 'limit': 150},
+    'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedInPro', 'limit': 200},
+    'Twitter/X': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetStar', 'limit': 160},
+    'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#DanceLegend', 'limit': 150},
+    'Facebook': {'focus': 'community connection', 'style': 'friendly', 'hashtag': '#FBConnect', 'limit': 250}
+}
+
+# Tone configurations
+tone_styles = {
+    'professional': {'adjectives': ['polished', 'expert', 'driven'], 'verbs': ['delivering', 'leading', 'building'], 'focus': 'expertise'},
+    'witty': {'adjectives': ['clever', 'sharp', 'witty'], 'verbs': ['sprinkling', 'crafting', 'spinning'], 'focus': 'charm'},
+    'bold': {'adjectives': ['fearless', 'dynamic', 'bold'], 'verbs': ['igniting', 'shaking', 'blazing'], 'focus': 'intensity'},
+    'friendly': {'adjectives': ['warm', 'approachable', 'genuine'], 'verbs': ['sharing', 'connecting', 'inviting'], 'focus': 'connection'},
+    'inspirational': {'adjectives': ['uplifting', 'visionary', 'motivated'], 'verbs': ['inspiring', 'empowering', 'fueling'], 'focus': 'drive'},
+    'romantic': {'adjectives': ['passionate', 'heartfelt', 'devoted'], 'verbs': ['weaving', 'cherishing', 'adoring'], 'focus': 'heart'},
+    'engaging': {'adjectives': ['vibrant', 'captivating', 'energetic'], 'verbs': ['sparking', 'electrifying', 'dazzling'], 'focus': 'engagement'},
+    'casual': {'adjectives': ['chill', 'easygoing', 'cool'], 'verbs': ['bringing', 'vibing', 'rolling'], 'focus': 'vibes'}
 }
 
 emojis = {
@@ -43,69 +43,99 @@ emojis = {
     'without_emojis': ['']
 }
 
-# Real-time keyword suggestion
-def suggest_keywords(bio_purpose):
-    keyword_base = {
-        'dancing': ['dance icon', 'rhythm pioneer', 'movement maestro', 'choreography legend', 'dance visionary'],
-        'marketing': ['SEO titan', 'digital master', 'brand strategist', 'growth innovator', 'marketing guru'],
-        'photography': ['visual storyteller', 'lens legend', 'photo maestro', 'capture pro', 'image pioneer'],
-        'technology': ['tech visionary', 'code master', 'innovation titan', 'digital pioneer', 'tech icon'],
-        'dating': ['connection guru', 'romance maestro', 'heart pioneer', 'spark innovator', 'love legend']
-    }
-    words = re.findall(r'\w+', bio_purpose.lower())
-    relevant = [kw for word in words for kw in keyword_base.get(word, [])]
-    custom = [f"{word} {random.choice(power_words['general'])}" for word in words][:6]
-    weighted = list(set(custom + relevant + random.sample(power_words['general'], 4)))[:12]
-    return weighted if weighted else ['pro', 'icon', 'master']
+# NLP-based keyword extraction
+@lru_cache(maxsize=100)
+def extract_keywords(text):
+    doc = nlp(text.lower())
+    keywords = []
+    for ent in doc.ents:
+        if ent.label_ in ['PERSON', 'ORG', 'GPE', 'NORP']:
+            keywords.append(ent.text)
+    for token in doc:
+        if token.pos_ in ['NOUN', 'ADJ'] and not token.is_stop and len(token.text) > 3:
+            keywords.append(token.text)
+    return list(set(keywords))[:10] or ['pro', 'expert']
 
-# Advanced bio generation
-def generate_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
+# Short bio generation
+def generate_short_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
     char_limit = platform_context[platform]['limit']
     tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
     platform_data = platform_context[platform]
-    location_part = f" based in {location}" if location else " worldwide"
-    theme_words = power_words.get(theme.lower(), power_words['cosmic_glow'])
+    location_part = location or 'global'
     emoji = random.choice(emojis[emoji_style]) if emoji_style != 'without_emojis' else ''
-
-    # Three-layer bio structure
-    intros = [
-        f"{random.choice(theme_words).capitalize()} {tone_data['adjective']} {bio_purpose}",
-        f"{tone_data['vibe'].capitalize()}-driven {bio_purpose}",
-        f"{bio_purpose} with {random.choice(theme_words)} {tone_data['focus']}",
-        f"{random.choice(theme_words).capitalize()} {bio_purpose} {tone_data['action']} {tone_data['focus']}"
-    ]
-    actions = [
-        f"{tone_data['action']} {keywords} {platform_data['focus']}",
-        f"shaping {keywords} with {tone_data['vibe']}",
-        f"amplifying {keywords} through {platform_data['focus']}",
-        f"creating {keywords} moments with {tone_data['vibe']}"
-    ]
-    closers = [
-        f"{location_part}{emoji} {platform_data['hashtag']}",
-        f"on {platform}{location_part}{emoji} {platform_data['hashtag']}",
-        f"pursuing {tone_data['focus']}{location_part}{emoji} {platform_data['hashtag']}",
-        f"igniting {tone_data['vibe']}{location_part}{emoji} {platform_data['hashtag']}"
-    ]
+    keywords = keywords or extract_keywords(bio_purpose)[0]
 
     bios = []
-    used_phrases = set()
-    target_length = char_limit * 0.85  # Aim for 85% of limit
-    for _ in range(3):
-        intro = random.choice(intros)
-        action = random.choice([a for a in actions if a not in used_phrases])
-        closer = random.choice([c for c in closers if c not in used_phrases])
-        used_phrases.update([action, closer])
-        bio = f"{intro}, {action}, {closer}".replace('\s+', ' ').strip()
-        # Adjust length
+    used_structures = set()
+    target_length = char_limit * 0.9
+
+    for _ in range(5):
+        adj = random.choice(tone_data['adjectives']).capitalize()
+        verb = random.choice(tone_data['verbs'])
+        structure = random.choice([
+            f"{adj} {bio_purpose}, {verb} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}",
+            f"{bio_purpose}, {verb} {keywords} with {platform_data['style']} flair, ruling {platform} from {location_part}{emoji} {platform_data['hashtag']}",
+            f"{location_part}'s {bio_purpose}, {verb} {keywords} {tone_data['focus']}, dazzling {platform}{emoji} {platform_data['hashtag']}"
+        ])
+        bio = re.sub(r'\s+', ' ', structure).strip()
+        struct_key = (structure.split()[0], verb, structure.split()[-2])
+
+        if struct_key in used_structures or len(bio) > char_limit:
+            continue
+        used_structures.add(struct_key)
+
         if len(bio) > char_limit:
             bio = bio[:char_limit - 3] + '...'
-        elif len(bio) < target_length:
-            bio = f"{intro}, {action}, {random.choice(theme_words)} {closer}".strip()
+        elif len(bio) < target_length * 0.8:
+            bio = re.sub(r'\s+', ' ', f"{bio} with {random.choice(['epic', 'vivid', 'blazing'])} {tone_data['focus']}").strip()
             if len(bio) > char_limit:
                 bio = bio[:char_limit - 3] + '...'
+
         bios.append({'text': bio, 'length': len(bio)})
-    
+        if len(bios) == 3:
+            break
+
+    while len(bios) < 3:
+        bio = re.sub(r'\s+', ' ', f"{random.choice(tone_data['adjectives']).capitalize()} {bio_purpose}, {random.choice(tone_data['verbs'])} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}").strip()
+        if len(bio) > char_limit:
+            bio = bio[:char_limit - 3] + '...'
+        bios.append({'text': bio, 'length': len(bio)})
+
     return bios
+
+# Long bio generation
+def generate_long_bio(prompt, platform, tone, word_count):
+    doc = nlp(prompt)
+    name = next((ent.text for ent in doc.ents if ent.label_ == 'PERSON'), 'Aadarsh Mishra')
+    profession = next((token.text for token in doc if token.pos_ == 'NOUN' and not token.is_stop), 'professional')
+    tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
+    platform_data = platform_context[platform]
+
+    sections = {
+        'intro': f"{name}, a {random.choice(tone_data['adjectives'])} {profession}, thrives on {platform_data['focus']}. With a passion for {tone_data['focus']}, {name} has carved a unique path in {platform_data['style']} spaces.",
+        'body': [
+            f"From early beginnings, {name} embraced {profession}, driven by {random.choice(['curiosity', 'ambition', 'creativity'])}. Through {random.choice(tone_data['verbs'])} innovative solutions, {name} has earned recognition for {random.choice(['impactful work', 'bold ideas', 'authentic connections'])}.",
+            f"Whether {random.choice(tone_data['verbs'])} {platform_data['focus']} or collaborating with others, {name} brings {tone_data['focus']} to every endeavor. Key achievements include {random.choice(['leading projects', 'inspiring teams', 'creating trends'])} that resonate deeply."
+        ],
+        'closer': f"Looking ahead, {name} aims to {random.choice(tone_data['verbs'])} {platform_data['focus']} further, fueled by {tone_data['focus']}. Connect with {name} on {platform} to join the journey! {platform_data['hashtag']}"
+    }
+
+    bio = f"{sections['intro']} {' '.join(sections['body'])} {sections['closer']}"
+    words = bio.split()
+    current_count = len(words)
+
+    if current_count < word_count:
+        filler = f" {name}'s approach combines {random.choice(tone_data['adjectives'])} vision with practical expertise, making a lasting impact. By {random.choice(tone_data['verbs'])} {platform_data['focus']}, {name} continues to inspire and innovate."
+        bio += filler * ((word_count - current_count) // len(filler.split()))
+        words = bio.split()
+        if len(words) > word_count:
+            bio = ' '.join(words[:word_count - 3]) + '...'
+        elif len(words) < word_count:
+            bio += ' ' + ' '.join(['Innovation drives progress.'] * (word_count - len(words)))
+    elif current_count > word_count:
+        bio = ' '.join(words[:word_count - 3]) + '...'
+
+    return {'text': re.sub(r'\s+', ' ', bio).strip(), 'length': len(bio.split())}
 
 @app.route('/api/suggest-keywords', methods=['POST'])
 def suggest_keywords_route():
@@ -113,35 +143,35 @@ def suggest_keywords_route():
         data = request.get_json()
         bio_purpose = data.get('bioPurpose')
         if not bio_purpose:
-            return jsonify({'error': 'Please enter a Bio Purpose (e.g., Dancing Coach).'}, 400)
-        keywords = suggest_keywords(bio_purpose)
+            return jsonify({'error': 'Bio Purpose is required.'}, 400)
+        keywords = extract_keywords(bio_purpose)
         return jsonify({'keywords': keywords})
     except Exception as e:
-        print(f"Keyword Suggestion Error: {e}")
-        return jsonify({'error': 'Failed to suggest keywords. Please try again.'}, 500)
+        print(f"Keyword Error: {e}")
+        return jsonify({'error': 'Failed to suggest keywords.'}, 500)
 
 @app.route('/api/generate-bios', methods=['POST'])
 def generate_bios_route():
     try:
         data = request.get_json()
-        required_fields = ['theme', 'bioPurpose', 'platform', 'tone', 'emojiStyle']
-        if not all(data.get(field) for field in required_fields):
-            return jsonify({'error': 'Theme, Bio Purpose, Platform, Tone, and Emoji Style are required.'}, 400)
-        bios = generate_bios(
-            data.get('theme'),
-            data.get('bioPurpose'),
-            data.get('location', ''),
-            data.get('platform'),
-            data.get('tone'),
-            data.get('keywords', 'pro'),
-            data.get('emojiStyle')
-        )
-        if not bios or len(bios) < 3:
-            raise Exception('Failed to generate sufficient bios')
-        return jsonify({'bios': bios})
+        required = ['theme', 'bioPurpose', 'platform', 'tone']
+        if not all(data.get(field) for field in required):
+            return jsonify({'error': 'All fields are required.'}, 400)
+        
+        if data.get('wordCount'):  # Long bio
+            bio = generate_long_bio(
+                data['bioPurpose'], data['platform'], data['tone'], data.get('wordCount', 300)
+            )
+            return jsonify({'longBio': bio})
+        else:  # Short bios
+            bios = generate_short_bios(
+                data['theme'], data['bioPurpose'], data.get('location', ''),
+                data['platform'], data['tone'], data.get('keywords', 'pro'), data.get('emojiStyle', 'without_emojis')
+            )
+            return jsonify({'shortBios': bios})
     except Exception as e:
         print(f"Generation Error: {e}")
-        return jsonify({'error': 'Failed to generate bios. Please try again later.'}, 500)
+        return jsonify({'error': 'Failed to generate bios.'}, 500)
 
 @app.route('/contact')
 def contact():
@@ -153,8 +183,7 @@ def privacy():
 
 @app.route('/api/current-date')
 def current_date():
-    date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    return jsonify({'date': date})
+    return jsonify({'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
 
 @app.route('/')
 @app.route('/<path:path>')
