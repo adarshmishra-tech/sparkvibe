@@ -3,112 +3,125 @@
 @tailwind utilities;
 
 :root {
-  --teal-50: #e6fffa;
-  --teal-600: #0d9488;
-  --teal-700: #0f766e;
-  --teal-800: #115e59;
-  --pink-100: #fce7f3;
+  --gray-900: #111827;
+  --gray-700: #374151;
+  --gray-400: #9ca3af;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --pink-500: #ec4899;
   --pink-600: #db2777;
   --pink-700: #be185d;
 }
-
-.text-pink-600 { color: var(--pink-600); }
-.border-teal-600 { border-color: var(--teal-600); }
-.bg-teal-700 { background-color: var(--teal-700); }
-.bg-teal-800 { background-color: var(--teal-800); }
-.bg-pink-600 { background-color: var(--pink-600); }
-.bg-pink-700 { background-color: var(--pink-700); }
-.text-gray-900 { color: #1a202c; }
-.text-gray-200 { color: #e5e7eb; }
 
 body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
+  background: linear-gradient(135deg, var(--gray-900), #1e1b4b);
 }
 
 #bioForm select, #bioForm input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%230d9488'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.75rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 12px var(--pink-600);
+  box-shadow: 0 0 12px var(--pink-500);
 }
 
 button {
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 button:hover {
-  transform: translateY(-1px) scale(1.03);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
 }
 
 #bioOutput .bio-box {
-  transition: all 0.3s ease;
-  min-height: 140px;
-  max-height: 180px;
+  transition: all 0.4s ease;
+  min-height: 200px;
+  max-height: 240px;
   overflow-y: auto;
-  border-radius: 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(55, 65, 81, 0.8), rgba(79, 70, 229, 0.2));
+  position: relative;
+}
+
+#bioOutput .bio-box::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--indigo-600), var(--pink-600));
+  border-radius: 18px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#bioOutput .bio-box:hover::before {
+  opacity: 1;
 }
 
 #bioOutput .bio-box:hover {
-  transform: scale(1.02);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
 }
 
-.theme-vibrant {
-  background: linear-gradient(to right, rgba(219, 39, 119, 0.1), rgba(13, 148, 136, 0.1));
+.theme-cosmic_glow {
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(17, 24, 39, 0.1));
 }
 
-.theme-elegant {
-  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(17, 94, 89, 0.1));
+.theme-neon_pulse {
+  background: linear-gradient(to right, rgba(236, 72, 153, 0.1), rgba(79, 70, 229, 0.1));
 }
 
-.theme-vibrant .bio-box {
+.theme-cosmic_glow .bio-box {
+  border-color: var(--indigo-600);
+  background: rgba(17, 24, 39, 0.8);
+}
+
+.theme-neon_pulse .bio-box {
   border-color: var(--pink-600);
-  background: rgba(252, 231, 243, 0.05);
-}
-
-.theme-elegant .bio-box {
-  border-color: var(--teal-800);
-  background: rgba(230, 255, 250, 0.05);
+  background: rgba(55, 65, 81, 0.8);
 }
 
 .copy-btn {
   display: flex;
   align-items: center;
   font-size: 0.875rem;
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  background: var(--indigo-600);
+}
+
+.copy-btn:hover {
+  background: var(--indigo-700);
 }
 
 .animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-slide {
-  animation: slide 20s linear infinite;
+  animation: slide 25s linear infinite;
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.8s ease-out;
+.animate-slide-up {
+  animation: slideUp 1s ease-out;
 }
 
-.dropdown-content {
-  transition: all 0.3s ease-in-out;
-}
-
-.dropdown:hover .dropdown-content, .dropdown:focus-within .dropdown-content {
-  display: block;
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.7; }
+  50% { opacity: 0.6; }
 }
 
 @keyframes slide {
@@ -116,39 +129,44 @@ button:hover {
   100% { transform: translateX(-100%); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--pink-500); }
+  to { text-shadow: 0 0 15px var(--pink-500), 0 0 25px var(--indigo-500); }
 }
 
 /* Responsive design */
 @media (max-width: 640px) {
-  header h1 { font-size: 2.5rem; }
-  header p { font-size: 1rem; }
-  #bioForm { grid-template-columns: 1fr; gap: 0.5rem; }
-  #bioOutput { grid-template-columns: 1fr; gap: 0.5rem; }
-  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
-  #keywordDropdown { max-height: 200px; overflow-y: auto; }
-  #bioOutput .bio-box { max-height: 160px; min-height: 120px; }
+  header h1 { font-size: 2.75rem; }
+  header p { font-size: 1.1rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 0.75rem; }
+  #bioOutput { grid-template-columns: 1fr; gap: 1rem; }
+  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
+  #keywordDropdown { max-height: 220px; }
+  #bioOutput .bio-box { min-height: 180px; max-height: 220px; }
   #reviewSlider div { width: 100%; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioOutput .bio-box { max-height: 170px; min-height: 130px; }
-  #bioForm { gap: 0.75rem; }
-  #bioOutput { gap: 0.75rem; }
+  #bioOutput .bio-box { min-height: 190px; max-height: 230px; }
+  #bioForm { gap: 1rem; }
+  #bioOutput { gap: 1.25rem; }
 }
 
 @media (min-width: 1025px) {
-  #bioOutput .bio-box { max-height: 180px; min-height: 140px; }
-  #bioForm { gap: 1rem; }
-  #bioOutput { gap: 1rem; }
+  #bioOutput .bio-box { min-height: 200px; max-height: 240px; }
+  #bioForm { gap: 1.5rem; }
+  #bioOutput { gap: 1.5rem; }
 }
 
 /* Landscape mobile */
 @media (max-height: 640px) and (orientation: landscape) {
-  #bioForm { grid-template-columns: repeat(3, 1fr); gap: 0.5rem; }
-  #bioOutput { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
-  #bioForm button { padding: 0.6rem; font-size: 1rem; }
-  #bioOutput .bio-box { max-height: 150px; min-height: 110px; }
+  #bioForm { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  #bioOutput { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
+  #bioOutput .bio-box { min-height: 170px; max-height: 210px; }
 }
