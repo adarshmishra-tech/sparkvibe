@@ -4,14 +4,21 @@
 @tailwind utilities;
 
 :root {
-  --neon-blue: #00ffff;
+  --gold-100: #fff3cd;
+  --gold-300: #ffd700;
+  --gold-500: #ffcc00;
   --neon-purple: #bf00ff;
+  --neon-blue: #00ffff;
+  --purple-900: #2a004a;
 }
 
-.text-neon-blue { color: var(--neon-blue); }
+.text-gold-300 { color: var(--gold-300); }
+.text-gold-500 { color: var(--gold-500); }
+.border-gold-500 { border-color: var(--gold-500); }
+.bg-gold-500 { background-color: var(--gold-500); }
 .text-neon-purple { color: var(--neon-purple); }
+.text-neon-blue { color: var(--neon-blue); }
 .border-neon-blue { border-color: var(--neon-blue); }
-.bg-neon-blue { background-color: var(--neon-blue); }
 .bg-neon-purple { background-color: var(--neon-purple); }
 
 body {
@@ -22,14 +29,14 @@ body {
 
 #bioForm select, #bioForm input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2300ffff'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%23ffd700'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 10px var(--neon-purple);
+  box-shadow: 0 0 15px var(--gold-300);
 }
 
 button {
@@ -38,11 +45,16 @@ button {
 
 button:hover {
   filter: brightness(1.2);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
 }
 
 #bioOutput:not(.hidden) {
   animation: fadeIn 0.5s ease-in;
+}
+
+#suggestKeywords {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 @keyframes fadeIn {
@@ -55,7 +67,8 @@ button:hover {
   header h1 { font-size: 2.5rem; }
   header p { font-size: 1rem; }
   section { padding: 1rem; }
-  #bioForm { gap: 1rem; }
+  #bioForm { gap: 0.5rem; }
   #bioForm button { padding: 1rem; font-size: 1rem; }
-  .review { min-width: 15rem; }
+  #keywords { padding-right: 6rem; }
+  #suggestKeywords { right: 0.5rem; padding: 0.25rem 0.5rem; }
 }
