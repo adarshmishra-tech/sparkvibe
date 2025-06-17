@@ -1,21 +1,99 @@
 /* styles.css */
-body { margin: 0; font-family: Arial, sans-serif; }
-header, footer { color: white; }
-main { padding: 1rem; }
-#bioForm { max-width: 100%; }
-#bioForm select, #bioForm input, #bioForm button { width: 100%; padding: 0.5rem; }
-#bioOutput div { min-height: 120px; }
-#bioOutput div:hover { box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --teal-50: #e6fffb;
+  --teal-600: #009d92;
+  --teal-700: #007d74;
+  --coral-500: #ff7f50;
+  --coral-600: #ff7043;
+  --gold-200: #ffeb99;
+}
+
+.text-coral-600 { color: var(--coral-600); }
+.border-teal-500 { border-color: var(--teal-500); }
+.bg-teal-600 { background-color: var(--teal-600); }
+.bg-teal-700 { background-color: var(--teal-700); }
+.bg-coral-500 { background-color: var(--coral-500); }
+.bg-coral-600 { background-color: var(--coral-600); }
+.text-gray-900 { color: #1a202c; }
+.text-gray-100 { color: #f7fafc; }
+
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+}
+
+#bioForm select, #bioForm input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%23009d92'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  background-size: 1em;
+}
+
+#bioForm select:focus, #bioForm input:focus {
+  box-shadow: 0 0 20px var(--coral-500);
+}
+
+button {
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+}
+
+#bioOutput div {
+  transition: all 0.3s ease;
+  min-height: 200px;
+}
+
+#bioOutput div:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-slide {
+  animation: slide 20s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); }
+}
+
+/* Responsive design */
 @media (max-width: 640px) {
-  #bioForm { grid-template-columns: 1fr; }
-  #bioOutput { grid-template-columns: 1fr; }
-  h2 { font-size: 1.5rem; }
+  header h1 { font-size: 3rem; }
+  header p { font-size: 1.2rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 2px; }
+  #bioOutput { grid-template-columns: 1fr; gap: 2px; }
+  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
+  #keywords { padding-right: 6rem; }
+  #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.8rem; }
+  #bioOutput div { max-h-48; min-height: 150px; }
+  #reviewSlider div { width: 100%; }
 }
+
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioForm { grid-template-columns: 1fr 1fr; }
-  #bioOutput { grid-template-columns: 1fr 1fr; }
+  #bioOutput div { max-h-60; }
+  #bioForm { gap: 4px; }
+  #bioOutput { gap: 4px; }
 }
+
 @media (min-width: 1025px) {
-  #bioForm { grid-template-columns: 1fr 1fr; }
-  #bioOutput { grid-template-columns: 1fr 1fr 1fr; }
+  #bioOutput div { max-h-80; }
 }
