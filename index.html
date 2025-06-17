@@ -4,121 +4,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SparkVibe AI - Premium Bio Generator</title>
+  <meta name="description" content="SparkVibe AI - Craft neon-powered SEO-optimized bios. Free forever, no login required. Trusted by 20,000+ creators worldwide.">
+  <title>SparkVibe AI - Neon-Powered SEO Bio Generator</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
-  <script src="https://js.stripe.com/v3/"></script>
 </head>
-<body class="bg-gradient-to-b from-blue-50 to-white font-sans antialiased">
+<body class="bg-gradient-to-b from-gray-900 to-black text-white min-h-screen font-sans">
   <!-- Header -->
-  <header class="bg-blue-700 text-white py-12 text-center shadow-lg">
-    <h1 class="text-5xl font-extrabold tracking-tight">SparkVibe AI</h1>
-    <p class="mt-4 text-xl max-w-2xl mx-auto">Craft professional, engaging bios for any platform with AI precision.</p>
+  <header class="bg-gray-800 py-12 text-center relative overflow-hidden">
+    <div class="absolute inset-0 opacity-20">
+      <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+        <path d="M10 10 L90 90 M10 90 L90 10" stroke="#00ffff" stroke-width="0.5" opacity="0.5" />
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#00ffff" stroke-width="0.2" opacity="0.3" />
+      </svg>
+    </div>
+    <h1 class="text-5xl md:text-6xl font-extrabold tracking-wide text-neon-blue relative z-10">SparkVibe AI</h1>
+    <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto relative z-10">Craft Neon-Powered SEO-Optimized Bios</p>
+    <p class="mt-2 text-md text-gray-400 relative z-10">Trusted by 20,000+ creators worldwide. Free Forever, No Login Required.</p>
   </header>
 
-  <!-- Premium Section -->
-  <section class="py-16 text-center bg-white">
-    <h2 class="text-4xl font-bold text-gray-800">Unlock Premium Features</h2>
-    <p class="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">Get unlimited bios, advanced tones, all platforms, and exports for $9/month or $59/year.</p>
-    <button id="goPremium" class="mt-8 bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition text-lg font-semibold shadow-md">Go Premium</button>
-  </section>
-
-  <!-- Bio Generator -->
-  <section class="py-16 bg-blue-50">
-    <div class="max-w-4xl mx-auto px-4">
-      <h2 class="text-4xl font-bold text-gray-800 text-center">AI Bio Generator</h2>
-      <form id="bioForm" class="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 p-8 bg-white rounded-2xl shadow-xl">
-        <input type="text" id="name" placeholder="Your Name" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        <input type="text" id="role" placeholder="Your Role (e.g., Product Manager)" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        <input type="text" id="industry" placeholder="Industry (e.g., Tech)" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-        <select id="tone" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+  <!-- Theme Selector -->
+  <section class="py-12 px-4 max-w-2xl mx-auto">
+    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-neon-blue">
+      <h2 class="text-3xl md:text-4xl font-bold text-neon-purple text-center mb-6">Neon Bio Generator</h2>
+      <button id="themeToggle" class="bg-neon-purple text-white px-6 py-3 rounded-full hover:bg-neon-blue transition-all duration-300 mb-6 inline-flex items-center">
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+        </svg>
+        Dark Theme
+      </button>
+      <form id="bioForm" class="grid grid-cols-1 gap-6">
+        <select id="theme" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
+          <option value="dark">Dark</option>
+        </select>
+        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Personal Branding, Business)" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300" required>
+        <input type="text" id="location" placeholder="Location (Optional, e.g., New York, NY)" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
+        <select id="platform" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
+          <option value="Instagram">Instagram (150 chars)</option>
+          <option value="LinkedIn">LinkedIn</option>
+        </select>
+        <select id="tone" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
           <option value="professional">Professional</option>
           <option value="witty">Witty</option>
           <option value="bold">Bold</option>
-          <option value="quirky">Quirky</option>
         </select>
-        <select id="platform" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="LinkedIn">LinkedIn</option>
-          <option value="Twitter">Twitter</option>
-          <option value="Portfolio">Portfolio</option>
-          <option value="Dating">Dating</option>
-        </select>
-        <select id="length" class="p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="50">50 Words</option>
-          <option value="100">100 Words</option>
-          <option value="150">150 Words</option>
-        </select>
-        <button type="submit" class="col-span-2 bg-blue-600 text-white px-8 py-4 rounded-full hover:bg-blue-700 transition text-lg font-semibold shadow-md">Generate Bio</button>
+        <button type="submit" class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-8 py-4 rounded-full hover:from-neon-blue hover:to-neon-purple transition-all duration-300 text-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+          Generate My SEO-Optimized Bio
+        </button>
       </form>
-      <div id="bioOutput" class="mt-6 p-6 bg-gray-50 rounded-2xl shadow-inner text-gray-800 hidden"></div>
+      <div id="bioOutput" class="mt-6 p-4 bg-gray-700 rounded-lg text-white hidden"></div>
+      <div id="charCount" class="mt-2 text-sm text-gray-400">Characters: 0/150</div>
     </div>
   </section>
 
-  <!-- Sliding Reviews -->
-  <section class="py-16 bg-white">
-    <h2 class="text-4xl font-bold text-gray-800 text-center">What Users Say</h2>
-    <div id="reviews" class="mt-8 flex overflow-hidden space-x-4 max-w-4xl mx-auto">
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">John D.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Perfect LinkedIn bio in seconds!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Sarah M.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Love the quirky tone options!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Mike T.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Saved me hours of writing!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Emma R.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Dating bio was a hit!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Alex P.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Premium is worth every penny!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Lisa K.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Super easy to use!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Tom H.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Professional and fast!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Anna S.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Best bio tool ever!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Chris L.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Twitter bio nailed it!"</p>
-      </div>
-      <div class="review flex-shrink-0 w-80 p-6 bg-blue-50 rounded-lg shadow-md">
-        <p class="font-bold text-gray-800">Rachel B.</p>
-        <p class="text-yellow-500">★★★★★</p>
-        <p class="text-gray-600">"Highly recommend!"</p>
-      </div>
-    </div>
+  <!-- SEO Guide -->
+  <section class="py-12 px-4 max-w-2xl mx-auto text-center">
+    <h2 class="text-3xl md:text-4xl font-bold text-neon-blue mb-4">SEO Guide: Boost Your Online Presence</h2>
+    <p class="text-lg text-gray-300 mb-4">Use SparkVibe AI to create bios that rank higher on platforms like LinkedIn and Instagram.</p>
+    <p class="text-lg text-gray-300 mb-4">Include Keywords: Add terms like “digital marketing expert” for better search rankings.</p>
+    <p class="text-lg text-gray-300">Use Hashtags: Include hashtags (e.g., #PersonalBranding) on Instagram/TikTok.</p>
   </section>
 
   <!-- Footer -->
-  <footer class="py-8 bg-blue-700 text-white text-center">
-    <div class="max-w-4xl mx-auto px-4">
-      <a href="/contact" class="mx-4 text-white hover:underline">Contact</a>
-      <a href="/privacy" class="mx-4 text-white hover:underline">Privacy Policy</a>
-      <p class="mt-4 text-sm">Powered by STX Tech</p>
+  <footer class="py-6 bg-gray-900 text-center">
+    <div class="max-w-2xl mx-auto px-4">
+      <a href="/contact" class="text-neon-purple hover:text-neon-blue mx-4 transition-colors duration-300">Contact</a>
+      <a href="/privacy" class="text-neon-purple hover:text-neon-blue mx-4 transition-colors duration-300">Privacy Policy</a>
+      <p class="mt-4 text-sm text-gray-400">Powered by <span class="text-neon-blue font-semibold">STX Tech</span> | Today: <span id="currentDate"></span></p>
     </div>
   </footer>
 
