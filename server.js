@@ -15,46 +15,53 @@ app.use(cors({
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// Custom keyword suggestion logic
+// Advanced keyword suggestion logic
 const suggestKeywords = (bioPurpose) => {
-  const keywordMap = {
-    'Digital Marketing': ['SEO expert', 'digital strategist', 'marketing guru', 'online growth', 'ad specialist'],
-    'Bakery': ['artisan baker', 'fresh pastries', 'bakery chef', 'homemade bread', 'sweet treats'],
-    'Personal Branding': ['brand builder', 'personal coach', 'identity expert', 'self-growth', 'influence creator'],
-    'Business': ['entrepreneur', 'business leader', 'startup founder', 'corporate strategist', 'innovation hub'],
-    'Fitness': ['fitness coach', 'health guru', 'workout expert', 'wellness advocate', 'strength trainer'],
-    'Photography': ['photo artist', 'visual storyteller', 'portrait pro', 'landscape expert', 'image creator']
+  const keywordDatabase = {
+    'Digital Marketing': ['SEO master', 'digital innovator', 'marketing wizard', 'online growth hacker', 'ad campaign pro'],
+    'Bakery': ['artisan bread maker', 'pastry artisan', 'baking enthusiast', 'homemade dessert expert', 'cake decorator'],
+    'Personal Branding': ['brand visionary', 'self-development guru', 'identity architect', 'influence builder', 'personal empowerment'],
+    'Business': ['entrepreneurial leader', 'business strategist', 'startup pioneer', 'corporate visionary', 'growth catalyst'],
+    'Fitness': ['fitness trailblazer', 'health revolutionist', 'workout innovator', 'wellness pioneer', 'strength mentor'],
+    'Photography': ['visual artistry pro', 'photo journey expert', 'portrait maestro', 'landscape visionary', 'image craft specialist'],
+    'Travel': ['globetrotting expert', 'travel storyteller', 'adventure guide', 'cultural explorer', 'journey curator'],
+    'Fashion': ['style innovator', 'trendsetter guru', 'fashion visionary', 'design maestro', 'couture expert'],
+    'Technology': ['tech pioneer', 'innovation leader', 'software visionary', 'coding maestro', 'digital futurist']
   };
-  const defaultKeywords = ['expert', 'creator', 'specialist', 'innovator', 'pro'];
-  return keywordMap[bioPurpose] || defaultKeywords;
+  const genericKeywords = ['expert', 'creator', 'specialist', 'innovator', 'pro', 'guru', 'master', 'enthusiast'];
+  const purposeWords = bioPurpose.toLowerCase().split(' ').filter(w => w.length > 2);
+  const customKeywords = purposeWords.map(word => `${word} ${genericKeywords[Math.floor(Math.random() * genericKeywords.length)]}`).slice(0, 2);
+  const baseKeywords = keywordDatabase[bioPurpose] || keywordDatabase[Object.keys(keywordDatabase)[Math.floor(Math.random() * Object.keys(keywordDatabase).length)]];
+  return [...new Set([...customKeywords, ...baseKeywords.slice(0, 3)])].join(', ');
+};
+
+// Advanced bio generation logic
+const generateBio = (theme, bioPurpose, location, platform, tone, keywords) => {
+  const charLimit = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150 }[platform] || 200;
+  const toneStyles = {
+    professional: { style: 'polished', energy: 'dedication', connector: 'delivering' },
+    witty: { style: 'quirky', energy: 'humor', connector: 'sprinkling' },
+    bold: { style: 'bold', energy: 'power', connector: 'unleashing' },
+    friendly: { style: 'warm', energy: 'connection', connector: 'sharing' },
+    inspirational: { style: 'uplifting', energy: 'inspiration', connector: 'igniting' }
+  };
+  const toneData = toneStyles[tone] || toneStyles.professional;
+  const keywordArray = keywords ? keywords.split(', ').slice(0, 3) : [];
+  const locationPart = location ? `based in ${location}` : 'globally inspired';
+  const themeStyle = theme === 'elegant' ? 'sophisticatedly curated' : 'dynamically crafted';
+  const platformTag = { Instagram: '#BioVibe', Twitter: '#TweetPro', LinkedIn: '#LinkedInExpert', TikTok: '#TikTokStar' }[platform] || '';
+  const bioBase = `${toneData.style} ${bioPurpose} ${themeStyle} ${keywordArray.join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.energy} with every ${platform} post. ${platformTag}`;
+  let bio = bioBase.replace(/\s+/g, ' ').trim();
+  return bio.length > charLimit ? bio.substring(0, charLimit - 3) + '...' : bio;
 };
 
 // Keyword suggestion route
 app.post('/api/suggest-keywords', (req, res) => {
   const { bioPurpose } = req.body;
   if (!bioPurpose) return res.status(400).json({ error: 'Bio Purpose is required.' });
-
-  const keywords = suggestKeywords(bioPurpose).slice(0, 5).join(', ');
+  const keywords = suggestKeywords(bioPurpose);
   res.json({ keywords });
 });
-
-// Custom bio generation logic
-const generateBio = (theme, bioPurpose, location, platform, tone, keywords) => {
-  const charLimit = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150 }[platform] || 200;
-  const tones = {
-    professional: { adj: 'dedicated', vibe: 'precision' },
-    witty: { adj: 'clever', vibe: 'humor' },
-    bold: { adj: 'dynamic', vibe: 'energy' },
-    friendly: { adj: 'warm', vibe: 'connection' },
-    inspirational: { adj: 'motivated', vibe: 'inspiration' }
-  };
-  const toneData = tones[tone] || tones.professional;
-  const keywordArray = keywords ? keywords.split(', ').slice(0, 3) : [];
-  const locationPart = location ? `from ${location}` : '';
-  const themePart = theme === 'elegant' ? 'elegantly crafted' : 'vibrantly designed';
-  const baseBio = `${toneData.adj} ${bioPurpose} ${themePart} ${keywordArray.join(' ')} ${locationPart}. Bringing ${toneData.vibe} to every ${platform}.`;
-  return baseBio.substring(0, charLimit).trim() + (baseBio.length > charLimit ? '...' : '');
-};
 
 // Bio generation route
 app.post('/api/generate-bio', (req, res) => {
@@ -62,7 +69,6 @@ app.post('/api/generate-bio', (req, res) => {
   if (!theme || !bioPurpose || !platform || !tone) {
     return res.status(400).json({ error: 'Theme, Bio Purpose, Platform, and Tone are required.' });
   }
-
   const bio = generateBio(theme, bioPurpose, location, platform, tone, keywords);
   res.json({ bio, characters: bio.length });
 });
