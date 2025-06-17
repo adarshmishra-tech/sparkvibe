@@ -4,75 +4,78 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SparkVibe AI - Craft neon-powered SEO-optimized bios. Free forever, no login required. Trusted by 20,000+ creators worldwide.">
-  <title>SparkVibe AI - Neon-Powered SEO Bio Generator</title>
+  <meta name="description" content="SparkVibe AI - Craft vibrant SEO-optimized bios. Free forever, no login required. Trusted by 20,000+ creators worldwide.">
+  <title>SparkVibe AI - Vibrant SEO Bio Generator</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
 </head>
-<body class="bg-gradient-to-b from-gray-900 to-black text-white min-h-screen font-sans">
+<body class="bg-gradient-to-b from-gold-100 to-purple-900 text-white min-h-screen font-sans">
   <!-- Header -->
-  <header class="bg-gray-800 py-12 text-center relative overflow-hidden">
+  <header class="bg-gradient-to-r from-gold-500 to-purple-700 py-16 text-center relative overflow-hidden">
     <div class="absolute inset-0 opacity-20">
       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        <path d="M10 10 L90 90 M10 90 L90 10" stroke="#00ffff" stroke-width="0.5" opacity="0.5" />
-        <circle cx="50" cy="50" r="30" fill="none" stroke="#00ffff" stroke-width="0.2" opacity="0.3" />
+        <path d="M10 10 L90 90 M10 90 L90 10" stroke="#ffd700" stroke-width="0.5" opacity="0.5" />
+        <circle cx="50" cy="50" r="30" fill="none" stroke="#ffd700" stroke-width="0.2" opacity="0.3" />
       </svg>
     </div>
-    <h1 class="text-5xl md:text-6xl font-extrabold tracking-wide text-neon-blue relative z-10">SparkVibe AI</h1>
-    <p class="mt-4 text-xl md:text-2xl text-gray-300 max-w-2xl mx-auto relative z-10">Craft Neon-Powered SEO-Optimized Bios</p>
-    <p class="mt-2 text-md text-gray-400 relative z-10">Trusted by 20,000+ creators worldwide. Free Forever, No Login Required.</p>
+    <h1 class="text-5xl md:text-6xl font-extrabold tracking-wide text-gold-300 relative z-10">SparkVibe AI</h1>
+    <p class="mt-4 text-xl md:text-2xl text-white max-w-2xl mx-auto relative z-10">Craft Vibrant SEO-Optimized Bios</p>
+    <p class="mt-2 text-md text-gray-200 relative z-10">Trusted by 20,000+ creators worldwide. Free Forever, No Login Required.</p>
   </header>
 
-  <!-- Theme Selector -->
+  <!-- Bio Generator -->
   <section class="py-12 px-4 max-w-2xl mx-auto">
-    <div class="bg-gray-800 p-8 rounded-2xl shadow-lg border border-neon-blue">
-      <h2 class="text-3xl md:text-4xl font-bold text-neon-purple text-center mb-6">Neon Bio Generator</h2>
-      <button id="themeToggle" class="bg-neon-purple text-white px-6 py-3 rounded-full hover:bg-neon-blue transition-all duration-300 mb-6 inline-flex items-center">
-        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
-        Dark Theme
-      </button>
+    <div class="bg-gradient-to-br from-gray-800 to-purple-900 p-8 rounded-2xl shadow-2xl border-4 border-gold-500">
+      <h2 class="text-3xl md:text-4xl font-bold text-gold-300 text-center mb-6">Vibrant Bio Generator</h2>
       <form id="bioForm" class="grid grid-cols-1 gap-6">
-        <select id="theme" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
-          <option value="dark">Dark</option>
+        <select id="theme" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300">
+          <option value="vibrant">Vibrant</option>
+          <option value="elegant">Elegant</option>
         </select>
-        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Personal Branding, Business)" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300" required>
-        <input type="text" id="location" placeholder="Location (Optional, e.g., New York, NY)" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
-        <select id="platform" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
+        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Digital Marketing, Bakery)" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300" required>
+        <input type="text" id="location" placeholder="Location (e.g., New York, NY)" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300">
+        <select id="platform" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300">
           <option value="Instagram">Instagram (150 chars)</option>
           <option value="LinkedIn">LinkedIn</option>
+          <option value="Twitter">Twitter (160 chars)</option>
+          <option value="TikTok">TikTok</option>
         </select>
-        <select id="tone" class="bg-gray-700 text-white p-4 rounded-lg border border-neon-blue focus:outline-none focus:ring-2 focus:ring-neon-purple transition-all duration-300">
+        <select id="tone" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300">
           <option value="professional">Professional</option>
           <option value="witty">Witty</option>
           <option value="bold">Bold</option>
+          <option value="friendly">Friendly</option>
+          <option value="inspirational">Inspirational</option>
         </select>
-        <button type="submit" class="bg-gradient-to-r from-neon-purple to-neon-blue text-white px-8 py-4 rounded-full hover:from-neon-blue hover:to-neon-purple transition-all duration-300 text-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+        <div class="relative">
+          <input type="text" id="keywords" placeholder="Suggested Keywords (e.g., SEO, Expert)" class="bg-gray-700 text-white p-4 rounded-lg border-2 border-gold-500 focus:outline-none focus:ring-2 focus:ring-gold-300 transition-all duration-300 w-full" readonly>
+          <button type="button" id="suggestKeywords" class="absolute right-2 top-2 bg-gold-500 text-purple-900 px-3 py-1 rounded-full hover:bg-gold-300 transition-all duration-300 text-sm">Suggest</button>
+        </div>
+        <button type="submit" class="bg-gradient-to-r from-gold-500 to-neon-purple text-white px-8 py-4 rounded-full hover:from-gold-300 hover:to-neon-blue transition-all duration-300 text-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
           Generate My SEO-Optimized Bio
         </button>
       </form>
       <div id="bioOutput" class="mt-6 p-4 bg-gray-700 rounded-lg text-white hidden"></div>
-      <div id="charCount" class="mt-2 text-sm text-gray-400">Characters: 0/150</div>
+      <div id="charCount" class="mt-2 text-sm text-gray-300">Characters: 0/150</div>
     </div>
   </section>
 
   <!-- SEO Guide -->
   <section class="py-12 px-4 max-w-2xl mx-auto text-center">
-    <h2 class="text-3xl md:text-4xl font-bold text-neon-blue mb-4">SEO Guide: Boost Your Online Presence</h2>
-    <p class="text-lg text-gray-300 mb-4">Use SparkVibe AI to create bios that rank higher on platforms like LinkedIn and Instagram.</p>
-    <p class="text-lg text-gray-300 mb-4">Include Keywords: Add terms like “digital marketing expert” for better search rankings.</p>
-    <p class="text-lg text-gray-300">Use Hashtags: Include hashtags (e.g., #PersonalBranding) on Instagram/TikTok.</p>
+    <h2 class="text-3xl md:text-4xl font-bold text-gold-300 mb-4">SEO Guide: Boost Your Online Presence</h2>
+    <p class="text-lg text-gray-200 mb-4">Use SparkVibe AI to create bios that rank higher on platforms like LinkedIn and Instagram.</p>
+    <p class="text-lg text-gray-200 mb-4">Include Keywords: Add terms like “digital marketing expert” for better search rankings.</p>
+    <p class="text-lg text-gray-200">Use Hashtags: Include hashtags (e.g., #PersonalBranding) on Instagram/TikTok.</p>
   </section>
 
   <!-- Footer -->
-  <footer class="py-6 bg-gray-900 text-center">
+  <footer class="py-6 bg-gradient-to-r from-gold-500 to-purple-700 text-center">
     <div class="max-w-2xl mx-auto px-4">
-      <a href="/contact" class="text-neon-purple hover:text-neon-blue mx-4 transition-colors duration-300">Contact</a>
-      <a href="/privacy" class="text-neon-purple hover:text-neon-blue mx-4 transition-colors duration-300">Privacy Policy</a>
-      <p class="mt-4 text-sm text-gray-400">Powered by <span class="text-neon-blue font-semibold">STX Tech</span> | Today: <span id="currentDate"></span></p>
+      <a href="/contact" class="text-neon-blue hover:text-gold-300 mx-4 transition-colors duration-300">Contact</a>
+      <a href="/privacy" class="text-neon-blue hover:text-gold-300 mx-4 transition-colors duration-300">Privacy Policy</a>
+      <p class="mt-4 text-sm text-gray-100">Powered by <span class="text-gold-300 font-semibold">STX Tech</span> | Today: <span id="currentDate"></span></p>
     </div>
   </footer>
 
