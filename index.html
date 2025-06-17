@@ -29,12 +29,12 @@
   <section class="py-16 px-4 max-w-4xl mx-auto">
     <div class="bg-white/80 p-10 rounded-3xl shadow-2xl border-4 border-teal-500/50 backdrop-blur-sm">
       <h2 class="text-4xl md:text-5xl font-bold text-coral-600 text-center mb-8 animate-pulse">Premium SEO Bio Creator</h2>
-      <form id="bioForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <form id="bioForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <select id="theme" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
           <option value="vibrant">Vibrant 🌈</option>
           <option value="elegant">Elegant 🎩</option>
         </select>
-        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Dating Coach, Tech Innovator, Bakery Expert)" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300" required>
+        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Dating Coach, Tech Innovator)" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300" required>
         <input type="text" id="location" placeholder="Location (e.g., Kathmandu, Nepal)" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
         <select id="platform" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
           <option value="Instagram">Instagram (150 chars)</option>
@@ -67,7 +67,7 @@
           Generate My Epic Bios
         </button>
       </form>
-      <div id="bioOutput" class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+      <div id="bioOutput" class="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
       <div id="charCount" class="mt-4 text-sm text-gray-600 text-center">Characters: 0/<span id="maxChars">150</span></div>
     </div>
   </section>
