@@ -4,14 +4,14 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 10000; // Updated to match environment variable
 
 // Middleware
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5000',
+  origin: 'https://sparkvibe-1.onrender.com', // Specific origin for Render
   methods: ['GET', 'POST'],
   credentials: true,
-  optionsSuccessStatus: 200 // Some legacy browsers choke on 204
+  optionsSuccessStatus: 200
 }));
 app.use(express.json());
 app.use(express.static(__dirname));
@@ -37,7 +37,7 @@ const suggestKeywords = (bioPurpose) => {
   return [...new Set([...custom, ...relevant.slice(0, 3)])];
 };
 
-// Advanced bio generation with theme impact and SEO optimization
+// Advanced bio generation with distinct theme impact
 const generateBios = (theme, bioPurpose, location, platform, tone, keywords, useEmoji) => {
   const charLimit = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[platform] || 200;
   const toneStyles = {
@@ -52,7 +52,7 @@ const generateBios = (theme, bioPurpose, location, platform, tone, keywords, use
   const toneData = toneStyles[tone] || toneStyles.professional;
   const keywordArray = keywords ? keywords.split(', ').slice(0, 3) : [];
   const locationPart = location ? `rooted in ${location}` : 'globally inspired';
-  const themeStyle = theme === 'elegant' ? 'elegantly woven with sophistication' : 'vibrantly infused with energy';
+  const themeStyle = theme === 'elegant' ? 'elegantly woven with timeless sophistication' : 'vibrantly infused with bold energy';
   const platformTag = { Instagram: '#BioBlaze', Twitter: '#TweetLegend', LinkedIn: '#LinkedPro', TikTok: '#TikTokIcon', Tinder: '#LoveSpark', Bumble: '#DateVibe' }[platform] || '';
   const emoji = useEmoji ? ' ✨' : '';
 
@@ -84,10 +84,11 @@ app.post('/api/generate-bios', (req, res) => {
   }
   try {
     const bios = generateBios(theme, bioPurpose, location, platform, tone, keywords, useEmoji);
+    if (!bios || bios.length < 3) throw new Error('Failed to generate sufficient bios');
     res.json({ bios });
   } catch (error) {
     console.error('Generation Error:', error);
-    res.status(500).json({ error: 'Internal server error. Please try again later.' });
+    res.status(500).json({ error: 'Failed to generate bios. Please try again later.' });
   }
 });
 
