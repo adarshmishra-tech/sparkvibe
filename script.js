@@ -1,9 +1,9 @@
 // script.js
 // Keyword suggestion dropdown
 document.getElementById('suggestKeywords').addEventListener('click', async () => {
-  const bioPurpose = document.getElementById('bioPurpose').value;
+  const bioPurpose = document.getElementById('bioPurpose').value.trim();
   if (!bioPurpose) {
-    alert('Please enter a Bio Purpose first.');
+    alert('Please enter a Bio Purpose (e.g., Dating Coach).');
     return;
   }
   try {
@@ -26,7 +26,8 @@ document.getElementById('suggestKeywords').addEventListener('click', async () =>
       });
     }
   } catch (err) {
-    alert('Failed to suggest keywords. Check connection.');
+    alert('Failed to suggest keywords. Please check your connection or try again.');
+    console.error('Suggest Error:', err);
   }
 });
 
@@ -35,13 +36,18 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = {
     theme: document.getElementById('theme').value,
-    bioPurpose: document.getElementById('bioPurpose').value,
-    location: document.getElementById('location').value,
+    bioPurpose: document.getElementById('bioPurpose').value.trim(),
+    location: document.getElementById('location').value.trim(),
     platform: document.getElementById('platform').value,
     tone: document.getElementById('tone').value,
     keywords: document.getElementById('keywords').value,
     useEmoji: document.getElementById('useEmoji').value === 'true'
   };
+
+  if (!formData.keywords) {
+    alert('Please select a keyword from the suggested list.');
+    return;
+  }
 
   try {
     const res = await fetch('/api/generate-bios', {
@@ -49,6 +55,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
     });
+    if (!res.ok) throw new Error('Server response not OK');
     const data = await res.json();
     const output = document.getElementById('bioOutput');
     const maxChars = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[formData.platform] || 200;
@@ -57,11 +64,10 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       output.innerHTML = `<div class="p-4 text-red-500">${data.error}</div>`;
     } else {
       output.innerHTML = data.bios.map((bio, index) => `
-        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-64 md:max-h-80">
+        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-60 md:max-h-80">
           <p class="text-gray-900 break-words">${bio.text}</p>
           <div class="mt-4 flex justify-between">
             <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
-            <button class="download-btn bg-coral-500 text-white px-4 py-2 rounded-lg hover:bg-coral-600 transition-all duration-300" data-index="${index}">Download 💾</button>
           </div>
           <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
         </div>
@@ -72,22 +78,10 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
           navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🎉'));
         });
       });
-      document.querySelectorAll('.download-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-          const index = btn.getAttribute('data-index');
-          const blob = new Blob([data.bios[index].text], { type: 'text/plain' });
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement('a');
-          a.href = url;
-          a.download = `bio_option_${index + 1}_${new Date().toISOString().split('T')[0]}.txt`;
-          a.click();
-          window.URL.revokeObjectURL(url);
-        });
-      });
     }
   } catch (err) {
-    document.getElementById('bioOutput').innerHTML = '<div class="p-4 text-red-500">Network error. Please try again.</div>';
-    console.error('Network Error:', err);
+    document.getElementById('bioOutput').innerHTML = '<div class="p-4 text-red-500">Network error. Please check your connection or try again later.</div>';
+    console.error('Generate Error:', err);
   }
 });
 
