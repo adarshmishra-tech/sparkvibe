@@ -79,8 +79,8 @@ button:hover {
 @media (max-width: 640px) {
   header h1 { font-size: 3rem; }
   header p { font-size: 1.2rem; }
-  #bioForm { grid-template-columns: 1fr; }
-  #bioOutput { grid-template-columns: 1fr; }
+  #bioForm { grid-template-columns: 1fr; gap: 2px; }
+  #bioOutput { grid-template-columns: 1fr; gap: 2px; }
   #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
   #keywords { padding-right: 6rem; }
   #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.8rem; }
@@ -90,6 +90,8 @@ button:hover {
 
 @media (min-width: 641px) and (max-width: 1024px) {
   #bioOutput div { max-h-60; }
+  #bioForm { gap: 4px; }
+  #bioOutput { gap: 4px; }
 }
 
 @media (min-width: 1025px) {
