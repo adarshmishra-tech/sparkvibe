@@ -39,7 +39,8 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     location: document.getElementById('location').value,
     platform: document.getElementById('platform').value,
     tone: document.getElementById('tone').value,
-    keywords: document.getElementById('keywords').value
+    keywords: document.getElementById('keywords').value,
+    useEmoji: document.getElementById('useEmoji').value === 'true'
   };
 
   try {
@@ -56,11 +57,11 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       output.innerHTML = `<div class="p-4 text-red-500">${data.error}</div>`;
     } else {
       output.innerHTML = data.bios.map((bio, index) => `
-        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-64">
+        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-64 md:max-h-80">
           <p class="text-gray-900 break-words">${bio.text}</p>
           <div class="mt-4 flex justify-between">
-            <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy</button>
-            <button class="download-btn bg-coral-500 text-white px-4 py-2 rounded-lg hover:bg-coral-600 transition-all duration-300" data-index="${index}">Download</button>
+            <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
+            <button class="download-btn bg-coral-500 text-white px-4 py-2 rounded-lg hover:bg-coral-600 transition-all duration-300" data-index="${index}">Download 💾</button>
           </div>
           <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
         </div>
@@ -68,7 +69,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const index = btn.getAttribute('data-index');
-          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard!'));
+          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🎉'));
         });
       });
       document.querySelectorAll('.download-btn').forEach(btn => {
@@ -78,7 +79,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
-          a.download = `bio_option_${index + 1}.txt`;
+          a.download = `bio_option_${index + 1}_${new Date().toISOString().split('T')[0]}.txt`;
           a.click();
           window.URL.revokeObjectURL(url);
         });
@@ -86,10 +87,11 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     }
   } catch (err) {
     document.getElementById('bioOutput').innerHTML = '<div class="p-4 text-red-500">Network error. Please try again.</div>';
+    console.error('Network Error:', err);
   }
 });
 
-// Character counter (for input preview)
+// Character counter
 document.getElementById('bioPurpose').addEventListener('input', () => {
   const charCount = document.getElementById('charCount');
   charCount.textContent = `Characters: ${document.getElementById('bioPurpose').value.length}/150`;
