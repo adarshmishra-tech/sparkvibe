@@ -1,11 +1,11 @@
 {
   "name": "SparkVibe AI",
   "short_name": "SparkVibe",
-  "description": "Craft vibrant SEO-optimized bios. Free forever, no login required.",
+  "description": "Craft stunning SEO-optimized bios. Free forever, no login required.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#fff3cd",
-  "theme_color": "#ffd700",
+  "background_color": "#e6fffa",
+  "theme_color": "#ff7f50",
   "icons": [
     { "src": "/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/icon-512x512.png", "sizes": "512x512", "type": "image/png" }
