@@ -12,8 +12,8 @@ load_dotenv()
 
 # Word dictionaries for dynamic bio generation
 power_words = {
-    'vibrant': ['radiant', 'bold', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'vibrant', 'dazzling', 'charismatic'],
-    'elegant': ['sophisticated', 'refined', 'graceful', 'timeless', 'exquisite', 'classy', 'elegant', 'chic', 'poised', 'alluring'],
+    'vibrant': ['radiant', 'bold', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'dazzling', 'charismatic', 'vibrant'],
+    'elegant': ['sophisticated', 'refined', 'graceful', 'timeless', 'exquisite', 'classy', 'chic', 'poised', 'alluring', 'elegant'],
     'general': ['guru', 'visionary', 'maestro', 'pro', 'innovator', 'master', 'trailblazer', 'icon', 'expert', 'legend']
 }
 
@@ -28,40 +28,45 @@ tone_styles = {
 }
 
 platform_context = {
-    'Tinder': {'focus': 'sparking connections', 'style': 'flirty', 'hashtag': '#LoveSpark', 'limit': 500}
+    'Instagram': {'focus': 'visual storytelling', 'style': 'trendy', 'hashtag': '#BioBlaze', 'limit': 150},
+    'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedPro', 'limit': 200},
+    'Twitter': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetLegend', 'limit': 160},
+    'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#TikTokIcon', 'limit': 150},
+    'Tinder': {'focus': 'personal connection', 'style': 'flirty', 'hashtag': '#LoveSpark', 'limit': 300}
 }
 
 emojis = {
-    'minimal': ['✨', '🌟', '💖'],
-    'vibrant': ['🌈', '🚀', '🎉', '🔥', '💥'],
-    'none': ['']
+    'with_emojis': ['✨', '🌟', '💖', '💡'],
+    'minimal_emojis': ['✨', '🌟'],
+    'vibrant_emojis': ['🌈', '🚀', '🎉', '🔥'],
+    'without_emojis': ['']
 }
 
 # Keyword suggestion logic
 def suggest_keywords(bio_purpose):
     keyword_base = {
-        'dating': ['love wizard', 'romance guru', 'flirt maestro', 'heart innovator', 'connection pro', 'charm legend', 'passion expert'],
-        'coach': ['dating mentor', 'relationship guru', 'love strategist', 'connection master', 'romance pro', 'heart guide'],
-        'fitness': ['fitness cupid', 'health charmer', 'wellness flirt', 'strength icon', 'vitality pro'],
-        'travel': ['adventure romantic', 'wanderlust guru', 'journey charmer', 'explorer heart', 'pathfinder pro'],
-        'fashion': ['style seducer', 'trend charmer', 'fashion flirt', 'chic icon', 'glam pro']
+        'dancing': ['dance icon', 'rhythm guru', 'movement maestro', 'choreography pro', 'dance legend'],
+        'marketing': ['SEO titan', 'digital guru', 'ad maestro', 'growth wizard', 'brand pro'],
+        'photography': ['visual titan', 'photo guru', 'portrait maestro', 'lens legend', 'image pro'],
+        'technology': ['tech titan', 'innovation guru', 'code maestro', 'digital pro', 'tech legend'],
+        'dating': ['romance titan', 'connection guru', 'flirt maestro', 'love pro', 'heart legend']
     }
     words = re.findall(r'\w+', bio_purpose.lower())
     relevant = [kw for word in words for kw in keyword_base.get(word, [])]
     custom = [f"{word} {random.choice(power_words['general'])}" for word in words][:5]
     keywords = list(set(custom + relevant + power_words['general'][:3]))[:10]
-    return keywords if keywords else ['love wizard', 'romance pro', 'heart expert']
+    return keywords if keywords else ['pro', 'expert', 'icon']
 
-# Dynamic bio generation for Tinder
-def generate_bios(theme, bio_purpose, location, tone, keywords, emoji_style):
-    char_limit = platform_context['Tinder']['limit']
-    tone_data = tone_styles.get(tone, tone_styles['romantic'])
-    platform_data = platform_context['Tinder']
-    location_part = f"in {location}" if location else "wherever sparks fly"
-    theme_words = power_words.get(theme, power_words['vibrant'])
-    emoji = random.choice(emojis[emoji_style]) if emoji_style != 'none' else ''
+# Dynamic bio generation
+def generate_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
+    char_limit = platform_context[platform]['limit']
+    tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
+    platform_data = platform_context[platform]
+    location_part = f"in {location}" if location else "worldwide"
+    theme_words = power_words.get(theme.lower(), power_words['vibrant'])
+    emoji = random.choice(emojis[emoji_style]) if emoji_style != 'without_emojis' else ''
 
-    # Sentence components for flirty, professional Tinder bios
+    # Sentence components for varied, professional bios
     intros = [
         f"{random.choice(theme_words).capitalize()} {tone_data['adjective']} {bio_purpose}",
         f"{tone_data['vibe'].capitalize()}-driven {bio_purpose}",
@@ -73,9 +78,9 @@ def generate_bios(theme, bio_purpose, location, tone, keywords, emoji_style):
         f"sparking {keywords} through {tone_data['focus']}"
     ]
     closers = [
-        f"{location_part} with {tone_data['vibe']}{emoji}",
-        f"on Tinder {location_part}{emoji}",
-        f"chasing {tone_data['focus']} {location_part}{emoji}"
+        f"{location_part}{emoji} {platform_data['hashtag']}",
+        f"on {platform} {location_part}{emoji} {platform_data['hashtag']}",
+        f"chasing {tone_data['focus']} {location_part}{emoji} {platform_data['hashtag']}"
     ]
 
     bios = []
@@ -85,7 +90,7 @@ def generate_bios(theme, bio_purpose, location, tone, keywords, emoji_style):
         action = random.choice([a for a in actions if a not in used_phrases])
         closer = random.choice([c for c in closers if c not in used_phrases])
         used_phrases.update([action, closer])
-        bio = f"{intro} {action} {closer} {platform_data['hashtag']}".replace('\s+', ' ').strip()
+        bio = f"{intro} {action} {closer}".replace('\s+', ' ').strip()
         if len(bio) > char_limit:
             bio = bio[:char_limit - 3] + '...'
         bios.append({'text': bio, 'length': len(bio)})
@@ -98,7 +103,7 @@ def suggest_keywords_route():
         data = request.get_json()
         bio_purpose = data.get('bioPurpose')
         if not bio_purpose:
-            return jsonify({'error': 'Please enter a Bio Purpose (e.g., Dating Coach).'}, 400)
+            return jsonify({'error': 'Please enter a Bio Purpose (e.g., Dancing Coach).'}, 400)
         keywords = suggest_keywords(bio_purpose)
         return jsonify({'keywords': keywords})
     except Exception as e:
@@ -109,16 +114,17 @@ def suggest_keywords_route():
 def generate_bios_route():
     try:
         data = request.get_json()
-        required_fields = ['theme', 'bioPurpose', 'tone']
+        required_fields = ['theme', 'bioPurpose', 'platform', 'tone', 'emojiStyle']
         if not all(data.get(field) for field in required_fields):
-            return jsonify({'error': 'Theme, Bio Purpose, and Tone are required.'}, 400)
+            return jsonify({'error': 'Theme, Bio Purpose, Platform, Tone, and Emoji Style are required.'}, 400)
         bios = generate_bios(
             data.get('theme'),
             data.get('bioPurpose'),
             data.get('location', ''),
+            data.get('platform'),
             data.get('tone'),
-            data.get('keywords', ''),
-            data.get('emojiStyle', 'none')
+            data.get('keywords', 'pro'),
+            data.get('emojiStyle')
         )
         if not bios or len(bios) < 3:
             raise Exception('Failed to generate sufficient bios')
