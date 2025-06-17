@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: sparkvibe-ai
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn server:app
+    envVars:
+      - key: PORT
+        value: 10000
+    plan: free
