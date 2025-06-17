@@ -3,23 +3,23 @@
 @tailwind utilities;
 
 :root {
-  --teal-50: #e6fffb;
-  --teal-500: #00b7ab;
-  --teal-600: #009d92;
-  --teal-700: #007d74;
-  --coral-500: #ff7f50;
-  --coral-600: #ff7043;
-  --gold-200: #ffeb99;
+  --teal-100: #ccfbf1;
+  --teal-600: #0d9488;
+  --teal-700: #0f766e;
+  --teal-800: #115e59;
+  --pink-50: #fdf2f8;
+  --pink-600: #db2777;
+  --pink-700: #be185d;
 }
 
-.text-coral-600 { color: var(--coral-600); }
-.border-teal-500 { border-color: var(--teal-500); }
-.bg-teal-600 { background-color: var(--teal-600); }
+.text-pink-600 { color: var(--pink-600); }
+.border-teal-600 { border-color: var(--teal-600); }
 .bg-teal-700 { background-color: var(--teal-700); }
-.bg-coral-500 { background-color: var(--coral-500); }
-.bg-coral-600 { background-color: var(--coral-600); }
+.bg-teal-800 { background-color: var(--teal-800); }
+.bg-pink-600 { background-color: var(--pink-600); }
+.bg-pink-700 { background-color: var(--pink-700); }
 .text-gray-900 { color: #1a202c; }
-.text-gray-100 { color: #f7fafc; }
+.text-gray-200 { color: #e5e7eb; }
 
 body {
   margin: 0;
@@ -29,14 +29,14 @@ body {
 
 #bioForm select, #bioForm input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%23009d92'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%230d9488'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 15px var(--coral-500);
+  box-shadow: 0 0 15px var(--pink-600);
 }
 
 button {
@@ -44,38 +44,38 @@ button {
 }
 
 button:hover {
-  transform: translateY(-1px) scale(1.03);
+  transform: translateY(-2px) scale(1.05);
 }
 
 #bioOutput .bio-box {
   transition: all 0.3s ease;
-  min-height: 140px;
-  max-height: 180px;
+  min-height: 160px;
+  max-height: 200px;
   overflow-y: auto;
   border-radius: 12px;
 }
 
 #bioOutput .bio-box:hover {
-  transform: scale(1.01);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
 .theme-vibrant {
-  background: linear-gradient(to right, rgba(255, 127, 80, 0.1), rgba(0, 157, 146, 0.1));
+  background: linear-gradient(to right, rgba(219, 39, 119, 0.1), rgba(13, 148, 136, 0.1));
 }
 
 .theme-elegant {
-  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(0, 125, 116, 0.1));
+  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(15, 118, 110, 0.1));
 }
 
 .theme-vibrant .bio-box {
-  border-color: var(--coral-500);
-  background: rgba(255, 235, 153, 0.05);
+  border-color: var(--pink-600);
+  background: rgba(253, 242, 248, 0.05);
 }
 
 .theme-elegant .bio-box {
-  border-color: var(--teal-700);
-  background: rgba(230, 255, 251, 0.05);
+  border-color: var(--teal-800);
+  background: rgba(204, 251, 241, 0.05);
 }
 
 .copy-btn {
@@ -94,9 +94,13 @@ button:hover {
   animation: slide 20s linear infinite;
 }
 
+.animate-fade-in {
+  animation: fadeIn 1s ease-out;
+}
+
 @keyframes pulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.6; }
+  50% { opacity: 0.7; }
 }
 
 @keyframes slide {
@@ -104,27 +108,32 @@ button:hover {
   100% { transform: translateX(-100%); }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 /* Responsive design */
 @media (max-width: 640px) {
-  header h1 { font-size: 2.5rem; }
-  header p { font-size: 1rem; }
-  #bioForm { grid-template-columns: 1fr; gap: 0.5rem; }
-  #bioOutput { grid-template-columns: 1fr; gap: 0.5rem; }
-  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
-  #keywords { padding-right: 7rem; }
-  #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.7rem; font-size: 0.8rem; }
-  #bioOutput .bio-box { max-height: 140px; min-height: 120px; }
+  header h1 { font-size: 2.8rem; }
+  header p { font-size: 1.1rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 0.75rem; }
+  #bioOutput { grid-template-columns: 1fr; gap: 0.75rem; }
+  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
+  #keywords { padding-right: 8rem; }
+  #suggestKeywords { right: 0.5rem; padding: 0.4rem 1rem; font-size: 0.9rem; }
+  #bioOutput .bio-box { max-height: 160px; min-height: 140px; }
   #reviewSlider div { width: 100%; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioOutput .bio-box { max-height: 160px; min-height: 130px; }
-  #bioForm { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
-  #bioOutput { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  #bioOutput .bio-box { max-height: 180px; min-height: 150px; }
+  #bioForm { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #bioOutput { grid-template-columns: 1fr 1fr; gap: 1rem; }
 }
 
 @media (min-width: 1025px) {
-  #bioOutput .bio-box { max-height: 180px; min-height: 140px; }
-  #bioForm { gap: 1rem; }
-  #bioOutput { gap: 1rem; }
+  #bioOutput .bio-box { max-height: 200px; min-height: 160px; }
+  #bioForm { gap: 1.5rem; }
+  #bioOutput { gap: 1.5rem; }
 }
