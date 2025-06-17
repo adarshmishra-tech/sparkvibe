@@ -1,20 +1,26 @@
-// server.js
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const port = process.env.PORT || 10000; // Updated to match environment variable
+const port = process.env.PORT || 10000;
 
 // Middleware
 app.use(cors({
-  origin: 'https://sparkvibe-1.onrender.com', // Specific origin for Render
+  origin: 'https://sparkvibe-1.onrender.com',
   methods: ['GET', 'POST'],
   credentials: true,
   optionsSuccessStatus: 200
 }));
 app.use(express.json());
 app.use(express.static(__dirname));
+
+// SEO Power Words Dictionary
+const powerWords = {
+  vibrant: ['dynamic', 'bold', 'radiant', 'striking', 'vivid', 'energetic', 'lively', 'sparkling', 'thriving', 'bustling'],
+  elegant: ['sophisticated', 'refined', 'polished', 'graceful', 'timeless', 'exquisite', 'classy', 'cultivated', 'distinguished', 'chic'],
+  general: ['expert', 'guru', 'pioneer', 'visionary', 'maestro', 'oracle', 'pro', 'legend', 'innovator', 'master']
+};
 
 // Advanced keyword suggestion with SEO focus
 const suggestKeywords = (bioPurpose) => {
@@ -32,13 +38,12 @@ const suggestKeywords = (bioPurpose) => {
   };
   const words = bioPurpose.toLowerCase().match(/\w+/g) || [];
   const relevant = words.map(w => keywordBase[w] || []).flat();
-  const generic = ['expert', 'creator', 'innovator', 'pro', 'legend', 'guru', 'maestro', 'oracle'];
-  const custom = words.map(w => `${w} ${generic[Math.floor(Math.random() * generic.length)]}`).slice(0, 2);
-  return [...new Set([...custom, ...relevant.slice(0, 3)])];
+  const custom = words.map(w => `${w} ${powerWords.general[Math.floor(Math.random() * powerWords.general.length)]}`).slice(0, 3);
+  return [...new Set([...custom, ...relevant.slice(0, 4), ...powerWords.general.slice(0, 2)])];
 };
 
 // Advanced bio generation with distinct theme impact
-const generateBios = (theme, bioPurpose, location, platform, tone, keywords, useEmoji) => {
+const generateBios = (theme, bioPurpose, location, platform, tone, keywords, emojiStyle) => {
   const charLimit = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[platform] || 200;
   const toneStyles = {
     professional: { style: 'refined', energy: 'precision', vibe: 'excellence', connector: 'delivering' },
@@ -52,14 +57,22 @@ const generateBios = (theme, bioPurpose, location, platform, tone, keywords, use
   const toneData = toneStyles[tone] || toneStyles.professional;
   const keywordArray = keywords ? keywords.split(', ').slice(0, 3) : [];
   const locationPart = location ? `rooted in ${location}` : 'globally inspired';
-  const themeStyle = theme === 'elegant' ? 'elegantly woven with timeless sophistication' : 'vibrantly infused with bold energy';
+  const themeWords = powerWords[theme] || powerWords.vibrant;
+  const themeStyle = theme === 'elegant' 
+    ? `${themeWords[Math.floor(Math.random() * themeWords.length)]} with timeless sophistication` 
+    : `${themeWords[Math.floor(Math.random() * themeWords.length)]} with bold energy`;
   const platformTag = { Instagram: '#BioBlaze', Twitter: '#TweetLegend', LinkedIn: '#LinkedPro', TikTok: '#TikTokIcon', Tinder: '#LoveSpark', Bumble: '#DateVibe' }[platform] || '';
-  const emoji = useEmoji ? ' ✨' : '';
+  const emojis = {
+    minimal: ['✨', '🌟', '💡'],
+    vibrant: ['🌈', '🚀', '🎉', '🔥'],
+    none: ['']
+  };
+  const emoji = emojiStyle !== 'none' ? emojis[emojiStyle][Math.floor(Math.random() * emojis[emojiStyle].length)] : '';
 
   const templates = [
-    `${toneData.style} ${bioPurpose} ${themeStyle} ${keywordArray.join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.energy}${emoji} with every ${platform} moment. ${platformTag}`,
-    `${toneData.vibe}-driven ${bioPurpose} ${themeStyle} ${keywordArray[0] || ''} ${locationPart}, crafting ${toneData.energy}${emoji} across ${platform}. ${platformTag}`,
-    `${toneData.style} ${bioPurpose} pioneer ${themeStyle} ${keywordArray.slice(0, 2).join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.vibe}${emoji} on ${platform}. ${platformTag}`
+    `${themeWords[0]} ${toneData.style} ${bioPurpose} ${themeStyle}, mastering ${keywordArray.join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.energy}${emoji} on ${platform}. ${platformTag}`,
+    `${toneData.vibe}-driven ${bioPurpose} ${themeStyle}, excelling as ${keywordArray[0] || 'expert'} ${locationPart}, crafting ${toneData.energy}${emoji} for ${platform}. ${platformTag}`,
+    `${themeWords[1]} ${bioPurpose} pioneer ${themeStyle}, leading with ${keywordArray.slice(0, 2).join(' & ')} ${locationPart}, ${toneData.connector} ${toneData.vibe}${emoji} across ${platform}. ${platformTag}`
   ];
 
   return templates.map(template => {
@@ -72,18 +85,23 @@ const generateBios = (theme, bioPurpose, location, platform, tone, keywords, use
 app.post('/api/suggest-keywords', (req, res) => {
   const { bioPurpose } = req.body;
   if (!bioPurpose) return res.status(400).json({ error: 'Please enter a Bio Purpose (e.g., Dating Coach).' });
-  const keywords = suggestKeywords(bioPurpose);
-  res.json({ keywords });
+  try {
+    const keywords = suggestKeywords(bioPurpose);
+    res.json({ keywords });
+  } catch (error) {
+    console.error('Keyword Suggestion Error:', error);
+    res.status(500).json({ error: 'Failed to suggest keywords. Please try again.' });
+  }
 });
 
 // Bio generation route
 app.post('/api/generate-bios', (req, res) => {
-  const { theme, bioPurpose, location, platform, tone, keywords, useEmoji } = req.body;
+  const { theme, bioPurpose, location, platform, tone, keywords, emojiStyle } = req.body;
   if (!theme || !bioPurpose || !platform || !tone) {
     return res.status(400).json({ error: 'Theme, Bio Purpose, Platform, and Tone are required.' });
   }
   try {
-    const bios = generateBios(theme, bioPurpose, location, platform, tone, keywords, useEmoji);
+    const bios = generateBios(theme, bioPurpose, location, platform, tone, keywords, emojiStyle);
     if (!bios || bios.length < 3) throw new Error('Failed to generate sufficient bios');
     res.json({ bios });
   } catch (error) {
