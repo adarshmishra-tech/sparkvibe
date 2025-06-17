@@ -36,7 +36,7 @@ body {
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 20px var(--coral-500);
+  box-shadow: 0 0 15px var(--coral-500);
 }
 
 button {
@@ -44,19 +44,46 @@ button {
 }
 
 button:hover {
-  transform: translateY(-2px) scale(1.05);
+  transform: translateY(-1px) scale(1.03);
 }
 
-#bioOutput div {
+#bioOutput .bio-box {
   transition: all 0.3s ease;
-  min-height: 150px;
-  max-height: 200px;
+  min-height: 140px;
+  max-height: 180px;
   overflow-y: auto;
+  border-radius: 12px;
 }
 
-#bioOutput div:hover {
-  transform: scale(1.02);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+#bioOutput .bio-box:hover {
+  transform: scale(1.01);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.theme-vibrant {
+  background: linear-gradient(to right, rgba(255, 127, 80, 0.1), rgba(0, 157, 146, 0.1));
+}
+
+.theme-elegant {
+  background: linear-gradient(to right, rgba(200, 200, 200, 0.1), rgba(0, 125, 116, 0.1));
+}
+
+.theme-vibrant .bio-box {
+  border-color: var(--coral-500);
+  background: rgba(255, 235, 153, 0.05);
+}
+
+.theme-elegant .bio-box {
+  border-color: var(--teal-700);
+  background: rgba(230, 255, 251, 0.05);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .animate-pulse {
@@ -80,24 +107,24 @@ button:hover {
 /* Responsive design */
 @media (max-width: 640px) {
   header h1 { font-size: 2.5rem; }
-  header p { font-size: 1.1rem; }
+  header p { font-size: 1rem; }
   #bioForm { grid-template-columns: 1fr; gap: 0.5rem; }
   #bioOutput { grid-template-columns: 1fr; gap: 0.5rem; }
-  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
-  #keywords { padding-right: 6rem; }
-  #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.8rem; }
-  #bioOutput div { max-height: 150px; min-height: 120px; }
+  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
+  #keywords { padding-right: 7rem; }
+  #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+  #bioOutput .bio-box { max-height: 140px; min-height: 120px; }
   #reviewSlider div { width: 100%; }
 }
 
 @media (min-width: 641px) and (max-width: 1024px) {
-  #bioOutput div { max-height: 180px; min-height: 140px; }
-  #bioForm { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  #bioOutput { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  #bioOutput .bio-box { max-height: 160px; min-height: 130px; }
+  #bioForm { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  #bioOutput { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
 }
 
 @media (min-width: 1025px) {
-  #bioOutput div { max-height: 200px; min-height: 150px; }
+  #bioOutput .bio-box { max-height: 180px; min-height: 140px; }
   #bioForm { gap: 1rem; }
   #bioOutput { gap: 1rem; }
 }
