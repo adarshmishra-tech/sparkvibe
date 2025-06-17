@@ -1,15 +1,11 @@
 {
   "name": "sparkvibe-ai",
   "version": "1.0.0",
-  "lockfileVersion": 2,
-  "requires": true,
-  "packages": {
-    "": {
-      "name": "sparkvibe-ai",
-      "version": "1.0.0",
-      "license": "MIT",
-      "dependencies": {},
-      "devDependencies": {}
-    }
-  }
+  "description": "Premium bio generator for social platforms",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "license": "MIT"
 }
