@@ -4,22 +4,22 @@
 @tailwind utilities;
 
 :root {
-  --teal-100: #e6fffa;
-  --teal-500: #00b4a8;
+  --teal-50: #e6fffb;
   --teal-600: #009d92;
+  --teal-700: #007d74;
   --coral-500: #ff7f50;
   --coral-600: #ff7043;
-  --coral-700: #ff5e2e;
-  --silver-800: #4a4a4a;
+  --gold-200: #ffeb99;
 }
 
 .text-coral-600 { color: var(--coral-600); }
 .border-teal-500 { border-color: var(--teal-500); }
-.bg-teal-500 { background-color: var(--teal-500); }
+.bg-teal-600 { background-color: var(--teal-600); }
+.bg-teal-700 { background-color: var(--teal-700); }
 .bg-coral-500 { background-color: var(--coral-500); }
 .bg-coral-600 { background-color: var(--coral-600); }
-.text-gray-800 { color: #2d3748; } /* Darker gray for better contrast */
-.text-gray-100 { color: #f7fafc; } /* Lighter gray for headers */
+.text-gray-900 { color: #1a202c; }
+.text-gray-100 { color: #f7fafc; }
 
 body {
   margin: 0;
@@ -29,14 +29,14 @@ body {
 
 #bioForm select, #bioForm input {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%2300b4a8'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%23009d92'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1em;
 }
 
 #bioForm select:focus, #bioForm input:focus {
-  box-shadow: 0 0 15px var(--coral-500);
+  box-shadow: 0 0 20px var(--coral-500);
 }
 
 button {
@@ -44,21 +44,30 @@ button {
 }
 
 button:hover {
-  filter: brightness(1.2);
-  transform: translateY(-3px);
+  transform: translateY(-2px) scale(1.05);
 }
 
-#bioOutput:not(.hidden) {
-  animation: fadeIn 0.5s ease-in;
+#bioOutput div {
+  transition: all 0.3s ease;
+  min-height: 200px;
 }
 
-#suggestKeywords {
-  top: 50%;
-  transform: translateY(-50%);
+#bioOutput div:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
 .animate-slide {
   animation: slide 20s linear infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 @keyframes slide {
@@ -66,19 +75,19 @@ button:hover {
   100% { transform: translateX(-100%); }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+/* Responsive design */
+@media (max-width: 768px) {
+  header h1 { font-size: 3.5rem; }
+  header p { font-size: 1.5rem; }
+  #bioForm { grid-template-columns: 1fr; }
+  #bioOutput { grid-template-columns: 1fr; }
+  #bioForm button { padding: 1rem; font-size: 1.5rem; }
+  #keywords { padding-right: 8rem; }
+  #suggestKeywords { right: 0.5rem; padding: 0.5rem 1rem; }
+  #bioOutput div { max-h-60; min-height: 150px; }
+  #reviewSlider div { width: 100%; }
 }
 
-/* Mobile responsiveness */
-@media (max-width: 640px) {
-  header h1 { font-size: 2.5rem; }
-  header p { font-size: 1rem; }
-  section { padding: 1rem; }
-  #bioForm { gap: 0.5rem; }
-  #bioForm button { padding: 1rem; font-size: 1rem; }
-  #keywords { padding-right: 6rem; }
-  #suggestKeywords { right: 0.5rem; padding: 0.25rem 0.5rem; }
-  #reviewSlider div { width: 100%; }
+@media (min-width: 769px) and (max-width: 1024px) {
+  #bioOutput div { max-h-72; }
 }
