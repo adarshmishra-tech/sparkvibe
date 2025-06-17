@@ -1,11 +1,11 @@
 {
   "name": "SparkVibe AI",
   "short_name": "SparkVibe",
-  "description": "Premium AI Bio Generator for professional and engaging bios.",
+  "description": "Craft neon-powered SEO-optimized bios. , no login required.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#1e40af",
+  "background_color": "#1a202c",
+  "theme_color": "#00ffff",
   "icons": [
     {
       "src": "/icon-192x192.png",
