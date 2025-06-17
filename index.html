@@ -11,110 +11,116 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/framer-motion@10.18.0/dist/framer-motion.js"></script>
 </head>
-<body class="bg-gradient-to-br from-teal-100 to-silver-800 text-gray-800 min-h-screen font-sans">
+<body class="bg-gradient-to-br from-teal-50 to-gold-200 text-gray-900 min-h-screen font-sans">
   <!-- Header -->
-  <header class="bg-gradient-to-r from-teal-500 to-coral-600 py-16 text-center relative overflow-hidden">
-    <div class="absolute inset-0 opacity-10">
+  <header class="bg-gradient-to-r from-teal-600 to-coral-500 py-20 text-center relative overflow-hidden backdrop-blur-md">
+    <div class="absolute inset-0 opacity-20">
       <svg class="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
-        <path d="M10 10 L90 90 M10 90 L90 10" stroke="#ff7f50" stroke-width="0.5" opacity="0.5" />
-        <circle cx="50" cy="50" r="30" fill="none" stroke="#ff7f50" stroke-width="0.2" opacity="0.3" />
+        <path d="M10 10 Q50 50 90 10" stroke="#ffaa00" stroke-width="0.5" opacity="0.5" />
+        <circle cx="50" cy="50" r="25" fill="none" stroke="#ffaa00" stroke-width="0.2" opacity="0.3" />
       </svg>
     </div>
-    <h1 class="text-5xl md:text-6xl font-extrabold tracking-wide text-white relative z-10">SparkVibe AI</h1>
-    <p class="mt-4 text-xl md:text-2xl text-gray-100 max-w-2xl mx-auto relative z-10">Craft Stunning SEO-Optimized Bios</p>
-    <p class="mt-2 text-md text-gray-300 relative z-10">Free Forever, No Login Required. Trusted by 20,000+ Creators!</p>
+    <h1 class="text-6xl md:text-7xl font-extrabold tracking-wide text-white drop-shadow-lg relative z-10">SparkVibe AI</h1>
+    <p class="mt-4 text-2xl md:text-3xl text-gray-100 max-w-3xl mx-auto relative z-10">Unleash Stunning SEO-Optimized Bios</p>
+    <p class="mt-2 text-lg text-gray-300 relative z-10">Free Forever, No Login. Loved by 20,000+ Creators!</p>
   </header>
 
   <!-- Bio Generator -->
-  <section class="py-12 px-4 max-w-2xl mx-auto">
-    <div class="bg-white/90 p-8 rounded-2xl shadow-2xl border-4 border-teal-500">
-      <h2 class="text-3xl md:text-4xl font-bold text-coral-600 text-center mb-6">Premium Bio Generator</h2>
-      <form id="bioForm" class="grid grid-cols-1 gap-6">
-        <select id="theme" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
+  <section class="py-16 px-4 max-w-4xl mx-auto">
+    <div class="bg-white/80 p-10 rounded-3xl shadow-2xl border-4 border-teal-500/50 backdrop-blur-sm">
+      <h2 class="text-4xl md:text-5xl font-bold text-coral-600 text-center mb-8 animate-pulse">Premium Bio Creator</h2>
+      <form id="bioForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <select id="theme" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
           <option value="vibrant">Vibrant</option>
           <option value="elegant">Elegant</option>
         </select>
-        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Digital Marketing)" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300" required>
-        <input type="text" id="location" placeholder="Location (e.g., New York, NY)" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
-        <select id="platform" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
+        <input type="text" id="bioPurpose" placeholder="Bio Purpose (e.g., Digital Marketing)" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300" required>
+        <input type="text" id="location" placeholder="Location (e.g., New York, NY)" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
+        <select id="platform" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
           <option value="Instagram">Instagram (150 chars)</option>
-          <option value="LinkedIn">LinkedIn</option>
+          <option value="LinkedIn">LinkedIn (200 chars)</option>
           <option value="Twitter">Twitter (160 chars)</option>
-          <option value="TikTok">TikTok</option>
+          <option value="TikTok">TikTok (150 chars)</option>
+          <option value="Tinder">Tinder (500 chars)</option>
+          <option value="Bumble">Bumble (300 chars)</option>
         </select>
-        <select id="tone" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
+        <select id="tone" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300">
           <option value="professional">Professional</option>
           <option value="witty">Witty</option>
           <option value="bold">Bold</option>
           <option value="friendly">Friendly</option>
           <option value="inspirational">Inspirational</option>
+          <option value="romantic">Romantic</option>
+          <option value="casual">Casual</option>
         </select>
-        <div class="relative">
-          <input type="text" id="keywords" placeholder="Suggested Keywords (e.g., SEO, Expert)" class="bg-gray-100 text-gray-800 p-4 rounded-lg border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300 w-full" readonly>
-          <button type="button" id="suggestKeywords" class="absolute right-2 top-2 bg-coral-500 text-white px-3 py-1 rounded-full hover:bg-coral-600 transition-all duration-300 text-sm">Suggest</button>
+        <div class="relative md:col-span-2">
+          <select id="keywords" class="bg-gray-100 text-gray-900 p-4 rounded-xl border-2 border-teal-500 focus:outline-none focus:ring-2 focus:ring-coral-500 transition-all duration-300 w-full appearance-none" required>
+            <option value="" disabled selected>Select a Keyword</option>
+          </select>
+          <button type="button" id="suggestKeywords" class="absolute right-2 top-2 bg-coral-500 text-white px-4 py-2 rounded-full hover:bg-coral-600 transition-all duration-300 text-sm">Suggest</button>
         </div>
-        <button type="submit" class="bg-gradient-to-r from-teal-500 to-coral-600 text-white px-8 py-4 rounded-full hover:from-teal-600 hover:to-coral-700 transition-all duration-300 text-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
-          Generate My SEO-Optimized Bio
+        <button type="submit" class="md:col-span-2 bg-gradient-to-r from-teal-600 to-coral-500 text-white px-10 py-4 rounded-xl hover:from-teal-700 hover:to-coral-600 transition-all duration-300 text-2xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105">
+          Generate My Epic Bios
         </button>
       </form>
-      <div id="bioOutput" class="mt-6 p-4 bg-gray-100 rounded-lg text-gray-800 hidden"></div>
-      <div id="charCount" class="mt-2 text-sm text-gray-600">Characters: 0/150</div>
+      <div id="bioOutput" class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+      <div id="charCount" class="mt-4 text-sm text-gray-600 text-center">Characters: 0/<span id="maxChars">150</span></div>
     </div>
   </section>
 
   <!-- Sliding Reviews -->
-  <section class="py-12 px-4 max-w-4xl mx-auto">
-    <h2 class="text-3xl md:text-4xl font-bold text-coral-600 text-center mb-6">What Our Users Say</h2>
+  <section class="py-16 px-4 max-w-5xl mx-auto">
+    <h2 class="text-4xl md:text-5xl font-bold text-coral-600 text-center mb-8 animate-pulse">What Our Users Say</h2>
     <div id="reviewSlider" class="overflow-hidden whitespace-nowrap">
       <div class="inline-block w-full animate-slide">
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Amazing tool for my Instagram bio!" - Jane D.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Transformed my dating profile!" - Alex P.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Boosted my LinkedIn presence instantly!" - John S.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Epic bios for my business!" - Sarah L.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Free and super effective!" - Emily R.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Love the creativity!" - Mike T.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Love the SEO tips!" - Mike T.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Best free tool ever!" - Emily R.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Easy to use and stunning results!" - Sarah L.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Boosted my Instagram game!" - John S.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Perfect for my TikTok bio!" - Alex P.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Inspirational bios rock!" - Lisa K.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Highly recommend this tool!" - Lisa K.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Perfect for TikTok!" - Tom H.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Great for business branding!" - Tom H.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Pro-level LinkedIn bios!" - Rachel M.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Fast and creative bios!" - Rachel M.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Fun and witty results!" - David C.</p>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-md inline-block w-80 mr-4">
-          <p class="text-gray-700">"Transformed my online presence!" - David C.</p>
+        <div class="bg-white/80 p-6 rounded-xl shadow-md inline-block w-96 mr-6 backdrop-blur-sm">
+          <p class="text-gray-900">"Amazing for Twitter!" - Jane D.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- SEO Guide -->
-  <section class="py-12 px-4 max-w-2xl mx-auto text-center">
-    <h2 class="text-3xl md:text-4xl font-bold text-coral-600 mb-4">SEO Guide: Boost Your Online Presence</h2>
-    <p class="text-lg text-gray-600 mb-4">Use SparkVibe AI to create bios that rank higher on platforms like LinkedIn and Instagram.</p>
-    <p class="text-lg text-gray-600 mb-4">Include Keywords: Add terms like “digital marketing expert” for better rankings.</p>
-    <p class="text-lg text-gray-600">Use Hashtags: Include #PersonalBranding on Instagram/TikTok.</p>
+  <section class="py-16 px-4 max-w-3xl mx-auto text-center">
+    <h2 class="text-4xl md:text-5xl font-bold text-coral-600 mb-6">SEO Guide: Elevate Your Online Presence</h2>
+    <p class="text-lg text-gray-700 mb-4">Craft bios with SparkVibe AI to dominate platforms like Tinder and LinkedIn.</p>
+    <p class="text-lg text-gray-700 mb-4">Incorporate Keywords: Use terms like “dating expert” for better visibility.</p>
+    <p class="text-lg text-gray-700">Add Hashtags: Try #LoveSpark on Tinder or #LinkedPro on LinkedIn.</p>
   </section>
 
   <!-- Footer -->
-  <footer class="py-6 bg-gradient-to-r from-teal-500 to-coral-600 text-center">
-    <div class="max-w-2xl mx-auto px-4">
-      <a href="/contact" class="text-white hover:text-gray-200 mx-4 transition-colors duration-300">Contact</a>
-      <a href="/privacy" class="text-white hover:text-gray-200 mx-4 transition-colors duration-300">Privacy Policy</a>
-      <p class="mt-4 text-sm text-gray-300">Powered by <span class="text-white font-semibold">STX Tech</span> | Today: <span id="currentDate"></span></p>
+  <footer class="py-8 bg-gradient-to-r from-teal-600 to-coral-500 text-center">
+    <div class="max-w-3xl mx-auto px-4">
+      <a href="/contact" class="text-white hover:text-gray-200 mx-6 transition-colors duration-300 text-xl">Contact</a>
+      <a href="/privacy" class="text-white hover:text-gray-200 mx-6 transition-colors duration-300 text-xl">Privacy</a>
+      <p class="mt-4 text-base text-gray-300">Powered by <span class="text-white font-semibold">STX Tech</span> | Today: <span id="currentDate"></span></p>
     </div>
   </footer>
 
