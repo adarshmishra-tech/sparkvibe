@@ -1,7 +1,26 @@
 // script.js
-// Theme toggle (simulated for now, only dark theme)
-document.getElementById('themeToggle').addEventListener('click', () => {
-  alert('Dark Theme is active! More themes coming soon.');
+// Keyword suggestion
+document.getElementById('suggestKeywords').addEventListener('click', async () => {
+  const bioPurpose = document.getElementById('bioPurpose').value;
+  if (!bioPurpose) {
+    alert('Please enter a Bio Purpose first.');
+    return;
+  }
+  try {
+    const res = await fetch('/api/suggest-keywords', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bioPurpose })
+    });
+    const data = await res.json();
+    if (data.error) {
+      alert(data.error);
+    } else {
+      document.getElementById('keywords').value = data.keywords;
+    }
+  } catch (err) {
+    alert('Failed to suggest keywords. Try again.');
+  }
 });
 
 // Bio form submission
@@ -12,7 +31,8 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     bioPurpose: document.getElementById('bioPurpose').value,
     location: document.getElementById('location').value,
     platform: document.getElementById('platform').value,
-    tone: document.getElementById('tone').value
+    tone: document.getElementById('tone').value,
+    keywords: document.getElementById('keywords').value
   };
 
   try {
