@@ -76,18 +76,22 @@ button:hover {
 }
 
 /* Responsive design */
-@media (max-width: 768px) {
-  header h1 { font-size: 3.5rem; }
-  header p { font-size: 1.5rem; }
+@media (max-width: 640px) {
+  header h1 { font-size: 3rem; }
+  header p { font-size: 1.2rem; }
   #bioForm { grid-template-columns: 1fr; }
   #bioOutput { grid-template-columns: 1fr; }
-  #bioForm button { padding: 1rem; font-size: 1.5rem; }
-  #keywords { padding-right: 8rem; }
-  #suggestKeywords { right: 0.5rem; padding: 0.5rem 1rem; }
-  #bioOutput div { max-h-60; min-height: 150px; }
+  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
+  #keywords { padding-right: 6rem; }
+  #suggestKeywords { right: 0.3rem; padding: 0.3rem 0.8rem; }
+  #bioOutput div { max-h-48; min-height: 150px; }
   #reviewSlider div { width: 100%; }
 }
 
-@media (min-width: 769px) and (max-width: 1024px) {
-  #bioOutput div { max-h-72; }
+@media (min-width: 641px) and (max-width: 1024px) {
+  #bioOutput div { max-h-60; }
+}
+
+@media (min-width: 1025px) {
+  #bioOutput div { max-h-80; }
 }
