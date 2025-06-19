@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "postinstall": "yarn install --silent"
   },
   "dependencies": {
     "compression": "^1.7.4",
