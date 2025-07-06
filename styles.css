@@ -1,82 +1,172 @@
-```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --gray-900: #111827;
+  --gray-700: #374151;
+  --gray-400: #9ca3af;
+  --indigo-500: #6366f1;
+  --indigo-600: #4f46e5;
+  --indigo-700: #4338ca;
+  --pink-500: #ec4899;
+  --pink-600: #db2777;
+  --pink-700: #be185d;
+}
+
 body {
-  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  margin: 0;
+  padding: 0;
   min-height: 100vh;
-  overflow-x: hidden;
+  background: linear-gradient(135deg, var(--gray-900), #1e1b4b);
 }
 
-.neon-glow {
-  box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #ff00ff;
-  animation: glow 1.5s ease-in-out infinite alternate;
+#bioForm select, #bioForm input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20' stroke='%236366f1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 1em;
 }
 
-@keyframes glow {
-  from { box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #ff00ff; }
-  to { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffcc, 0 0 40px #ff00ff; }
+#bioForm select:focus, #bioForm input:focus {
+  box-shadow: 0 0 12px var(--pink-500);
 }
 
-.input-field {
-  background: rgba(255, 255, 255, 0.1);
-  border: 2px solid #00ffcc;
-  border-radius: 8px;
-  padding: 12px;
-  color: white;
-  transition: all 0.3s ease;
+button {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.input-field:focus {
-  outline: none;
-  border-color: #ff00ff;
-  box-shadow: 0 0 15px #ff00ff;
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 20px rgba(236, 72, 153, 0.3);
 }
 
-.vision-box {
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid #00ffcc;
-  border-radius: 12px;
-  padding: 20px;
-  animation: pulse 2s infinite;
+#bioOutput .bio-box {
+  transition: all 0.4s ease;
+  min-height: 200px;
+  max-height: 240px;
+  overflow-y: auto;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(55, 65, 81, 0.8), rgba(79, 70, 229, 0.2));
+  position: relative;
+}
+
+#bioOutput .bio-box::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, var(--indigo-600), var(--pink-600));
+  border-radius: 18px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#bioOutput .bio-box:hover::before {
+  opacity: 1;
+}
+
+#bioOutput .bio-box:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.theme-cosmic_glow {
+  background: linear-gradient(to right, rgba(99, 102, 241, 0.1), rgba(17, 24, 39, 0.1));
+}
+
+.theme-neon_pulse {
+  background: linear-gradient(to right, rgba(236, 72, 153, 0.1), rgba(79, 70, 229, 0.1));
+}
+
+.theme-cosmic_glow .bio-box {
+  border-color: var(--indigo-600);
+  background: rgba(17, 24, 39, 0.8);
+}
+
+.theme-neon_pulse .bio-box {
+  border-color: var(--pink-600);
+  background: rgba(55, 65, 81, 0.8);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  font-size: 0.875rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 10px;
+  background: var(--indigo-600);
+}
+
+.copy-btn:hover {
+  background: var(--indigo-700);
+}
+
+.animate-pulse {
+  animation: pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-slide {
+  animation: slide 25s linear infinite;
+}
+
+.animate-slide-up {
+  animation: slideUp 1s ease-out;
+}
+
+.animate-glow {
+  animation: glow 2s ease-in-out infinite alternate;
 }
 
 @keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.02); }
-  100% { transform: scale(1); }
-}
-
-.slider-container {
-  overflow: hidden;
-  white-space: nowrap;
-  background: rgba(0, 0, 0, 0.5);
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.slider {
-  display: inline-block;
-  animation: slide 20s linear infinite;
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
 @keyframes slide {
   0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  100% { transform: translateX(-100%); }
 }
 
-.share-button {
-  background: #ff00ff;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.share-button:hover {
-  background: #00ffcc;
-  transform: scale(1.05);
+@keyframes glow {
+  from { text-shadow: 0 0 5px var(--pink-500); }
+  to { text-shadow: 0 0 15px var(--pink-500), 0 0 25px var(--indigo-500); }
 }
 
-footer {
-  background: rgba(0, 0, 0, 0.8);
-  border-top: 2px solid #00ffcc;
+/* Responsive design */
+@media (max-width: 640px) {
+  header h1 { font-size: 2.75rem; }
+  header p { font-size: 1.1rem; }
+  #bioForm { grid-template-columns: 1fr; gap: 0.75rem; }
+  #bioOutput { grid-template-columns: 1fr; gap: 1rem; }
+  #bioForm button { padding: 0.8rem; font-size: 1.2rem; }
+  #keywordDropdown { max-height: 220px; }
+  #bioOutput .bio-box { min-height: 180px; max-height: 220px; }
+  #reviewSlider div { width: 100%; }
 }
-```
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  #bioOutput .bio-box { min-height: 190px; max-height: 230px; }
+  #bioForm { gap: 1rem; }
+  #bioOutput { gap: 1.25rem; }
+}
+
+@media (min-width: 1025px) {
+  #bioOutput .bio-box { min-height: 200px; max-height: 240px; }
+  #bioForm { gap: 1.5rem; }
+  #bioOutput { gap: 1.5rem; }
+}
+
+/* Landscape mobile */
+@media (max-height: 640px) and (orientation: landscape) {
+  #bioForm { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+  #bioOutput { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  #bioForm button { padding: 0.7rem; font-size: 1.1rem; }
+  #bioOutput .bio-box { min-height: 170px; max-height: 210px; }
+}
