@@ -1,78 +1,23 @@
-# 🚀 SparkVibe – AI-Powered Business Bio & Social Content Generator
+# SparkVibe AI
 
-**Live Demo**: [https://sparkvibe-1.onrender.com](https://sparkvibe-1.onrender.com)
+SparkVibe AI is a web application that generates SEO-optimized social media bios for platforms like Instagram, LinkedIn, Twitter, TikTok, and Tinder using Open AI's GPT-4o-mini model. It’s free to use, requires no login, and is designed to help creators craft compelling bios.
 
-SparkVibe is my solo-built AI tool designed to help startups, creators, and professionals instantly generate sharp, compelling social media bios and business intros — tailored to their industry, tone, and vibe.
+## Features
+- Generate bios tailored to specific platforms with character limits.
+- Support for various tones (professional, witty, bold, etc.).
+- Keyword suggestions using spaCy’s NLP.
+- Customizable themes and emoji styles.
+- Deployable on Render with a simple setup.
 
-Whether you're launching a brand or just need the perfect LinkedIn intro, SparkVibe helps you write like a pro — without hiring one.
+## Prerequisites
+- Python 3.11
+- Open AI API key (sign up at [platform.openai.com](https://platform.openai.com))
+- Render account for deployment ([render.com](https://render.com)
+- Git for version control
 
----
+## Setup Instructions
 
-## 🎯 Why I Built This
-
-Writing content that *sounds good* and *sells well* is hard — especially when you're not a copywriter.
-
-I built SparkVibe because:
-- I kept seeing founders struggle with basic bios or startup intros
-- I wanted to use AI not just for fun, but to solve a real problem
-- I had no funding or team — just code, a dream, and late nights
-
-Now it's ~90% built and deployed on Render. It just needs a bit of support to go fully live.
-
----
-
-## ✨ Features
-
-✅ Choose tone – casual, professional, bold  
-✅ Select industry & keywords  
-✅ Generate instantly using AI (GPT-powered)  
-✅ Copy bio to clipboard  
-✅ Simple, mobile-friendly UI  
-
----
-
-## 🛠 Tech Stack
-
-- **Frontend**: HTML, CSS, JavaScript (Vanilla)
-- **Backend**: Flask (Python)
-- **AI**: OpenAI GPT (Planned – currently needs funding/API credits)
-- **Hosting**: [Render](https://render.com)
-
----
-
-## 🚧 What's Next
-
-🧠 AI Integration – requires OpenAI API credit  
-🌐 Custom domain – currently on Render subdomain  
-📈 Feedback loop – let users improve results  
-💸 Support from devs & creators – to keep it live and growing
-
----
-
-## ❤️ Support This Project
-
-I'm solo-building SparkVibe with zero funding — just time, belief, and some code.  
-If you like the project and want to support the launch:
-
-👉 **[Become a GitHub Sponsor](https://github.com/sponsors/adarshmishra-tech)**
-
-Even small contributions go toward:
-- AI API usage (OpenAI)
-- Domain costs (e.g. sparkvibe.ai or sparkvibe.tech)
-- Maintenance and feature dev
-
----
-
-## 🧪 Local Setup (Coming Soon)
-
-To run this locally (after AI integration):
-
+### 1. Clone the Repository
 ```bash
-git clone https://github.com/adarshmishra-tech/sparkvibe.git
+git clone <your-repository-url>
 cd sparkvibe
-pip install -r requirements.txt
-
-# Add your OpenAI key to a .env file
-OPENAI_API_KEY=your_key_here
-
-i need support to make it live with open ai api integeration and domain purchase to make it live for free.support me!!!
