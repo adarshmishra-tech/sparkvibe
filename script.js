@@ -83,7 +83,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     if (data.error) {
       output.innerHTML = `<div class="p-4 text-red-400">${data.error}</div>`;
     } else {
-      output.innerHTML = data.bios.map((bio, index) => `
+      output.innerHTML = data.shortBios.map((bio, index) => `
         <div class="bio-box p-6 rounded-xl shadow-lg border-2 border-indigo-600/50 backdrop-blur-sm overflow-auto theme-${formData.theme} animate-slide-up">
           <p class="text-white break-words font-medium">${bio.text}</p>
           <div class="mt-4 flex justify-between items-center">
@@ -98,7 +98,7 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const index = btn.getAttribute('data-index');
-          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🌟'));
+          navigator.clipboard.writeText(data.shortBios[index].text).then(() => alert('Copied to clipboard! 🌟'));
         });
       });
     }
@@ -106,9 +106,9 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     console.error('Generate Error:', err);
     const maxChars = platform_context[formData.platform].limit;
     const fallbackBios = [
-      { text: `${formData.bioPurpose} shining in ${formData.location || 'the world'} with ${formData.tone} energy. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
-      { text: `${formData.bioPurpose} crafting ${formData.tone} stories on ${formData.platform}. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
-      { text: `${formData.bioPurpose} leading with ${formData.keywords} in ${formData.location || 'global'} vibes. ${platform_context[formData.platform].hashtag}`, length: 0 }
+      { text: `${formData.bioPurpose} shining in ${formData.location || 'the world'} with ${formData.tone} energy. ${formData.keywords} #SparkVibe`, length: 0 },
+      { text: `${formData.bioPurpose} crafting ${formData.tone} stories on ${formData.platform}. ${formData.keywords} #SparkVibe`, length: 0 },
+      { text: `${formData.bioPurpose} leading with ${formData.keywords} in ${formData.location || 'global'} vibes. #SparkVibe`, length: 0 }
     ].map(bio => {
       const length = bio.text.length;
       return { text: bio.text.length > maxChars ? bio.text.substring(0, maxChars - 3) + '...' : bio.text, length: Math.min(length, maxChars) };
