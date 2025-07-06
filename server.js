@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const OpenAI = require('openai');
+// const OpenAI = require('openai'); // Commented out for showcase deployment; uncomment when using OpenAI API
 const keywordExtractor = require('keyword-extractor');
 const path = require('path');
 require('dotenv').config();
@@ -10,10 +10,15 @@ app.use(cors({ origin: 'https://sparkvibe-1.onrender.com' }));
 app.use(express.json());
 app.use(express.static('.'));
 
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY not set');
-}
+// Comment out OpenAI client initialization for showcase deployment
+// To enable OpenAI API:
+// 1. Uncomment the OpenAI import above
+// 2. Uncomment the line below and set OPENAI_API_KEY in Render's environment variables
+// 3. Add "openai": "4.68.1" to package.json dependencies
+// const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+// if (!process.env.OPENAI_API_KEY) {
+//   throw new Error('OPENAI_API_KEY not set');
+// }
 
 const platformContext = {
   Instagram: { focus: 'visual storytelling', style: 'trendy', hashtag: '#InstaVibes', limit: 150 },
@@ -51,31 +56,35 @@ function extractKeywords(text) {
   return extraction.length > 0 ? extraction.slice(0, 10) : ['pro', 'expert'];
 }
 
-async function generateShortBios(theme, bioPurpose, location, platform, tone, keywords, emojiStyle) {
+function generateShortBios(theme, bioPurpose, location, platform, tone, keywords, emojiStyle) {
   const charLimit = platformContext[platform].limit;
   const toneData = toneStyles[tone.toLowerCase()] || toneStyles.professional;
   const platformData = platformContext[platform];
   const locationPart = location || 'global';
-  const emoji = emojiStyle != 'without_emojis' ? emojis[emojiStyle][Math.floor(Math.random() * emojis[emojiStyle].length)] : '';
+  const emoji = emojiStyle !== 'without_emojis' ? emojis[emojiStyle][Math.floor(Math.random() * emojis[emojiStyle].length)] : '';
   const selectedKeyword = keywords || extractKeywords(bioPurpose)[0];
 
-  const prompt = `
-    Generate 3 unique social media bios for a ${bioPurpose} on ${platform}.
-    - Tone: ${tone} (${toneData.focus})
-    - Include keywords: ${selectedKeyword}
-    - Location: ${locationPart}
-    - Style: ${platformData.style}
-    - Max characters: ${charLimit}
-    - Hashtag: ${platformData.hashtag}
-    - ${emojiStyle.replace('_', ' ')} (use ${emoji} if applicable)
-  `;
-
+  // Comment out OpenAI API call for showcase deployment
+  // To enable OpenAI API:
+  // 1. Uncomment the OpenAI client initialization above
+  // 2. Uncomment the try-catch block below
+  // 3. Ensure OPENAI_API_KEY is set in Render's environment variables
+  /*
   try {
     const response = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'You are a creative assistant specializing in crafting social media bios.' },
-        { role: 'user', content: prompt }
+        { role: 'user', content: `
+          Generate 3 unique social media bios for a ${bioPurpose} on ${platform}.
+          - Tone: ${tone} (${toneData.focus})
+          - Include keywords: ${selectedKeyword}
+          - Location: ${locationPart}
+          - Style: ${platformData.style}
+          - Max characters: ${charLimit}
+          - Hashtag: ${platformData.hashtag}
+          - ${emojiStyle.replace('_', ' ')} (use ${emoji} if applicable)
+        ` }
       ],
       max_tokens: 150,
       n: 3
@@ -87,34 +96,38 @@ async function generateShortBios(theme, bioPurpose, location, platform, tone, ke
     });
   } catch (error) {
     console.error('OpenAI Error:', error);
-    const bios = [];
-    const usedStructures = new Set();
-    const targetLength = charLimit * 0.9;
+  }
+  */
 
-    for (let i = 0; i < 5 && bios.length < 3; i++) {
-      const adj = toneData.adjectives[Math.floor(Math.random() * toneData.adjectives.length)].replace(/^\w/, c => c.toUpperCase());
-      const verb = toneData.verbs[Math.floor(Math.random() * toneData.verbs.length)];
-      const structures = [
-        `${adj} ${bioPurpose}, ${verb} ${selectedKeyword} ${platformData.focus} in ${locationPart}${emoji} ${platformData.hashtag}`,
-        `${bioPurpose}, ${verb} ${selectedKeyword} with ${platformData.style} flair on ${platform}${emoji} ${platformData.hashtag}`,
-        `${locationPart}'s ${bioPurpose}, ${verb} ${selectedKeyword} ${toneData.focus}${emoji} ${platformData.hashtag}`
-      ];
-      const structure = structures[Math.floor(Math.random() * structures.length)];
-      const bio = structure.replace(/\s+/g, ' ').trim();
-      const structKey = `${structure.split(' ')[0]}-${verb}`;
+  // Rule-based bio generation (used for showcase deployment)
+  const bios = [];
+  const usedStructures = new Set();
+  const targetLength = charLimit * 0.9;
 
-      if (!usedStructures.has(structKey) && bio.length <= charLimit) {
-        usedStructures.add(structKey);
-        bios.push({ text: bio, length: bio.length });
-      }
-    }
+  for (let i = 0; i < 5 && bios.length < 3; i++) {
+    const adj = toneData.adjectives[Math.floor(Math.random() * toneData.adjectives.length)].replace(/^\w/, c => c.toUpperCase());
+    const verb = toneData.verbs[Math.floor(Math.random() * toneData.verbs.length)];
+    const structures = [
+      `${adj} ${bioPurpose}, ${verb} ${selectedKeyword} ${platformData.focus} in ${locationPart}${emoji} ${platformData.hashtag}`,
+      `${bioPurpose}, ${verb} ${selectedKeyword} with ${platformData.style} flair on ${platform}${emoji} ${platformData.hashtag}`,
+      `${locationPart}'s ${bioPurpose}, ${verb} ${selectedKeyword} ${toneData.focus}${emoji} ${platformData.hashtag}`
+    ];
+    const structure = structures[Math.floor(Math.random() * structures.length)];
+    const bio = structure.replace(/\s+/g, ' ').trim();
+    const structKey = `${structure.split(' ')[0]}-${verb}`;
 
-    while (bios.length < 3) {
-      const bio = `${toneData.adjectives[Math.floor(Math.random() * toneData.adjectives.length)].replace(/^\w/, c => c.toUpperCase())} ${bioPurpose}, ${toneData.verbs[Math.floor(Math.random() * toneData.verbs.length)]} ${selectedKeyword} in ${locationPart}${emoji} ${platformData.hashtag}`.replace(/\s+/g, ' ').trim().slice(0, charLimit);
+    if (!usedStructures.has(structKey) && bio.length <= charLimit) {
+      usedStructures.add(structKey);
       bios.push({ text: bio, length: bio.length });
     }
-    return bios;
   }
+
+  while (bios.length < 3) {
+    const bio = `${toneData.adjectives[Math.floor(Math.random() * toneData.adjectives.length)].replace(/^\w/, c => c.toUpperCase())} ${bioPurpose}, ${toneData.verbs[Math.floor(Math.random() * toneData.verbs.length)]} ${selectedKeyword} in ${locationPart}${emoji} ${platformData.hashtag}`.replace(/\s+/g, ' ').trim().slice(0, charLimit);
+    bios.push({ text: bio, length: bio.length });
+  }
+
+  return bios;
 }
 
 app.post('/api/suggest-keywords', async (req, res) => {
@@ -137,7 +150,7 @@ app.post('/api/generate-bios', async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
   try {
-    const bios = await generateShortBios(theme, bioPurpose, location || '', platform, tone, keywords || 'pro', emojiStyle || 'without_emojis');
+    const bios = generateShortBios(theme, bioPurpose, location || '', platform, tone, keywords || 'pro', emojiStyle || 'without_emojis');
     res.json({ shortBios: bios });
   } catch (error) {
     console.error('Generation Error:', error);
