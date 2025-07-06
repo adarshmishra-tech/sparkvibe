@@ -1,0 +1,17 @@
+Commercial License
+
+Copyright (c) 2025 Adarsh Mishra
+
+SparkVibe is a commercial product protected by copyright law. It is not open-source.
+
+By purchasing or downloading SparkVibe, you receive a non-exclusive, non-transferable license to:
+✅ Use the software for personal or business purposes
+✅ Modify the software for your own use
+✅ Deploy the software on your servers or platforms
+
+You are prohibited from:
+❌ Reselling, sharing, or redistributing the code
+❌ Publishing the source code publicly (e.g., on GitHub)
+❌ Using any part of the code in another product for resale
+
+Ownership of the code remains with Adarsh Mishra. For custom licenses or inquiries, contact: adarshmishraa121@gmail.com.
