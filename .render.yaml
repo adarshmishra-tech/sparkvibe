@@ -1,17 +1,4 @@
-services:
-  - type: web
-    name: sparkvibe
-    env: python
-    runtime: python-3.11
-    buildCommand: |
-      python -m pip install --upgrade pip setuptools wheel
-      pip install -r requirements.txt
-      python -m spacy download en_core_web_sm
-    startCommand: gunicorn server:app
-    plan: free
-    numInstances: 1
-    envVars:
-      - key: PYTHONUNBUFFERED
-        value: "1"
-      - key: OPENAI_API_KEY
-        sync: false
+buildCommand: |
+  python -m pip install --upgrade pip setuptools wheel
+  pip install -r requirements.txt
+  python -m spacy download en_core_web_sm
