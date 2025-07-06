@@ -112,7 +112,7 @@ app.post('/api/generate-bios', async (req, res) => {
   const { theme, bioPurpose, location, platform, tone, keywords, emojiStyle } = req.body;
   if (!theme || !bioPurpose || !platform || !tone) return res.status(400).json({ error: 'All fields are required' });
   try {
-    const bios = generateShortBios(theme, bioPurpose, location || '', platform, tone, keywords || 'pro', emojiStyle || 'without_emojis');
+    const bios = generateShortBios(theme, bioPurpose, location || '', platform, tone, keywords || 'pro', emojiStyle || 'with_emojis');
     res.json({ shortBios: bios });
   } catch (error) {
     console.error('Generation Error:', error);
@@ -123,8 +123,8 @@ app.post('/api/generate-bios', async (req, res) => {
 app.post('/api/contact', (req, res) => {
   const { name, email, message } = req.body;
   if (!name || !email || !message) return res.status(400).json({ error: 'All fields are required' });
-  // Simulate contact submission (in production, use a service like SendGrid)
-  res.json({ message: 'Thank you for your message!' });
+  // Simulate contact submission
+  res.json({ message: 'Thank you for your message! We will get back to you soon.' });
 });
 
 app.get('/api/current-date', (req, res) => {
