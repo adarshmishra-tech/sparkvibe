@@ -3,91 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SparkVibe AI - Craft Stellar Bios</title>
-  <link rel="stylesheet" href="/styles.css">
-  <link rel="manifest" href="/manifest.json">
-  <script src="/script.js" defer></script>
+  <title>SparkVibe AI - Bio Generator</title>
+  <link href="https://cdn.tailwindcss.com" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="manifest" href="manifest.json">
 </head>
-<body>
-  <header class="text-center py-12">
-    <h1 class="text-4xl font-bold text-white">SparkVibe AI</h1>
-    <p class="text-xl text-gray-400 mt-2">Unleash Epic Bios for Social Platforms</p>
-    <p class="text-lg text-indigo-400">Free Forever, No Login. Loved by 50,000+ Creators!</p>
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-300 min-h-screen">
+  <header class="bg-blue-600 dark:bg-blue-800 p-4 text-white flex justify-between items-center">
+    <h1 class="text-2xl font-bold">SparkVibe AI</h1>
+    <button id="themeToggle" class="bg-gray-200 dark:bg-gray-700 p-2 rounded">Toggle Theme</button>
   </header>
-
-  <section class="container mx-auto p-6">
-    <h2 class="text-2xl font-semibold text-white mb-6">Stellar Bio Forge</h2>
-    <form id="bioForm" class="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
-      <select id="theme" class="p-3 rounded-lg bg-gray-700 text-white">
-        <option value="cosmic_glow">Cosmic Glow 🌌</option>
-        <option value="neon_pulse">Neon Pulse ⚡️</option>
-      </select>
-      <input id="bioPurpose" type="text" placeholder="Bio Purpose (e.g., Dancing Coach)" class="p-3 rounded-lg bg-gray-700 text-white">
-      <input id="location" type="text" placeholder="Location (optional)" class="p-3 rounded-lg bg-gray-700 text-white">
-      <select id="platform" class="p-3 rounded-lg bg-gray-700 text-white">
-        <option value="Instagram">Instagram (150 chars)</option>
-        <option value="LinkedIn">LinkedIn (200 chars)</option>
-        <option value="Twitter">Twitter (160 chars)</option>
-        <option value="TikTok">TikTok (150 chars)</option>
-        <option value="Tinder">Tinder (300 chars)</option>
-      </select>
-      <select id="tone" class="p-3 rounded-lg bg-gray-700 text-white">
-        <option value="professional">Professional 💼</option>
-        <option value="witty">Witty 😄</option>
-        <option value="bold">Bold 💪</option>
-        <option value="friendly">Friendly 😊</option>
-        <option value="inspirational">Inspirational 🌟</option>
-        <option value="romantic">Romantic ❤️</option>
-        <option value="engaging">Engaging ⚡️</option>
-        <option value="casual">Casual 😎</option>
-      </select>
-      <select id="emojiStyle" class="p-3 rounded-lg bg-gray-700 text-white">
-        <option value="with_emojis">With Emojis 🎉</option>
-        <option value="minimal_emojis">Minimal Emojis ✨</option>
-        <option value="vibrant_emojis">Vibrant Emojis 🌈</option>
-        <option value="without_emojis">Without Emojis 🚫</option>
-      </select>
-      <div class="relative">
-        <input id="keywords" type="text" placeholder="Keywords (optional)" class="p-3 rounded-lg bg-gray-700 text-white w-full">
-        <button id="suggestKeywords" type="button" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-indigo-400">
-          Suggest Keywords
-        </button>
-        <div id="keywordDropdown" class="hidden absolute w-full bg-gray-700 rounded-lg mt-2 max-h-60 overflow-y-auto z-10">
-          <div class="p-2 text-gray-400 text-center">Enter Bio Purpose to see suggestions</div>
-        </div>
+  <main class="max-w-3xl mx-auto p-6 space-y-6">
+    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-semibold mb-4">Generate Your Bio</h2>
+      <div class="space-y-4">
+        <input type="text" id="bioPurpose" placeholder="Enter your purpose (e.g., Photographer)" class="w-full p-2 border rounded" required>
+        <select id="platform" class="w-full p-2 border rounded">
+          <option value="Instagram">Instagram</option>
+          <option value="LinkedIn">LinkedIn</option>
+          <option value="Twitter">Twitter</option>
+          <option value="TikTok">TikTok</option>
+          <option value="Tinder">Tinder</option>
+        </select>
+        <select id="tone" class="w-full p-2 border rounded">
+          <option value="professional">Professional</option>
+          <option value="witty">Witty</option>
+          <option value="bold">Bold</option>
+          <option value="friendly">Friendly</option>
+          <option value="inspirational">Inspirational</option>
+          <option value="romantic">Romantic</option>
+          <option value="engaging">Engaging</option>
+          <option value="casual">Casual</option>
+        </select>
+        <input type="text" id="location" placeholder="Location (optional)" class="w-full p-2 border rounded">
+        <select id="emojiStyle" class="w-full p-2 border rounded">
+          <option value="with_emojis">With Emojis</option>
+          <option value="minimal_emojis">Minimal Emojis</option>
+          <option value="vibrant_emojis">Vibrant Emojis</option>
+          <option value="without_emojis">Without Emojis</option>
+        </select>
+        <button id="generateBio" class="bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">Generate Bio</button>
       </div>
-      <button type="submit" class="col-span-2 bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700">
-        Forge My Stellar Bios
-      </button>
-    </form>
-    <p id="charCount" class="text-center text-gray-400 mt-2">Characters: 0/150</p>
-    <div id="bioOutput" class="grid grid-cols-3 gap-6 mt-8"></div>
-    <p class="text-center text-gray-400 mt-4">Max Characters: <span id="maxChars">150</span></p>
-  </section>
-
-  <section class="container mx-auto p-6">
-    <h2 class="text-2xl font-semibold text-white mb-6">Creator Spotlight</h2>
-    <div id="reviewSlider" class="flex overflow-hidden">
-      <div class="flex-none p-4 text-white">"Revamped my Instagram game! 🌌" - Alex K.</div>
-      <div class="flex-none p-4 text-white">"LinkedIn profile shines! 💼" - Sarah M.</div>
-      <div class="flex-none p-4 text-white">"Twitter bios pop off! ⚡️" - Mike R.</div>
-      <div class="flex-none p-4 text-white">"TikTok vibes are unreal! 🎉" - Emily T.</div>
-    </div>
-  </section>
-
-  <section class="container mx-auto p-6">
-    <h2 class="text-2xl font-semibold text-white mb-6">SEO Guide: Dominate Online</h2>
-    <p class="text-white mb-4">SparkVibe AI crafts SEO-optimized bios to skyrocket your presence across platforms.</p>
-    <p class="text-white mb-4">Use Keywords: Terms like “dance visionary” or “tech pioneer” boost discoverability.</p>
-    <p class="text-white mb-4">Leverage Hashtags: Try #BioBlaze or #TikTokIcon for massive reach.</p>
-  </section>
-
-  <footer class="text-center py-8 text-gray-400">
-    <nav>
-      <a href="/contact" class="text-indigo-400 hover:underline mr-4">Contact</a>
-      <a href="/privacy" class="text-indigo-400 hover:underline mr-4">Privacy</a>
-      <span>Powered by STX Tech | Today: <span id="currentDate">Loading...</span></span>
-    </nav>
-  </footer>
+      <div id="bioOutput" class="mt-4 space-y-2"></div>
+      <div id="keywordSuggestions" class="mt-4 text-sm text-gray-600"></div>
+    </section>
+    <section class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+      <h2 class="text-xl font-semibold mb-4">Feedback</h2>
+      <div id="feedbackSection" class="space-y-2"></div>
+    </section>
+  </main>
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log('Service Worker registered'))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    }
+  </script>
 </body>
 </html>
