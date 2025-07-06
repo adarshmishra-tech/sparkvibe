@@ -1,146 +1,156 @@
-```javascript
-const { useState, useEffect } = React;
-
-const names = [
-  "Aarav Sharma", "Priya Patel", "Vikram Singh", "Ananya Gupta", "Rohan Desai",
-  "Emma Johnson", "Liam Brown", "Sophia Davis", "Noah Wilson", "Olivia Taylor"
-];
-
-const platforms = [
-  { name: "Twitter", maxLength: 160 },
-  { name: "LinkedIn", maxLength: 2000 },
-  { name: "Instagram", maxLength: 150 },
-  { name: "Facebook", maxLength: 250 },
-  { name: "Personal Website", maxLength: 500 }
-];
-
-const generateBio = (name, profession, platform) => {
-  const templates = {
-    Twitter: `${name} | ${profession} 🚀 Passionate about innovation & impact! #AI #Tech`,
-    LinkedIn: `${name} | ${profession} | Experienced professional driving change through technology and leadership. Connect with me to collaborate! 🌟`,
-    Instagram: `${name} | ${profession} ✨ Sharing my journey in tech & life! DM for collabs!`,
-    Facebook: `${name} | ${profession} | Love creating and connecting. Join my journey! 😎`,
-    "Personal Website": `${name} | ${profession} | Welcome to my world of creativity and innovation. Explore my projects and get in touch! 🌐`
-  };
-  return templates[platform] || "Select a platform to generate a bio!";
+const platform_context = {
+  Instagram: { limit: 150 },
+  LinkedIn: { limit: 200 },
+  Twitter: { limit: 160 },
+  TikTok: { limit: 150 },
+  Tinder: { limit: 300 }
 };
 
-const generateComment = () => {
-  const comments = [
-    "You're unstoppable! Keep shining! 🌟",
-    "Your vibe is electric! ⚡️",
-    "Inspiring the world, one bio at a time! 🚀",
-    "Your future is neon bright! ✨",
-    "Keep sparking vibes everywhere! 😎"
-  ];
-  return comments[Math.floor(Math.random() * comments.length)];
-};
+document.getElementById('theme').addEventListener('change', (e) => {
+  const form = document.getElementById('bioForm');
+  form.classList.remove('theme-cosmic_glow', 'theme-neon_pulse');
+  form.classList.add(`theme-${e.target.value}`);
+});
 
-const App = () => {
-  const [name, setName] = useState("");
-  const [profession, setProfession] = useState("");
-  const [platform, setPlatform] = useState("");
-  const [bio, setBio] = useState("");
-  const [footerComment, setFooterComment] = useState(generateComment());
+const suggestBtn = document.getElementById('suggestKeywords');
+const keywordDropdown = document.getElementById('keywordDropdown');
+const bioPurposeInput = document.getElementById('bioPurpose');
+const keywordsInput = document.getElementById('keywords');
 
-  useEffect(() => {
-    const interval = setInterval(() => setFooterComment(generateComment()), 5000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleGenerate = () => {
-    if (name && profession && platform) {
-      const generatedBio = generateBio(name, profession, platform);
-      setBio(generatedBio);
+suggestBtn.addEventListener('click', async () => {
+  const bioPurpose = bioPurposeInput.value.trim();
+  keywordDropdown.classList.toggle('hidden');
+  if (!bioPurpose) {
+    keywordDropdown.innerHTML = '<div class="p-2 text-gray-400 text-center">Enter Bio Purpose to see suggestions</div>';
+    return;
+  }
+  try {
+    const res = await fetch('https://sparkvibe-1.onrender.com/api/suggest-keywords', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ bioPurpose }),
+      timeout: 5000
+    });
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    const data = await res.json();
+    if (data.error) {
+      keywordDropdown.innerHTML = `<div class="p-2 text-red-400 text-center">${data.error}</div>`;
     } else {
-      setBio("Please fill all fields! 😅");
+      keywordDropdown.innerHTML = data.keywords.map(kw => `
+        <div class="p-2 hover:bg-gray-600 text-white cursor-pointer transition-all duration-200" onclick="document.getElementById('keywords').value='${kw.replace(/'/g, "\\'")}'; document.getElementById('keywordDropdown').classList.add('hidden');">${kw}</div>
+      `).join('');
     }
+  } catch (err) {
+    console.error('Keyword Error:', err);
+    keywordDropdown.innerHTML = '<div class="p-2 text-red-400 text-center">Failed to load keywords. Try again.</div>';
+  }
+});
+
+bioPurposeInput.addEventListener('input', () => {
+  keywordDropdown.classList.add('hidden');
+  keywordDropdown.innerHTML = '<div class="p-2 text-gray-400 text-center">Enter Bio Purpose to see suggestions</div>';
+});
+
+document.getElementById('bioForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = {
+    theme: document.getElementById('theme').value,
+    bioPurpose: document.getElementById('bioPurpose').value.trim(),
+    location: document.getElementById('location').value.trim(),
+    platform: document.getElementById('platform').value,
+    tone: document.getElementById('tone').value,
+    keywords: document.getElementById('keywords').value.trim() || 'pro',
+    emojiStyle: document.getElementById('emojiStyle').value
   };
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(bio);
-    alert("Bio copied to clipboard! 📋");
-  };
+  if (!formData.bioPurpose) {
+    alert('Please enter a Bio Purpose (e.g., Dancing Coach).');
+    return;
+  }
 
-  const handleShare = (platform) => {
-    const urls = {
-      Twitter: `https://twitter.com/intent/tweet?text=${encodeURIComponent(bio)}`,
-      LinkedIn: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(bio)}`,
-      Instagram: `https://www.instagram.com/`
-    };
-    window.open(urls[platform], "_blank");
-  };
-
-  return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-4xl font-bold text-center neon-glow mb-8">SparkVibe AI Bio Generator 🌟</h1>
-
-      <div className="slider-container mb-8">
-        <div className="slider">
-          {[...names, ...names].map((name, index) => (
-            <span key={index} className="inline-block mx-4 text-lg text-white neon-glow">{name}</span>
-          ))}
+  try {
+    const res = await fetch('https://sparkvibe-1.onrender.com/api/generate-bios', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData),
+      timeout: 5000
+    });
+    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    const data = await res.json();
+    const output = document.getElementById('bioOutput');
+    const maxChars = platform_context[formData.platform].limit;
+    document.getElementById('maxChars').textContent = maxChars;
+    if (data.error) {
+      output.innerHTML = `<div class="p-4 text-red-400">${data.error}</div>`;
+    } else {
+      output.innerHTML = data.bios.map((bio, index) => `
+        <div class="bio-box p-6 rounded-xl shadow-lg border-2 border-indigo-600/50 backdrop-blur-sm overflow-auto theme-${formData.theme} animate-slide-up">
+          <p class="text-white break-words font-medium">${bio.text}</p>
+          <div class="mt-4 flex justify-between items-center">
+            <button class="copy-btn text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 text-sm" data-index="${index}">
+              <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
+              Copy
+            </button>
+            <span class="text-sm text-gray-400">Chars: ${bio.length}/${maxChars}</span>
+          </div>
         </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div>
-          <input
-            type="text"
-            placeholder="Your Name 😊"
-            className="input-field w-full mb-4"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="text"
-            placeholder="Your Profession 💼"
-            className="input-field w-full mb-4"
-            value={profession}
-            onChange={(e) => setProfession(e.target.value)}
-          />
-          <select
-            className="input-field w-full mb-4"
-            value={platform}
-            onChange={(e) => setPlatform(e.target.value)}
-          >
-            <option value="">Select Platform 📱</option>
-            {platforms.map((p) => (
-              <option key={p.name} value={p.name}>{p.name}</option>
-            ))}
-          </select>
-          <button
-            className="share-button w-full"
-            onClick={handleGenerate}
-          >
-            Generate Bio 🚀
+      `).join('');
+      document.querySelectorAll('.copy-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const index = btn.getAttribute('data-index');
+          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🌟'));
+        });
+      });
+    }
+  } catch (err) {
+    console.error('Generate Error:', err);
+    const maxChars = platform_context[formData.platform].limit;
+    const fallbackBios = [
+      { text: `${formData.bioPurpose} shining in ${formData.location || 'the world'} with ${formData.tone} energy. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
+      { text: `${formData.bioPurpose} crafting ${formData.tone} stories on ${formData.platform}. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
+      { text: `${formData.bioPurpose} leading with ${formData.keywords} in ${formData.location || 'global'} vibes. ${platform_context[formData.platform].hashtag}`, length: 0 }
+    ].map(bio => {
+      const length = bio.text.length;
+      return { text: bio.text.length > maxChars ? bio.text.substring(0, maxChars - 3) + '...' : bio.text, length: Math.min(length, maxChars) };
+    });
+    document.getElementById('bioOutput').innerHTML = fallbackBios.map((bio, index) => `
+      <div class="bio-box p-6 rounded-xl shadow-lg border-2 border-indigo-600/50 backdrop-blur-sm overflow-auto theme-${formData.theme} animate-slide-up">
+        <p class="text-white break-words font-medium">${bio.text}</p>
+        <div class="mt-4 flex justify-between items-center">
+          <button class="copy-btn text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 text-sm" data-index="${index}">
+            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
+            Copy
           </button>
-        </div>
-
-        <div className="vision-box">
-          <h2 className="text-2xl font-semibold mb-4">Generated Bio ✨</h2>
-          <p className="mb-4">{bio || "Your bio will appear here! 😎"}</p>
-          {bio && (
-            <div className="flex space-x-4">
-              <button className="share-button" onClick={handleCopy}>Copy 📋</button>
-              <button className="share-button" onClick={() => handleShare("Twitter")}>Share on Twitter 🐦</button>
-              <button className="share-button" onClick={() => handleShare("LinkedIn")}>Share on LinkedIn 💼</button>
-              <button className="share-button" onClick={() => handleShare("Instagram")}>Share on Instagram 📸</button>
-            </div>
-          )}
+          <span class="text-sm text-gray-400">Chars: ${bio.length}/${maxChars}</span>
         </div>
       </div>
+    `).join('');
+    document.querySelectorAll('.copy-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const index = btn.getAttribute('data-index');
+        navigator.clipboard.writeText(fallbackBios[index].text).then(() => alert('Copied to clipboard! 🌟'));
+      });
+    });
+  }
+});
 
-      <footer className="mt-8 p-4 text-center">
-        <p className="text-lg neon-glow">{footerComment}</p>
-        <p className="mt-2">
-          <a href="contact.html" className="text-cyan-400 hover:text-pink-400">Contact Us 📧</a> | 
-          <a href="privacy.html" className="text-cyan-400 hover:text-pink-400"> Privacy Policy 🔒</a>
-        </p>
-      </footer>
-    </div>
-  );
-};
+document.getElementById('bioPurpose').addEventListener('input', updateCharCount);
+document.getElementById('platform').addEventListener('change', updateCharCount);
 
-ReactDOM.render(<App />, document.getElementById("root"));
-```
+function updateCharCount() {
+  const charCount = document.getElementById('charCount');
+  const platform = document.getElementById('platform').value;
+  const maxChars = platform_context[platform].limit;
+  const currentLength = document.getElementById('bioPurpose').value.length;
+  charCount.textContent = `Characters: ${currentLength}/${maxChars}`;
+  document.getElementById('maxChars').textContent = maxChars;
+}
+
+fetch('https://sparkvibe-1.onrender.com/api/current-date')
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById('currentDate').textContent = data.date;
+  })
+  .catch(err => {
+    document.getElementById('currentDate').textContent = 'Date unavailable';
+  });
