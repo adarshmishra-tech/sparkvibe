@@ -7,10 +7,17 @@ from datetime import datetime
 import os
 from dotenv import load_dotenv
 from functools import lru_cache
+from openai import OpenAI
 
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "https://sparkvibe-1.onrender.com"}})
 load_dotenv()
+
+# Initialize Open AI client
+openai_api_key = os.getenv('OPENAI_API_KEY')
+if not openai_api_key:
+    raise ValueError("OPENAI_API_KEY environment variable is not set")
+client = OpenAI(api_key=openai_api_key)
 
 # Load spaCy model
 nlp = spacy.load("en_core_web_sm")
@@ -19,9 +26,9 @@ nlp = spacy.load("en_core_web_sm")
 platform_context = {
     'Instagram': {'focus': 'visual storytelling', 'style': 'trendy', 'hashtag': '#InstaVibes', 'limit': 150},
     'LinkedIn': {'focus': 'professional networking', 'style': 'formal', 'hashtag': '#LinkedInPro', 'limit': 200},
-    'Twitter/X': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetStar', 'limit': 160},
+    'Twitter': {'focus': 'quick engagement', 'style': 'concise', 'hashtag': '#TweetStar', 'limit': 160},
     'TikTok': {'focus': 'creative expression', 'style': 'playful', 'hashtag': '#DanceLegend', 'limit': 150},
-    'Facebook': {'focus': 'community connection', 'style': 'friendly', 'hashtag': '#FBConnect', 'limit': 250}
+    'Tinder': {'focus': 'personal connection', 'style': 'flirty', 'hashtag': '#TinderVibes', 'limit': 300}
 }
 
 # Tone configurations
@@ -56,7 +63,7 @@ def extract_keywords(text):
             keywords.append(token.text)
     return list(set(keywords))[:10] or ['pro', 'expert']
 
-# Short bio generation
+# Generate bios using Open AI
 def generate_short_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
     char_limit = platform_context[platform]['limit']
     tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
@@ -65,77 +72,74 @@ def generate_short_bios(theme, bio_purpose, location, platform, tone, keywords, 
     emoji = random.choice(emojis[emoji_style]) if emoji_style != 'without_emojis' else ''
     keywords = keywords or extract_keywords(bio_purpose)[0]
 
-    bios = []
-    used_structures = set()
-    target_length = char_limit * 0.9
+    prompt = f"""
+    Generate 3 unique social media bios for a {bio_purpose} on {platform}. 
+    - Tone: {tone} ({tone_data['focus']})
+    - Include keywords: {keywords}
+    - Location: {location_part}
+    - Style: {platform_data['style']}
+    - Max characters: {char_limit}
+    - Hashtag: {platform_data['hashtag']}
+    - {emoji_style.replace('_', ' ')} (use {emoji} if applicable)
+    """
 
-    for _ in range(5):
-        adj = random.choice(tone_data['adjectives']).capitalize()
-        verb = random.choice(tone_data['verbs'])
-        structure = random.choice([
-            f"{adj} {bio_purpose}, {verb} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}",
-            f"{bio_purpose}, {verb} {keywords} with {platform_data['style']} flair, ruling {platform} from {location_part}{emoji} {platform_data['hashtag']}",
-            f"{location_part}'s {bio_purpose}, {verb} {keywords} {tone_data['focus']}, dazzling {platform}{emoji} {platform_data['hashtag']}"
-        ])
-        bio = re.sub(r'\s+', ' ', structure).strip()
-        struct_key = (structure.split()[0], verb, structure.split()[-2])
+    try:
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a creative assistant specializing in crafting social media bios."},
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=150,
+            n=3
+        )
+        bios = []
+        for choice in response.choices:
+            bio_text = choice.message.content.strip()
+            if len(bio_text) > char_limit:
+                bio_text = bio_text[:char_limit - 3] + '...'
+            bios.append({'text': bio_text, 'length': len(bio_text)})
+        return bios
+    except Exception as e:
+        print(f"Open AI Error: {e}")
+        # Fallback to original logic
+        bios = []
+        used_structures = set()
+        target_length = char_limit * 0.9
 
-        if struct_key in used_structures or len(bio) > char_limit:
-            continue
-        used_structures.add(struct_key)
+        for _ in range(5):
+            adj = random.choice(tone_data['adjectives']).capitalize()
+            verb = random.choice(tone_data['verbs'])
+            structure = random.choice([
+                f"{adj} {bio_purpose}, {verb} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}",
+                f"{bio_purpose}, {verb} {keywords} with {platform_data['style']} flair, ruling {platform} from {location_part}{emoji} {platform_data['hashtag']}",
+                f"{location_part}'s {bio_purpose}, {verb} {keywords} {tone_data['focus']}, dazzling {platform}{emoji} {platform_data['hashtag']}"
+            ])
+            bio = re.sub(r'\s+', ' ', structure).strip()
+            struct_key = (structure.split()[0], verb, structure.split()[-2])
 
-        if len(bio) > char_limit:
-            bio = bio[:char_limit - 3] + '...'
-        elif len(bio) < target_length * 0.8:
-            bio = re.sub(r'\s+', ' ', f"{bio} with {random.choice(['epic', 'vivid', 'blazing'])} {tone_data['focus']}").strip()
+            if struct_key in used_structures or len(bio) > char_limit:
+                continue
+            used_structures.add(struct_key)
+
             if len(bio) > char_limit:
                 bio = bio[:char_limit - 3] + '...'
+            elif len(bio) < target_length * 0.8:
+                bio = re.sub(r'\s+', ' ', f"{bio} with {random.choice(['epic', 'vivid', 'blazing'])} {tone_data['focus']}").strip()
+                if len(bio) > char_limit:
+                    bio = bio[:char_limit - 3] + '...'
 
-        bios.append({'text': bio, 'length': len(bio)})
-        if len(bios) == 3:
-            break
+            bios.append({'text': bio, 'length': len(bio)})
+            if len(bios) == 3:
+                break
 
-    while len(bios) < 3:
-        bio = re.sub(r'\s+', ' ', f"{random.choice(tone_data['adjectives']).capitalize()} {bio_purpose}, {random.choice(tone_data['verbs'])} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}").strip()
-        if len(bio) > char_limit:
-            bio = bio[:char_limit - 3] + '...'
-        bios.append({'text': bio, 'length': len(bio)})
+        while len(bios) < 3:
+            bio = re.sub(r'\s+', ' ', f"{random.choice(tone_data['adjectives']).capitalize()} {bio_purpose}, {random.choice(tone_data['verbs'])} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}").strip()
+            if len(bio) > char_limit:
+                bio = bio[:char_limit - 3] + '...'
+            bios.append({'text': bio, 'length': len(bio)})
 
-    return bios
-
-# Long bio generation
-def generate_long_bio(prompt, platform, tone, word_count):
-    doc = nlp(prompt)
-    name = next((ent.text for ent in doc.ents if ent.label_ == 'PERSON'), 'Aadarsh Mishra')
-    profession = next((token.text for token in doc if token.pos_ == 'NOUN' and not token.is_stop), 'professional')
-    tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
-    platform_data = platform_context[platform]
-
-    sections = {
-        'intro': f"{name}, a {random.choice(tone_data['adjectives'])} {profession}, thrives on {platform_data['focus']}. With a passion for {tone_data['focus']}, {name} has carved a unique path in {platform_data['style']} spaces.",
-        'body': [
-            f"From early beginnings, {name} embraced {profession}, driven by {random.choice(['curiosity', 'ambition', 'creativity'])}. Through {random.choice(tone_data['verbs'])} innovative solutions, {name} has earned recognition for {random.choice(['impactful work', 'bold ideas', 'authentic connections'])}.",
-            f"Whether {random.choice(tone_data['verbs'])} {platform_data['focus']} or collaborating with others, {name} brings {tone_data['focus']} to every endeavor. Key achievements include {random.choice(['leading projects', 'inspiring teams', 'creating trends'])} that resonate deeply."
-        ],
-        'closer': f"Looking ahead, {name} aims to {random.choice(tone_data['verbs'])} {platform_data['focus']} further, fueled by {tone_data['focus']}. Connect with {name} on {platform} to join the journey! {platform_data['hashtag']}"
-    }
-
-    bio = f"{sections['intro']} {' '.join(sections['body'])} {sections['closer']}"
-    words = bio.split()
-    current_count = len(words)
-
-    if current_count < word_count:
-        filler = f" {name}'s approach combines {random.choice(tone_data['adjectives'])} vision with practical expertise, making a lasting impact. By {random.choice(tone_data['verbs'])} {platform_data['focus']}, {name} continues to inspire and innovate."
-        bio += filler * ((word_count - current_count) // len(filler.split()))
-        words = bio.split()
-        if len(words) > word_count:
-            bio = ' '.join(words[:word_count - 3]) + '...'
-        elif len(words) < word_count:
-            bio += ' ' + ' '.join(['Innovation drives progress.'] * (word_count - len(words)))
-    elif current_count > word_count:
-        bio = ' '.join(words[:word_count - 3]) + '...'
-
-    return {'text': re.sub(r'\s+', ' ', bio).strip(), 'length': len(bio.split())}
+        return bios
 
 @app.route('/api/suggest-keywords', methods=['POST'])
 def suggest_keywords_route():
@@ -158,17 +162,11 @@ def generate_bios_route():
         if not all(data.get(field) for field in required):
             return jsonify({'error': 'All fields are required.'}, 400)
         
-        if data.get('wordCount'):  # Long bio
-            bio = generate_long_bio(
-                data['bioPurpose'], data['platform'], data['tone'], data.get('wordCount', 300)
-            )
-            return jsonify({'longBio': bio})
-        else:  # Short bios
-            bios = generate_short_bios(
-                data['theme'], data['bioPurpose'], data.get('location', ''),
-                data['platform'], data['tone'], data.get('keywords', 'pro'), data.get('emojiStyle', 'without_emojis')
-            )
-            return jsonify({'shortBios': bios})
+        bios = generate_short_bios(
+            data['theme'], data['bioPurpose'], data.get('location', ''),
+            data['platform'], data['tone'], data.get('keywords', 'pro'), data.get('emojiStyle', 'without_emojis')
+        )
+        return jsonify({'shortBios': bios})
     except Exception as e:
         print(f"Generation Error: {e}")
         return jsonify({'error': 'Failed to generate bios.'}, 500)
