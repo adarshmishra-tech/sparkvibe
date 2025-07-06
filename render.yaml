@@ -3,8 +3,8 @@ services:
     name: sparkvibe-ai
     env: node
     plan: free
-    nodeVersion: "22"
+    nodeVersion: "22.16.0"
     buildCommand: |
       npm cache clean --force
-      npm install
+      npm install --no-audit --no-fund
     startCommand: npm start
