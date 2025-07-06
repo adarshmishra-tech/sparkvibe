@@ -1,20 +1,14 @@
 {
-  "name": "SparkVibe AI",
-  "short_name": "SparkVibe",
-  "start_url": "/",
-  "display": "standalone",
-  "background_color": "#1e1b4b",
-  "theme_color": "#6b46c1",
-  "icons": [
-    {
-      "src": "icon.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
+"name": "SparkVibe AI",
+"short_name": "SparkVibe",
+  "description": "Craft unignorable, professional bios for Instagram, LinkedIn, Twitter, TikTok, and Tinder. Free forever, no login.",
+  "description": "Craft stellar, professional bios for Instagram, LinkedIn, Twitter, TikTok, and Tinder. Free forever, no login.",
+"start_url": "/",
+"display": "standalone",
+  "background_color": "#fce7f3",
+  "theme_color": "#0d9488",
+  "background_color": "#111827",
+  "theme_color": "#6366f1",
+"icons": [
+{
+"src": "/icon-192x192.png",
