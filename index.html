@@ -3,30 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SparkVibe AI - Premium Bio Generator</title>
+  <title>SparkVibe AI - Neon Bio Generator</title>
   <link href="https://cdn.tailwindcss.com" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="manifest" href="manifest.json">
 </head>
-<body class="bg-gradient-to-br from-indigo-900 via-purple-800 to-blue-900 text-white min-h-screen font-poppins">
-  <header class="bg-opacity-80 backdrop-blur-md p-6 text-center transform hover:scale-105 transition-transform duration-300">
-    <h1 class="text-5xl font-bold">SparkVibe AI</h1>
-    <button id="themeToggle" class="mt-4 bg-gray-200 text-gray-900 p-2 rounded-lg hover:bg-gray-300 transition">Toggle Theme</button>
+<body class="bg-black text-white font-poppins min-h-screen overflow-x-hidden">
+  <header class="bg-gray-900 p-6 text-center shadow-neon">
+    <h1 class="text-4xl font-semibold text-neon-green">SparkVibe AI</h1>
+    <button id="themeToggle" class="mt-3 bg-gray-800 text-white p-2 rounded-lg hover:bg-gray-700 transition-all duration-200 glow-button">Toggle Theme</button>
   </header>
-  <main class="max-w-4xl mx-auto p-6 space-y-8">
-    <section class="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl transform hover:rotate-1 transition-transform duration-300">
-      <h2 class="text-2xl font-semibold mb-6">Craft Your Premium Bio</h2>
+  <main class="max-w-3xl mx-auto p-6 space-y-6">
+    <section class="bg-gray-900 p-6 rounded-xl shadow-neon">
+      <h2 class="text-2xl font-semibold mb-4 text-neon-blue">Generate Your Neon Bio</h2>
       <div class="space-y-4">
-        <input type="text" id="bioPurpose" placeholder="Enter your purpose (e.g., Photographer)" class="w-full p-3 border rounded-lg bg-white/5 text-white placeholder-gray-400" required>
-        <select id="platform" class="w-full p-3 border rounded-lg bg-white/5 text-white">
+        <input type="text" id="bioPurpose" placeholder="Enter your purpose (e.g., Photographer)" class="w-full p-3 border border-neon-purple rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:ring-2 focus:ring-neon-purple focus:border-transparent glow-input" required>
+        <select id="platform" class="w-full p-3 border border-neon-purple rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-neon-purple focus:border-transparent glow-input">
           <option value="Instagram">Instagram</option>
           <option value="LinkedIn">LinkedIn</option>
           <option value="Twitter">Twitter</option>
           <option value="TikTok">TikTok</option>
           <option value="Tinder">Tinder</option>
         </select>
-        <select id="tone" class="w-full p-3 border rounded-lg bg-white/5 text-white">
+        <select id="tone" class="w-full p-3 border border-neon-purple rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-neon-purple focus:border-transparent glow-input">
           <option value="professional">Professional</option>
           <option value="witty">Witty</option>
           <option value="bold">Bold</option>
@@ -36,25 +36,27 @@
           <option value="engaging">Engaging</option>
           <option value="casual">Casual</option>
         </select>
-        <input type="text" id="location" placeholder="Location (optional)" class="w-full p-3 border rounded-lg bg-white/5 text-white placeholder-gray-400">
-        <select id="emojiStyle" class="w-full p-3 border rounded-lg bg-white/5 text-white">
+        <input type="text" id="location" placeholder="Location (optional)" class="w-full p-3 border border-neon-purple rounded-lg bg-gray-800 text-white placeholder-gray-500 focus:ring-2 focus:ring-neon-purple focus:border-transparent glow-input">
+        <select id="emojiStyle" class="w-full p-3 border border-neon-purple rounded-lg bg-gray-800 text-white focus:ring-2 focus:ring-neon-purple focus:border-transparent glow-input">
           <option value="with_emojis">With Emojis</option>
           <option value="minimal_emojis">Minimal Emojis</option>
           <option value="vibrant_emojis">Vibrant Emojis</option>
           <option value="without_emojis">Without Emojis</option>
         </select>
-        <button id="generateBio" class="bg-gradient-to-r from-blue-500 to-purple-600 text-white p-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-300">Generate Bio</button>
+        <button id="generateBio" class="w-full bg-neon-blue text-white p-3 rounded-lg hover:bg-neon-purple transition-all duration-200 glow-button">Generate Bio</button>
       </div>
-      <div id="bioOutput" class="mt-6 space-y-4"></div>
-      <div id="keywordSuggestions" class="mt-4 text-sm text-gray-300"></div>
+      <div id="bioOutput" class="mt-4 space-y-3 bg-gray-800 p-4 rounded-lg glow-box">
+        <!-- Bio output will be inserted here -->
+      </div>
+      <div id="keywordSuggestions" class="mt-2 text-sm text-gray-400"></div>
     </section>
-    <section class="bg-white/10 backdrop-blur-md p-8 rounded-xl shadow-2xl transform hover:rotate-1 transition-transform duration-300">
-      <h2 class="text-2xl font-semibold mb-6">Automated Feedback</h2>
-      <div id="feedbackSection" class="space-y-4"></div>
+    <section class="bg-gray-900 p-6 rounded-xl shadow-neon">
+      <h2 class="text-2xl font-semibold mb-4 text-neon-blue">Automated Feedback</h2>
+      <div id="feedbackSection" class="space-y-2"></div>
     </section>
   </main>
-  <footer class="bg-gray-800 p-6 text-center">
-    <p class="text-lg font-poppins">Powered by <span class="text-gradient bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent font-bold">STX Tech</span></p>
+  <footer class="bg-gray-900 p-4 text-center text-white">
+    <p class="text-sm">Powered by <span class="text-gradient bg-gradient-to-r from-neon-green to-neon-blue bg-clip-text text-transparent">STX Tech</span></p>
   </footer>
   <script src="script.js"></script>
   <script>
