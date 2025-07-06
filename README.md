@@ -1,131 +1,154 @@
-🌟 SparkVibe AI
-SparkVibe AI is a creative web app that helps you generate SEO-optimized bios for social platforms like Instagram, LinkedIn, Twitter, TikTok, and even Tinder — using OpenAI's GPT-4o-mini.
+markdown
 
-No login required
+Collapse
 
-100% free to use
+Wrap
 
-Loved by 50,000+ users
-
-✨ Features
-✅ Generate bios based on platform + tone
-✅ Supports character limits for each platform
-✅ Suggests keywords using spaCy NLP
-✅ Add emojis, themes, and location for personalization
-✅ Mobile-friendly and fast
-
-🧰 What You Need Before You Start
-Requirement	Use
-Python 3.11+	Runs the backend (Flask app)
-Git	To clone the repo
-OpenAI API Key	Needed for generating bios (Get it here)
-Render (optional)	For free cloud hosting (render.com)
-
-⚙️ Setup Guide (Local & Online)
-✅ Option A: Run SparkVibe on Your Computer (Local)
-1. Clone the Repository
-bash
 Copy
-Edit
-git clone https://github.com/adarshmishra-tech/sparkvibe.git
+# SparkVibe AI
+
+SparkVibe AI generates SEO-optimized social media bios for Instagram, LinkedIn, Twitter, TikTok, and Tinder using Open AI's GPT-4o-mini model. It’s free to use, requires no login, and is trusted by over 50,000 creators.
+
+## Features
+- Platform-specific bios with character limits
+- Custom tones (professional, witty, bold, etc.)
+- NLP-powered keyword suggestions via spaCy
+- Customizable themes and emoji styles
+- Optimized for Render deployment
+
+## Prerequisites
+- Python 3.11 (Render does not support 3.13.4; see [Render Python docs](https://render.com/docs/python-version))
+- Open AI API key ([platform.openai.com](https://platform.openai.com))
+- Render account ([render.com](https://render.com))
+- Git
+
+## Setup Instructions
+
+### 1. Clone the Repository
+```bash
+git clone <your-repository-url>
 cd sparkvibe
-2. Install Python Dependencies
+2. Install Dependencies
+Install Python dependencies:
+
 bash
+
+Collapse
+
+Wrap
+
+Run
+
 Copy
-Edit
 pip install -r requirements.txt
+Download the spaCy model:
+
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
 python -m spacy download en_core_web_sm
-3. Add Your OpenAI Key
-Create a file called .env in the root directory:
-
+3. Configure Open AI API Key
+Sign up at platform.openai.com and get an API key.
+Create a .env file in the project root:
 env
+
+Collapse
+
+Wrap
+
 Copy
-Edit
-OPENAI_API_KEY=your-openai-api-key-here
-4. Start the App
+OPENAI_API_KEY=your-openai-api-key
+Or set it as an environment variable:
 bash
+
+Collapse
+
+Wrap
+
+Run
+
 Copy
-Edit
+export OPENAI_API_KEY=your-openai-api-key
+4. Run Locally
+Start the Flask server:
+
+bash
+
+Collapse
+
+Wrap
+
+Run
+
+Copy
 gunicorn server:app
-Your app will be available at:
-http://localhost:10000
+Access at http://localhost:10000.
 
-🌐 Option B: Deploy SparkVibe to the Web (with Render)
-1. Push Your Code to GitHub (if not already)
+5. Deploy to Render
+Remove Node.js Artifacts: Ensure package.json is deleted:
 bash
+
+Collapse
+
+Wrap
+
+Run
+
 Copy
-Edit
-git init
-git add .
-git commit -m "Initial commit"
-git remote add origin https://github.com/yourusername/sparkvibe.git
-git push -u origin main
-2. Set Up on Render
-Go to render.com and log in
+rm package.json
+git rm package.json
+git commit -m "Remove package.json to fix Node.js error"
+git push origin main
+Create a Web Service:
+Go to render.com and create a new Web Service.
+Connect your repository and select the branch (e.g., main).
+Configure the Service:
+Runtime: Python
+Build Command: pip install -r requirements.txt && python -m spacy download en_core_web_sm
+Start Command: gunicorn server:app
+Environment Variables:
+OPENAI_API_KEY: Your Open AI API key
+PYTHONUNBUFFERED: 1
+Deploy:
+Click "Deploy" and monitor the build logs.
+Access the app at https://<your-service>.onrender.com.
+Using SparkVibe
+Open the app in a browser.
+Select a theme, platform, tone, and emoji style.
+Enter a bio purpose (e.g., "Dancing Coach") and optional location/keywords.
+Click "Suggest Keywords" for NLP suggestions.
+Click "Forge My Stellar Bios" to generate bios.
+Copy bios to your clipboard.
+Troubleshooting
+EINTEGRITY Error: Ensure package.json is removed, and .render.yaml specifies runtime: python-3.11.
+Build Fails: Check Render logs (/opt/render/.cache/_logs/). Verify OPENAI_API_KEY and internet access for spaCy model download.
+API Errors: Confirm your Open AI API key is valid and has credits. Test with a small request via Postman:
+json
 
-Click New → Web Service
+Collapse
 
-Connect your GitHub repo
+Wrap
 
-Configure as:
-
-Setting	Value
-Runtime	Python
-Build Command	pip install -r requirements.txt && python -m spacy download en_core_web_sm
-Start Command	gunicorn server:app
-Environment Vars	OPENAI_API_KEY=your-openai-api-key-here
-
-Once deployed, access your live app at:
-https://your-app-name.onrender.com
-
-💡 How to Use SparkVibe
-Open the app (locally or online)
-
-Choose:
-
-A platform (e.g., LinkedIn)
-
-A tone (e.g., Professional, Witty)
-
-A theme and emoji style
-
-Enter your bio purpose (e.g., “Marketing Specialist”)
-
-Add optional keywords or location
-
-Click “Suggest Keywords” (uses NLP)
-
-Click “Forge My Stellar Bios”
-
-Copy the one you like most 🚀
-
-🛠️ Troubleshooting
-Problem	Solution
-App doesn’t start	Make sure .env is set with your OpenAI key
-403 / 429 errors	Check OpenAI credits or key permissions
-Render build fails	Check logs, make sure spaCy model is downloading
-CORS error on deployed app	Update server.py CORS line with correct domain
-Nothing happens on button	Open browser dev tools → Console → Check errors
-
-📂 Folder Structure (for reference)
-bash
 Copy
-Edit
-sparkvibe/
-├── server.py            # Flask backend
-├── index.html           # Frontend UI
-├── script.js            # Frontend logic
-├── styles.css           # Styling
-├── requirements.txt     # Python packages
-├── .env                 # Your API key (not committed)
-├── .render.yaml         # Render deployment settings
-├── contact.html         # Extra pages
-├── privacy.html         # Privacy page
-├── manifest.json        # PWA manifest
-📣 Final Notes
-You can change the theme, colors, or tone presets in script.js or index.html
+POST https://<your-service>.onrender.com/api/generate-bios
+{
+  "theme": "cosmic_glow",
+  "bioPurpose": "Dancing Coach",
+  "platform": "Instagram",
+  "tone": "professional",
+  "emojiStyle": "with_emojis"
+}
+CORS Issues: Update server.py CORS to https://<your-service>.onrender.com.
+License
+This project is under a commercial license. See LICENSE.txt for details.
 
-You can also plug in your own API (Claude, Gemini, etc.) by editing server.py
+Contact
+Email support@sparkvibe.ai for support.
 
-Great for dev portfolios, client projects, or personal tools
-
+Powered by STX Tech
