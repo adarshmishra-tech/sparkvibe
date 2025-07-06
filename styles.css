@@ -1,44 +1,82 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html {
-    font-family: 'Poppins', sans-serif;
-  }
+```css
+body {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-@layer components {
-  .glow-input {
-    box-shadow: 0 0 10px #a100ff, 0 0 20px #a100ff, 0 0 30px #a100ff;
-    transition: box-shadow 0.3s ease;
-  }
-  .glow-input:focus {
-    box-shadow: 0 0 15px #a100ff, 0 0 25px #a100ff, 0 0 40px #a100ff;
-  }
-  .glow-button {
-    box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff, 0 0 30px #00ffff;
-    transition: box-shadow 0.3s ease, background-color 0.3s ease;
-  }
-  .glow-button:hover {
-    box-shadow: 0 0 15px #00ffff, 0 0 25px #00ffff, 0 0 40px #00ffff;
-  }
-  .glow-box {
-    box-shadow: inset 0 0 10px #00ffcc, 0 0 20px #00ffcc;
-    transition: box-shadow 0.3s ease;
-  }
+.neon-glow {
+  box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #ff00ff;
+  animation: glow 1.5s ease-in-out infinite alternate;
 }
 
-@layer utilities {
-  .text-neon-green { color: #00ffcc; text-shadow: 0 0 5px #00ffcc, 0 0 10px #00ffcc; }
-  .text-neon-blue { color: #00ffff; text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff; }
-  .text-neon-purple { color: #a100ff; text-shadow: 0 0 5px #a100ff, 0 0 10px #a100ff; }
-  .bg-neon-blue { background-color: #00ffff; }
-  .bg-neon-purple { background-color: #a100ff; }
-  .shadow-neon { box-shadow: 0 0 15px #00ffcc, 0 0 25px #00ffcc; }
-  .text-gradient {
-    background-clip: text;
-    -webkit-background-clip: text;
-    color: transparent;
-  }
+@keyframes glow {
+  from { box-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc, 0 0 30px #ff00ff; }
+  to { box-shadow: 0 0 20px #ff00ff, 0 0 30px #00ffcc, 0 0 40px #ff00ff; }
 }
+
+.input-field {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid #00ffcc;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #ff00ff;
+  box-shadow: 0 0 15px #ff00ff;
+}
+
+.vision-box {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #00ffcc;
+  border-radius: 12px;
+  padding: 20px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+.slider-container {
+  overflow: hidden;
+  white-space: nowrap;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.slider {
+  display: inline-block;
+  animation: slide 20s linear infinite;
+}
+
+@keyframes slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.share-button {
+  background: #ff00ff;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.share-button:hover {
+  background: #00ffcc;
+  transform: scale(1.05);
+}
+
+footer {
+  background: rgba(0, 0, 0, 0.8);
+  border-top: 2px solid #00ffcc;
+}
+```
