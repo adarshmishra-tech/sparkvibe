@@ -6,5 +6,6 @@ services:
     nodeVersion: "22.16.0"
     buildCommand: |
       npm cache clean --force
+      rm -f package-lock.json
       npm install --no-audit --no-fund
     startCommand: npm start
