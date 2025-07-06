@@ -1,11 +1,8 @@
 services:
   - type: web
     name: sparkvibe-ai
-    env: python
+    env: node
     plan: free
-    pythonVersion: "3.9"
-    buildCommand: |
-      apt-get update && apt-get install -y python3-dev
-      pip install --upgrade pip setuptools wheel
-      pip install -r requirements.txt
-    startCommand: gunicorn -w 4 -b 0.0.0.0:$PORT server:app
+    nodeVersion: "20"
+    buildCommand: npm install
+    startCommand: npm start
