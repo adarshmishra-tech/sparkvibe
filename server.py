@@ -13,13 +13,13 @@ app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app, resources={r"/api/*": {"origins": "https://sparkvibe-1.onrender.com"}})
 load_dotenv()
 
-# Initialize Open AI client
+# Initialize OpenAI client
 openai_api_key = os.getenv('OPENAI_API_KEY')
 if not openai_api_key:
-    raise ValueError("OPENAI_API_KEY environment variable is not set")
+    raise ValueError("OPENAI_API_KEY not set")
 client = OpenAI(api_key=openai_api_key)
 
-# Initialize KeyBERT model
+# Initialize KeyBERT
 kw_model = KeyBERT()
 
 # Platform configurations
@@ -50,23 +50,21 @@ emojis = {
     'without_emojis': ['']
 }
 
-# Keyword extraction using KeyBERT
 @lru_cache(maxsize=100)
 def extract_keywords(text):
     keywords = kw_model.extract_keywords(text.lower(), keyphrase_ngram_range=(1, 2), stop_words='english', top_n=10)
     return [kw[0] for kw in keywords] or ['pro', 'expert']
 
-# Generate bios using Open AI
 def generate_short_bios(theme, bio_purpose, location, platform, tone, keywords, emoji_style):
     char_limit = platform_context[platform]['limit']
-    tone_data = tone_styles.get(tone.lower(), toneStyles['professional'])
+    tone_data = tone_styles.get(tone.lower(), tone_styles['professional'])
     platform_data = platform_context[platform]
     location_part = location or 'global'
     emoji = random.choice(emojis[emoji_style]) if emoji_style != 'without_emojis' else ''
     keywords = keywords or extract_keywords(bio_purpose)[0]
 
     prompt = f"""
-    Generate 3 unique social media bios for a {bio_purpose} on {platform}. 
+    Generate 3 unique social media bios for a {bio_purpose} on {platform}.
     - Tone: {tone} ({tone_data['focus']})
     - Include keywords: {keywords}
     - Location: {location_part}
@@ -94,29 +92,78 @@ def generate_short_bios(theme, bio_purpose, location, platform, tone, keywords, 
             bios.append({'text': bio_text, 'length': len(bio_text)})
         return bios
     except Exception as e:
-        print(f"Open AI Error: {e}")
-        # Fallback to original logic
+        print(f"OpenAI Error: {e}")
         bios = []
         used_structures = set()
         target_length = char_limit * 0.9
 
-        for _ in range(5):
+        for _ in range(3):
             adj = random.choice(tone_data['adjectives']).capitalize()
             verb = random.choice(tone_data['verbs'])
             structure = random.choice([
-                f"{adj} {bio_purpose}, {verb} {keywords} {platform_data['focus']}, in {location_part}{emoji} {platform_data['hashtag']}",
-                f"{bio_purpose}, {verb} {keywords} with {platform_data['style']} flair, ruling苗
+                f"{adj} {bio_purpose}, {verb} {keywords} {platform_data['focus']} in {location_part}{emoji} {platform_data['hashtag']}",
+                f"{bio_purpose}, {verb} {keywords} with {platform_data['style']} flair on {platform}{emoji} {platform_data['hashtag']}",
+                f"{location_part}'s {bio_purpose}, {verb} {keywords} {tone_data['focus']}{emoji} {platform_data['hashtag']}"
+            ])
+            bio = re.sub(r'\s+', ' ', structure).strip()
+            struct_key = (structure.split()[0], verb)
 
-System: The deployment issue on Render, where the build process gets stuck during the installation of `spacy==3.7.6`, has been resolved by replacing Spacy with `keybert==0.8.5`, a lightweight library for keyword extraction that doesn’t require complex compilation. Below are the complete set of revised files to ensure smooth deployment while preserving the original UI and functionality of SparkVibe AI. These updates address the build failure, maintain compatibility with Python 3.9 (Render’s default), and ensure no changes to the frontend UI or core backend logic.
+            if struct_key not in used_structures and len(bio) <= char_limit:
+                used_structures.add(struct_key)
+                bios.append({'text': bio, 'length': len(bio)})
 
-### Revised Files
+        while len(bios) < 3:
+            bio = f"{random.choice(tone_data['adjectives']).capitalize()} {bio_purpose}, {random.choice(tone_data['verbs'])} {keywords} in {location_part}{emoji} {platform_data['hashtag']}"
+            bio = re.sub(r'\s+', ' ', bio).strip()[:char_limit]
+            bios.append({'text': bio, 'length': len(bio)})
+        return bios
 
-#### 1. `requirements.txt`
-Replaced `spacy` with `keybert` to avoid compilation issues and updated `openai` to a compatible version.
+@app.route('/api/suggest-keywords', methods=['POST'])
+def suggest_keywords():
+    data = request.get_json()
+    bio_purpose = data.get('bioPurpose')
+    if not bio_purpose:
+        return jsonify({'error': 'Bio Purpose is required'}, 400)
+    try:
+        keywords = extract_keywords(bio_purpose)
+        return jsonify({'keywords': keywords})
+    except Exception as e:
+        print(f"Keyword Error: {e}")
+        return jsonify({'error': 'Failed to suggest keywords'}, 500)
 
-<xaiArtifact artifact_id="d018bcdc-f927-4c3f-ba38-19cefb219047" artifact_version_id="0a8b91e4-2415-49cf-b42e-53df25322a98" title="requirements.txt" contentType="text/plain">
-Flask==3.0.3
-Flask-Cors==5.0.0
-gunicorn==23.0.0
-keybert==0.8.5
-openai==1.44.0
+@app.route('/api/generate-bios', methods=['POST'])
+def generate_bios():
+    data = request.get_json()
+    required = ['theme', 'bioPurpose', 'platform', 'tone']
+    if not all(data.get(field) for field in required):
+        return jsonify({'error': 'All fields are required'}, 400)
+    try:
+        bios = generate_short_bios(
+            data['theme'], data['bioPurpose'], data.get('location', ''),
+            data['platform'], data['tone'], data.get('keywords', 'pro'),
+            data.get('emojiStyle', 'without_emojis')
+        )
+        return jsonify({'shortBios': bios})
+    except Exception as e:
+        print(f"Generation Error: {e}")
+        return jsonify({'error': 'Failed to generate bios'}, 500)
+
+@app.route('/api/current-date')
+def current_date():
+    return jsonify({'date': datetime.now().strftime('%Y-%m-%d %H:%M:%S')})
+
+@app.route('/contact')
+def contact():
+    return send_from_directory('.', 'contact.html')
+
+@app.route('/privacy')
+def privacy():
+    return send_from_directory('.', 'privacy.html')
+
+@app.route('/', defaults={'path': 'index.html'})
+@app.route('/<path:path>')
+def serve_static(path):
+    return send_from_directory('.', path)
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 10000)))
