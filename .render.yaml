@@ -2,7 +2,13 @@ services:
   - type: web
     name: sparkvibe
     env: python
+    runtime: python-3.11  # Specify Python version explicitly
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn server:app
     plan: free
     numInstances: 1
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: OPENAI_API_KEY
+        sync: false  # User must set this in Render dashboard
