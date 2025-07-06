@@ -1,27 +1,8 @@
-const platform_context = {
-  Instagram: { limit: 150 },
-  LinkedIn: { limit: 200 },
-  Twitter: { limit: 160 },
-  TikTok: { limit: 150 },
-  Tinder: { limit: 300 }
-};
-
-document.getElementById('theme').addEventListener('change', (e) => {
-  const form = document.getElementById('bioForm');
-  form.classList.remove('theme-cosmic_glow', 'theme-neon_pulse');
-  form.classList.add(`theme-${e.target.value}`);
-});
-
-const suggestBtn = document.getElementById('suggestKeywords');
-const keywordDropdown = document.getElementById('keywordDropdown');
-const bioPurposeInput = document.getElementById('bioPurpose');
-const keywordsInput = document.getElementById('keywords');
-
-suggestBtn.addEventListener('click', async () => {
-  const bioPurpose = bioPurposeInput.value.trim();
-  keywordDropdown.classList.toggle('hidden');
+// Keyword suggestion dropdown
+document.getElementById('suggestKeywords').addEventListener('click', async () => {
+  const bioPurpose = document.getElementById('bioPurpose').value.trim();
   if (!bioPurpose) {
-    keywordDropdown.innerHTML = '<div class="p-2 text-gray-400 text-center">Enter Bio Purpose to see suggestions</div>';
+    alert('Please enter a Bio Purpose (e.g., Dating Coach, Tech Innovator).');
     return;
   }
   try {
@@ -31,26 +12,36 @@ suggestBtn.addEventListener('click', async () => {
       body: JSON.stringify({ bioPurpose }),
       timeout: 5000
     });
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    if (!res.ok) throw new Error(`Server response not OK: ${res.status}`);
     const data = await res.json();
     if (data.error) {
-      keywordDropdown.innerHTML = `<div class="p-2 text-red-400 text-center">${data.error}</div>`;
+      alert(data.error);
     } else {
-      keywordDropdown.innerHTML = data.keywords.map(kw => `
-        <div class="p-2 hover:bg-gray-600 text-white cursor-pointer transition-all duration-200" onclick="document.getElementById('keywords').value='${kw.replace(/'/g, "\\'")}'; document.getElementById('keywordDropdown').classList.add('hidden');">${kw}</div>
-      `).join('');
+      const select = document.getElementById('keywords');
+      select.innerHTML = '<option value="" disabled selected>Select a Keyword</option>';
+      data.keywords.forEach(keyword => {
+        const option = document.createElement('option');
+        option.value = keyword;
+        option.textContent = keyword;
+        select.appendChild(option);
+      });
     }
   } catch (err) {
-    console.error('Keyword Error:', err);
-    keywordDropdown.innerHTML = '<div class="p-2 text-red-400 text-center">Failed to load keywords. Try again.</div>';
+    alert(`Failed to suggest keywords: ${err.message}. Using fallback keywords.`);
+    console.error('Suggest Error:', err);
+    // Fallback keywords
+    const select = document.getElementById('keywords');
+    select.innerHTML = '<option value="" disabled selected>Select a Keyword</option>';
+    ['expert', 'guru', 'innovator'].forEach(keyword => {
+      const option = document.createElement('option');
+      option.value = keyword;
+      option.textContent = keyword;
+      select.appendChild(option);
+    });
   }
 });
 
-bioPurposeInput.addEventListener('input', () => {
-  keywordDropdown.classList.add('hidden');
-  keywordDropdown.innerHTML = '<div class="p-2 text-gray-400 text-center">Enter Bio Purpose to see suggestions</div>';
-});
-
+// Bio form submission with three options
 document.getElementById('bioForm').addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = {
@@ -59,12 +50,12 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
     location: document.getElementById('location').value.trim(),
     platform: document.getElementById('platform').value,
     tone: document.getElementById('tone').value,
-    keywords: document.getElementById('keywords').value.trim() || 'pro',
+    keywords: document.getElementById('keywords').value,
     emojiStyle: document.getElementById('emojiStyle').value
   };
 
-  if (!formData.bioPurpose) {
-    alert('Please enter a Bio Purpose (e.g., Dancing Coach).');
+  if (!formData.keywords) {
+    alert('Please select a keyword from the suggested list.');
     return;
   }
 
@@ -75,77 +66,67 @@ document.getElementById('bioForm').addEventListener('submit', async (e) => {
       body: JSON.stringify(formData),
       timeout: 5000
     });
-    if (!res.ok) throw new Error(`Server error: ${res.status}`);
+    if (!res.ok) throw new Error(`Server response not OK: ${res.status}`);
     const data = await res.json();
     const output = document.getElementById('bioOutput');
-    const maxChars = platform_context[formData.platform].limit;
+    const maxChars = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[formData.platform] || 200;
     document.getElementById('maxChars').textContent = maxChars;
     if (data.error) {
-      output.innerHTML = `<div class="p-4 text-red-400">${data.error}</div>`;
+      output.innerHTML = `<div class="p-4 text-red-500">${data.error}</div>`;
     } else {
       output.innerHTML = data.bios.map((bio, index) => `
-        <div class="bio-box p-6 rounded-xl shadow-lg border-2 border-indigo-600/50 backdrop-blur-sm overflow-auto theme-${formData.theme} animate-slide-up">
-          <p class="text-white break-words font-medium">${bio.text}</p>
-          <div class="mt-4 flex justify-between items-center">
-            <button class="copy-btn text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 text-sm" data-index="${index}">
-              <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
-              Copy
-            </button>
-            <span class="text-sm text-gray-400">Chars: ${bio.length}/${maxChars}</span>
+        <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-60 md:max-h-80">
+          <p class="text-gray-900 break-words">${bio.text}</p>
+          <div class="mt-4 flex justify-between">
+            <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
           </div>
+          <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
         </div>
       `).join('');
       document.querySelectorAll('.copy-btn').forEach(btn => {
         btn.addEventListener('click', () => {
           const index = btn.getAttribute('data-index');
-          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🌟'));
+          navigator.clipboard.writeText(data.bios[index].text).then(() => alert('Copied to clipboard! 🎉'));
         });
       });
     }
   } catch (err) {
     console.error('Generate Error:', err);
-    const maxChars = platform_context[formData.platform].limit;
+    // Fallback bio generation
+    const maxChars = { Instagram: 150, Twitter: 160, LinkedIn: 200, TikTok: 150, Tinder: 500, Bumble: 300 }[formData.platform] || 200;
     const fallbackBios = [
-      { text: `${formData.bioPurpose} shining in ${formData.location || 'the world'} with ${formData.tone} energy. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
-      { text: `${formData.bioPurpose} crafting ${formData.tone} stories on ${formData.platform}. ${formData.keywords} ${platform_context[formData.platform].hashtag}`, length: 0 },
-      { text: `${formData.bioPurpose} leading with ${formData.keywords} in ${formData.location || 'global'} vibes. ${platform_context[formData.platform].hashtag}`, length: 0 }
+      { text: `${formData.bioPurpose} crafting excellence in ${formData.location || 'the world'}.`, length: 0 },
+      { text: `${formData.bioPurpose} with ${formData.tone} vibes, ${formData.keywords}.`, length: 0 },
+      { text: `${formData.bioPurpose} shining in ${formData.platform}, ${formData.keywords}.`, length: 0 }
     ].map(bio => {
       const length = bio.text.length;
       return { text: bio.text.length > maxChars ? bio.text.substring(0, maxChars - 3) + '...' : bio.text, length: Math.min(length, maxChars) };
     });
     document.getElementById('bioOutput').innerHTML = fallbackBios.map((bio, index) => `
-      <div class="bio-box p-6 rounded-xl shadow-lg border-2 border-indigo-600/50 backdrop-blur-sm overflow-auto theme-${formData.theme} animate-slide-up">
-        <p class="text-white break-words font-medium">${bio.text}</p>
-        <div class="mt-4 flex justify-between items-center">
-          <button class="copy-btn text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-all duration-300 text-sm" data-index="${index}">
-            <svg class="w-4 h-4 inline-block mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-2M8 5V3a2 2 0 012-2h4a2 2 0 012 2v2M8 5h8"/></svg>
-            Copy
-          </button>
-          <span class="text-sm text-gray-400">Chars: ${bio.length}/${maxChars}</span>
+      <div class="bg-white/80 p-6 rounded-xl shadow-lg border-2 border-teal-500/50 backdrop-blur-sm overflow-auto max-h-72 sm:max-h-60 md:max-h-80">
+        <p class="text-gray-900 break-words">${bio.text}</p>
+        <div class="mt-4 flex justify-between">
+          <button class="copy-btn bg-teal-600 text-white px-4 py-2 rounded-lg hover:bg-teal-700 transition-all duration-300" data-index="${index}">Copy 📋</button>
         </div>
+        <p class="mt-2 text-sm text-gray-600">Chars: ${bio.length}/${maxChars}</p>
       </div>
     `).join('');
     document.querySelectorAll('.copy-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const index = btn.getAttribute('data-index');
-        navigator.clipboard.writeText(fallbackBios[index].text).then(() => alert('Copied to clipboard! 🌟'));
+        navigator.clipboard.writeText(fallbackBios[index].text).then(() => alert('Copied to clipboard! 🎉'));
       });
     });
   }
 });
 
-document.getElementById('bioPurpose').addEventListener('input', updateCharCount);
-document.getElementById('platform').addEventListener('change', updateCharCount);
-
-function updateCharCount() {
+// Character counter
+document.getElementById('bioPurpose').addEventListener('input', () => {
   const charCount = document.getElementById('charCount');
-  const platform = document.getElementById('platform').value;
-  const maxChars = platform_context[platform].limit;
-  const currentLength = document.getElementById('bioPurpose').value.length;
-  charCount.textContent = `Characters: ${currentLength}/${maxChars}`;
-  document.getElementById('maxChars').textContent = maxChars;
-}
+  charCount.textContent = `Characters: ${document.getElementById('bioPurpose').value.length}/150`;
+});
 
+// Dynamic date
 fetch('https://sparkvibe-1.onrender.com/api/current-date')
   .then(res => res.json())
   .then(data => {
