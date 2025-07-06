@@ -7,5 +7,5 @@ services:
     buildCommand: |
       npm cache clean --force
       rm -f package-lock.json
-      npm install --no-audit --no-fund
+      npm install --no-audit --no-fund --force
     startCommand: npm start
